@@ -1,0 +1,57 @@
+<section class="section">
+  <h2 class="section__h2">Inicio de sesión</h2>
+  <form [formGroup]="formLogin" class="form">
+    <div class="form__div">
+      <mat-label ngClass="form__label">Usuario</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="Ingrese su usuario"
+          formControlName="user"
+          type="text"
+          required
+        />
+        <mat-error ngClass="form__alert" *ngIf="hasError('user', 'required')"
+          >Campo requerido</mat-error
+        >
+        <mat-error ngClass="form__alert" *ngIf="hasError('user', 'pattern')"
+          >Este campo no permite números</mat-error
+        >
+      </mat-form-field>
+
+      <mat-label ngClass="form__label">Contraseña</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          placeholder="Ingrese su contraseña"
+          formControlName="password"
+          type="password"
+          required
+          [type]="hide ? 'password' : 'text'"
+        />
+        <mat-error
+          ngClass="form__alert"
+          *ngIf="hasError('password', 'required')"
+          >Campo requerido</mat-error
+        >
+        <mat-icon class="form__icon" matSuffix (click)="hide = !hide">{{
+          hide ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </mat-form-field>
+      <button
+        [ngClass]="'form__button'"
+        type="submit"
+        color="primary"
+        mat-flat-button
+        [disabled]="formLogin.invalid"
+      >
+        Ingresar
+      </button>
+    </div>
+  </form>
+  <div class="section__div">
+    <a routerLink="/auth/forgot-password" class="section__div--a">
+      ¿Olvidaste tu contraseña?
+    </a>
+  </div>
+</section>
