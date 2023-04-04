@@ -7,14 +7,16 @@
         <input
           matInput
           placeholder="Ingrese su usuario"
-          formControlName="user"
+          formControlName="username"
           type="text"
           required
         />
-        <mat-error ngClass="form__alert" *ngIf="hasError('user', 'required')"
+        <mat-error
+          ngClass="form__alert"
+          *ngIf="hasError('username', 'required')"
           >Campo requerido</mat-error
         >
-        <mat-error ngClass="form__alert" *ngIf="hasError('user', 'pattern')"
+        <mat-error ngClass="form__alert" *ngIf="hasError('username', 'pattern')"
           >Este campo no permite números</mat-error
         >
       </mat-form-field>

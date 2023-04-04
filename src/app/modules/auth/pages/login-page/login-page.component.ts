@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -9,10 +10,24 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginPageComponent implements OnInit {
   formLogin!: FormGroup;
   hide = true;
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.formLogin = this.initForm();
+  }
+
+  onLogin(): void {
+    this.authService.login(this.formLogin.value).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   hasError(controlName: string, errorName: string) {
@@ -21,7 +36,7 @@ export class LoginPageComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      user: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      username: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
       password: ['', Validators.required],
     });
   }
