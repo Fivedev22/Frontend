@@ -1,0 +1,42 @@
+table {
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+    padding: 20px;
+}
+
+.mat-icon {
+    font-size: 18px;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    min-width: 400px;
+}
+
+.mat-paginator {
+    border-radius: 0px 0px 10px 10px;
+}
+
+td,
+th {
+    width: 10%;
+}
+
+.container-table {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.container-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.content-client button {
+    background-color: #898989;
+    color: #FFFFFF;
+    font-weight: 400;
+    border-radius: 5px;
+}

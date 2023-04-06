@@ -10,6 +10,22 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { PropertyPageComponent } from './pages/property-page/property-page.component';
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
 import { ClientFormComponent } from './pages/client-page/components/client-form/client-form.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ForeignPipe } from './pages/pipes/foreign.pipe';
+import { ProvincePipe } from './pages/pipes/province.pipe';
+import { GenderTypePipe } from './pages/pipes/gender_type.pipe';
+import { DocumentTypePipe } from './pages/pipes/document_type.pipe';
+import { RouterModule } from '@angular/router';
+import { PropertyFormComponent } from './pages/property-page/property-form/property-form.component';
+import { AvailabilityStatusPipe } from './pages/pipes/availability_status.pipe';
+import { ActivityStatusPipe } from './pages/pipes/activity_status.pipe';
+import { PropertyTypePipe } from './pages/pipes/property_type.pipe';
+import { PaymentFormComponent } from './pages/payment-page/payment-form/payment-form.component';
+import { ReservationFormComponent } from './pages/reservation-page/reservation-form/reservation-form.component';
+import { PaymentStatusPipe } from './pages/pipes/payment_status.pipe';
+import { PaymentTypePipe } from './pages/pipes/payment_type.pipe';
+import { ReservationOriginPipe } from './pages/pipes/reservation_origin.pipe';
+import { ReservationTypePipe } from './pages/pipes/reservation_type.pipe';
 
 @NgModule({
   declarations: [
@@ -20,12 +36,28 @@ import { ClientFormComponent } from './pages/client-page/components/client-form/
     PropertyPageComponent,
     PaymentPageComponent,
     ClientFormComponent,
+    ForeignPipe,
+    ProvincePipe,
+    GenderTypePipe,
+    DocumentTypePipe,
+    PropertyFormComponent,
+    AvailabilityStatusPipe,
+    ActivityStatusPipe,
+    PropertyTypePipe,
+    PaymentFormComponent,
+    ReservationFormComponent,
+    PaymentStatusPipe,
+    PaymentTypePipe,
+    ReservationOriginPipe,
+    ReservationTypePipe,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     SharedModule,
     ReactiveFormsModule,
+    SweetAlert2Module.forRoot(),
+    RouterModule
   ],
 })
 export class AdminModule {}
