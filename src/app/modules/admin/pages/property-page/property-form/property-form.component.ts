@@ -154,7 +154,7 @@ export class PropertyFormComponent implements OnInit {
 
   updateProperty() {
     if (this.propertyForm.valid) {
-      this.propertyService.updateProperty(+this.propertyData.id_client, this.propertyForm.value).subscribe({
+      this.propertyService.updateProperty(+this.propertyData.id_property, this.propertyForm.value).subscribe({
         next: (res) => {
           this.updateAlert.fire()
             .then(() => {
