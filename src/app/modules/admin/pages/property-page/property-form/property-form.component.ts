@@ -107,7 +107,7 @@ export class PropertyFormComponent implements OnInit {
     this.propertyForm.controls['property_name'].setValue(data.property_name);
     this.propertyForm.controls['property_type'].setValue(data.property_type.id);
     this.propertyForm.controls['square_meter'].setValue(data.square_meter);
-    this.propertyForm.controls['street'].setValue(data.gender_type.street);
+    this.propertyForm.controls['street'].setValue(data.street);
     this.propertyForm.controls['street_number'].setValue(data.street_number);
     this.propertyForm.controls['building_floor'].setValue(data.building_floor);
     this.propertyForm.controls['province'].setValue(data.province.id_province);
