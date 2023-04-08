@@ -72,7 +72,7 @@ export class PropertyFormComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      reference_number: ['', [Validators.required,]],
+      reference_number: [this.generateRandomNumber()],
       property_name: ['', [Validators.required]],
       property_type: ['', [Validators.required]],
       square_meter: [''],
@@ -98,6 +98,11 @@ export class PropertyFormComponent implements OnInit {
       availability_status: ['', [Validators.required]],
       activity_status: ['', [Validators.required]],
     });
+  }
+
+  generateRandomNumber(): string {
+    const randomNum = Math.floor(Math.random() * 1000).toString();
+    return randomNum.padStart(4, '0');
   }
 
   addPropertyData(data: any) {

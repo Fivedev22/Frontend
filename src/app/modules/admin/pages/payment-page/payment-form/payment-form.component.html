@@ -11,21 +11,21 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Cobro</mat-label>
-                    <input matInput placeholder="" type="number" disabled>
+                    <input formControlName="payment_number" matInput placeholder="" type="number" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Cobro</mat-label>
-                    <input matInput placeholder="" type="date" disabled>
+                    <input formControlName="createdAt" matInput placeholder="" type="date" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Reserva</mat-label>
-                    <mat-select formControlName="booking" placeholder="">
+                    <mat-select formControlName="booking" placeholder="Seleccione...">
                         <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
                             {{reservation.booking_number}}</mat-option>
                     </mat-select>
@@ -50,6 +50,7 @@
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
+
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
@@ -168,6 +169,20 @@
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('payment_type','required')">
+                        <strong>Campo requerido</strong>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Estado de Pago</mat-label>
+                    <mat-select formControlName="payment_status" placeholder="">
+                        <mat-option *ngFor="let payment_status of payment_statuses" [value]="payment_status.id_payment_status">
+                            {{payment_status.payment_status_name}}</mat-option>
+                    </mat-select>
+                    <mat-hint align="end">Campo requerido</mat-hint>
+                    <mat-error align=" end" *ngIf="hasError('payment_status','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>

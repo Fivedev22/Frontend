@@ -12,11 +12,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Referencia</mat-label>
-                    <input formControlName="reference_number" matInput placeholder="Número de Referencia" type="number">
-                    <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('reference_number','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
+                    <input formControlName="reference_number" matInput placeholder="Número de Referencia" type="number" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 

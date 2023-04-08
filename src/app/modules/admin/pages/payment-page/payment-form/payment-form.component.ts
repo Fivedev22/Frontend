@@ -38,6 +38,7 @@ export class PaymentFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
+data: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private paymentData: any,
@@ -74,7 +75,7 @@ export class PaymentFormComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      payment_number: [''],
+      payment_number: [this.generateRandomNumber()],
       createdAt: [''],
       booking: ['', [Validators.required]],
       client: ['', [Validators.required,]],
@@ -87,7 +88,13 @@ export class PaymentFormComponent implements OnInit {
       payment_amount_subtotal: ['', [Validators.required]],
       payment_amount_total: ['', [Validators.required]],
       payment_type: ['', [Validators.required]],
+      payment_status: ['',[Validators.required]],
     });
+  }
+
+  generateRandomNumber(): string {
+    const randomNum = Math.floor(Math.random() * 1000).toString();
+    return randomNum.padStart(4, '1');
   }
 
   addReservationData(data: any) {
@@ -106,6 +113,7 @@ export class PaymentFormComponent implements OnInit {
     this.paymentForm.controls['payment_amount_subtotal'].setValue(data.payment_amount_subtotal);
     this.paymentForm.controls['payment_amount_total'].setValue(data.payment_amount_total);
     this.paymentForm.controls['payment_type'].setValue(data.payment_type.id);
+    this.paymentForm.controls['payment_status'].setValue(data.payment_status.id_payment_status);
   }
 
   sendPayment() {

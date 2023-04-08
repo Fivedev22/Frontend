@@ -68,7 +68,7 @@ export class ReservationFormComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      booking_number: [''],
+      booking_number: [this.generateRandomNumber()],
       createdAt: [''],
       booking_type: ['', [Validators.required]],
       booking_origin: ['',[Validators.required]],
@@ -87,6 +87,11 @@ export class ReservationFormComponent implements OnInit {
       estimated_amount_deposit: ['', [Validators.required]],
       booking_amount: ['', [Validators.required]],
     });
+  }
+
+  generateRandomNumber(): string {
+    const randomNum = Math.floor(Math.random() * 1000).toString();
+    return randomNum.padStart(5, '00');
   }
 
   addReservationData(data: any) {
