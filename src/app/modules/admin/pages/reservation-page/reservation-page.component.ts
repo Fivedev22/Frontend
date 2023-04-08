@@ -16,7 +16,7 @@ import { ReservationFormComponent } from './reservation-form/reservation-form.co
 export class ReservationPageComponent implements OnInit {
   title = 'reservation';
 
-  displayedColumns: string[] = ['name', 'last_name', 'document_number', 'email','phone_number', 'is_foreign', 'province', 'actions'];
+  displayedColumns: string[] = ['booking_number', 'booking_type', 'client', 'property','check_in_date','check_out_date', 'actions'];
 
   dataSource!: MatTableDataSource<IReservation>;
 
@@ -40,10 +40,10 @@ export class ReservationPageComponent implements OnInit {
     })
   }
 
-  deleteReservation(id: number, reservation_number: number, fecha: string) {
+  deleteReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea eliminar la reserva?',
-      text: `${reservation_number} ${fecha}`,
+      text: `${booking_number} ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 

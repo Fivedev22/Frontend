@@ -14,9 +14,9 @@ import Swal from 'sweetalert2';
   styleUrls: ['./payment-page.component.css']
 })
 export class PaymentPageComponent  {
-  title = 'client';
+  title = 'payment';
 
-  displayedColumns: string[] = ['name', 'last_name', 'document_number', 'email','phone_number', 'is_foreign', 'province', 'actions'];
+  displayedColumns: string[] = ['booking', 'property', 'client', 'payment_amount_total','payment_status', 'actions'];
 
   dataSource!: MatTableDataSource<IPayment>;
 
@@ -58,7 +58,7 @@ export class PaymentPageComponent  {
               Swal.fire({
                 position: 'center',
                 icon: 'success',
-                title: 'Cliente eliminado correctamente',
+                title: 'Pago eliminado correctamente',
                 showConfirmButton: false,
                 timer: 1800
               }).then(() => {

@@ -26,6 +26,9 @@ import { PaymentStatusPipe } from './pages/pipes/payment_status.pipe';
 import { PaymentTypePipe } from './pages/pipes/payment_type.pipe';
 import { ReservationOriginPipe } from './pages/pipes/reservation_origin.pipe';
 import { ReservationTypePipe } from './pages/pipes/reservation_type.pipe';
+import { ClientPipe } from './pages/pipes/client.pipe';
+import { PropertyPipe } from './pages/pipes/property.pipe';
+import { BookingPipe } from './pages/pipes/booking.pipe';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,9 @@ import { ReservationTypePipe } from './pages/pipes/reservation_type.pipe';
     PaymentTypePipe,
     ReservationOriginPipe,
     ReservationTypePipe,
+    ClientPipe,
+    PropertyPipe,
+    BookingPipe,
   ],
   imports: [
     CommonModule,
