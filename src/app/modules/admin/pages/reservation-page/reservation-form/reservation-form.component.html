@@ -17,20 +17,13 @@
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
-                    <mat-label>Fecha de Reserva</mat-label>
-                    <input formControlName="createdAt" matInput placeholder="" type="date" readonly>
-                </mat-form-field>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <mat-form-field appearance="outline">
                     <mat-label>Tipo de Reserva</mat-label>
-                    <mat-select formControlName="booking_type" placeholder="Seleccione...">
+                    <mat-select formControlName="reservation_type" placeholder="Seleccione...">
                         <mat-option *ngFor="let reservation_type of reservation_types" [value]="reservation_type.id">
                             {{reservation_type.booking_type_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('booking_type','required')">
+                    <mat-error align=" end" *ngIf="hasError('reservation_type','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
@@ -39,12 +32,12 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Procedencia de Reserva</mat-label>
-                    <mat-select formControlName="booking_origin" placeholder="Seleccione...">
+                    <mat-select formControlName="reservation_origin" placeholder="Seleccione...">
                         <mat-option *ngFor="let reservation_origin of reservation_origins" [value]="reservation_origin.id">
                             {{reservation_origin.origin_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('booking_origin','required')">
+                    <mat-error align=" end" *ngIf="hasError('reservation_origin','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>

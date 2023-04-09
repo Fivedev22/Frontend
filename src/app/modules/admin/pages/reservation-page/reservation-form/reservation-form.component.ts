@@ -69,9 +69,8 @@ export class ReservationFormComponent implements OnInit {
   initForm(): FormGroup {
     return this.formBuilder.group({
       booking_number: [this.generateRandomNumber()],
-      createdAt: [''],
-      booking_type: ['', [Validators.required]],
-      booking_origin: ['',[Validators.required]],
+      reservation_type: ['', [Validators.required]],
+      reservation_origin: ['',[Validators.required]],
       client: ['', [Validators.required,]],
       property: ['', [Validators.required]],
       adults_number: ['', [Validators.required]],
@@ -91,16 +90,15 @@ export class ReservationFormComponent implements OnInit {
 
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(5, '00');
+    return randomNum.padStart(3);
   }
 
   addReservationData(data: any) {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
     this.reservationForm.controls['booking_number'].setValue(data.booking_number);
-    this.reservationForm.controls['createdAt'].setValue(data.createdAt)
-    this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
-    this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
+    this.reservationForm.controls['reservation_type'].setValue(data.reservation_type.id);
+    this.reservationForm.controls['reservation_origin'].setValue(data.reservation_origin.id);
     this.reservationForm.controls['client'].setValue(data.client.id_client);
     this.reservationForm.controls['property'].setValue(data.property.id_property);
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);

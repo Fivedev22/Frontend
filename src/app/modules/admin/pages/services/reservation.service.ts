@@ -26,7 +26,7 @@ export class ReservationService {
   }
 
   updateReservation(id: number, reservation: IReservation): Observable<IReservation> {
-    return this.http.patch<IReservation>(`${this.RESERVATION_URL}update/${+id}`, reservation);
+    return this.http.patch<IReservation>(`${this.RESERVATION_URL}edit/${+id}`, reservation);
   }
 
   removeReservation(id: number): Observable<IReservation> {

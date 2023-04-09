@@ -43,7 +43,7 @@ export class ReservationPageComponent implements OnInit {
   deleteReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea eliminar la reserva?',
-      text: `${booking_number} ${check_in_date}`,
+      text: `Nro de Reserva: ${booking_number} - Fecha de Reserva: ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 
