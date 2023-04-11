@@ -56,7 +56,7 @@
           <button mat-icon-button color="warn" (click)="deleteClient(row.id_client, row.name, row.last_name)">
             <mat-icon>delete</mat-icon>
           </button>
-          <button  mat-icon-button color="basic" (click)="archiveClient(row.id_client, row.name, row.last_name, {{is_active: true }})">
+          <button mat-icon-button color="basic" (click)="archiveClient(row.id_client, row.name, row.last_name, row.is_active)">
             <mat-icon>archive</mat-icon>
           </button>
         </td>
