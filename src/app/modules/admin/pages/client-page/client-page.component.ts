@@ -74,7 +74,7 @@ export class ClientPageComponent implements OnInit {
     })
   }
 
-  archiveClient(id: number, name: string, last_name: string, client: IClient) {
+  archiveClient(id: number, name: string, last_name: string, is_active: IClient) {
     Swal.fire({
       title: '¿Desea archivar el cliente?',
       text: `${name} ${last_name}`,
@@ -86,7 +86,7 @@ export class ClientPageComponent implements OnInit {
 
     }).then((result) => {
       if (result.isConfirmed) {
-        this.clientService.archiveClient(+id, client)
+        this.clientService.archiveClient(+id, is_active)
           .subscribe({
             next: (res) => {
               Swal.fire({

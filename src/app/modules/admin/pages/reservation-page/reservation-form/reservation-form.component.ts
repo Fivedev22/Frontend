@@ -5,12 +5,13 @@ import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { IReservationOrigin } from '../../services/interfaces/reservation_origin.interface';
 import { IClient } from '../../services/interfaces/client.interface';
 import { IProperty } from '../../services/interfaces/property.interface';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ReservationService } from '../../services/reservation.service';
 import { ClientService } from '../../services/client-page.service';
 import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
+import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
 
 @Component({
   selector: 'app-reservation-form',
@@ -19,14 +20,14 @@ import { ReservationOriginService } from '../../services/reservation_origin.serv
 })
 export class ReservationFormComponent implements OnInit {
 
-  reservation_types!: IReservationType[];
-  reservation_origins!: IReservationOrigin[];
+  booking_types!: IReservationType[];
+  booking_origins!: IReservationOrigin[];
   clients!: IClient[];
   properties!: IProperty[];
 
 
   reservationForm!: FormGroup;
-
+  precioReserva!: number;
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -39,6 +40,7 @@ export class ReservationFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private reservationData: any,
 
     private formBuilder: FormBuilder,
+    private readonly dialog: MatDialog,
 
     private reservationService: ReservationService,
     private clientService: ClientService,
@@ -69,8 +71,8 @@ export class ReservationFormComponent implements OnInit {
   initForm(): FormGroup {
     return this.formBuilder.group({
       booking_number: [this.generateRandomNumber()],
-      reservation_type: ['', [Validators.required]],
-      reservation_origin: ['',[Validators.required]],
+      booking_type: ['', [Validators.required]],
+      booking_origin: ['',[Validators.required]],
       client: ['', [Validators.required,]],
       property: ['', [Validators.required]],
       adults_number: ['', [Validators.required]],
@@ -83,7 +85,7 @@ export class ReservationFormComponent implements OnInit {
       starting_price: ['', [Validators.required]],
       discount: [''],
       deposit_amount: ['', [Validators.required]],
-      estimated_amount_deposit: ['', [Validators.required]],
+      estimated_amount_deposit: [20000],
       booking_amount: ['', [Validators.required]],
     });
   }
@@ -97,8 +99,8 @@ export class ReservationFormComponent implements OnInit {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
     this.reservationForm.controls['booking_number'].setValue(data.booking_number);
-    this.reservationForm.controls['reservation_type'].setValue(data.reservation_type.id);
-    this.reservationForm.controls['reservation_origin'].setValue(data.reservation_origin.id);
+    this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
+    this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
     this.reservationForm.controls['client'].setValue(data.client.id_client);
     this.reservationForm.controls['property'].setValue(data.property.id_property);
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);
@@ -114,6 +116,16 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['estimated_amount_deposit'].setValue(data.estimated_amount_deposit);
     this.reservationForm.controls['booking_amount'].setValue(data.booking_amount);
   }
+
+  calcularPrecioReserva() {
+    const montoInicial = Number(this.reservationForm.controls['starting_price'].value);
+    const porcentajeDescuento = Number(this.reservationForm.controls['discount'].value);
+    const descuento = montoInicial * (porcentajeDescuento / 100);
+    const montoConDescuento = montoInicial - descuento;
+    const montoSenia = Number(this.reservationForm.controls['deposit_amount'].value);
+     this.precioReserva = montoConDescuento - montoSenia;
+  }
+
 
   sendReservation() {
     if (!this.reservationData) this.createReservation();
@@ -156,13 +168,13 @@ export class ReservationFormComponent implements OnInit {
 
   findAllReservationTypes() {
     this.reservationTypeService.findAll().subscribe(data => {
-      this.reservation_types = data;
+      this.booking_types = data;
     });
   }
 
   findAllReservationOrigin() {
     this.reservationOriginService.findAll().subscribe(data => {
-      this.reservation_origins = data;
+      this.booking_origins = data;
     });
   }
 
@@ -176,6 +188,15 @@ export class ReservationFormComponent implements OnInit {
     this.propertyService.findAllProperties().subscribe(data => {
       this.properties = data;
     });
+  }
+
+  openFormCreateClient() {
+    this.dialog.open(ClientFormComponent, { width: '800px', disableClose: true }).afterClosed()
+      .subscribe(val => {
+        if (val === 'save') {
+          this.reservationService.findAllReservations();
+        }
+      });
   }
 
 }

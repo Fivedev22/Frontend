@@ -18,12 +18,12 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Reserva</mat-label>
-                    <mat-select formControlName="reservation_type" placeholder="Seleccione...">
-                        <mat-option *ngFor="let reservation_type of reservation_types" [value]="reservation_type.id">
-                            {{reservation_type.booking_type_name}}</mat-option>
+                    <mat-select formControlName="booking_type" placeholder="Seleccione...">
+                        <mat-option *ngFor="let booking_type of booking_types" [value]="booking_type.id">
+                            {{booking_type.booking_type_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('reservation_type','required')">
+                    <mat-error align=" end" *ngIf="hasError('booking_type','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
@@ -32,12 +32,12 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Procedencia de Reserva</mat-label>
-                    <mat-select formControlName="reservation_origin" placeholder="Seleccione...">
-                        <mat-option *ngFor="let reservation_origin of reservation_origins" [value]="reservation_origin.id">
-                            {{reservation_origin.origin_name}}</mat-option>
+                    <mat-select formControlName="booking_origin" placeholder="Seleccione...">
+                        <mat-option *ngFor="let booking_origin of booking_origins" [value]="booking_origin.id">
+                            {{booking_origin.origin_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('reservation_origin','required')">
+                    <mat-error align=" end" *ngIf="hasError('booking_origin','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
@@ -55,6 +55,9 @@
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
+                <button mat-icon-button (click)="openFormCreateClient()">
+                    <mat-icon>add</mat-icon>
+                  </button>
             </mat-grid-tile>
 
             <mat-grid-tile>
@@ -176,18 +179,14 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Monto Estimado de Seña</mat-label>
-                    <input formControlName="estimated_amount_deposit" matInput placeholder="Monto estimado de seña" type="number">
-                    <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('estimated_amount_deposit','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
+                    <input formControlName="estimated_amount_deposit" matInput placeholder="Monto estimado de seña" type="number" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Monto de Reserva</mat-label>
-                    <input formControlName="booking_amount" matInput placeholder="Monto Total" type="number">
+                    <input formControlName="booking_amount" matInput placeholder="" type="number">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('booking_amount','required')">
                         <strong>Campo requerido</strong>

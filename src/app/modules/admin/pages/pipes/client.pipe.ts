@@ -6,7 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ClientPipe implements PipeTransform {
 
   transform(value: any, ...args: any[]): any {
-    return value === null ? "" : value.name;
+    if (value === null) {
+      return { firstName: "", lastName: "" };
+    } else {
+      return { firstName: value.name, lastName: value.last_name };
+    }
   }
 
 }
