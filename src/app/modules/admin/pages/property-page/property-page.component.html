@@ -48,8 +48,11 @@
           <button mat-icon-button color="basic" (click)="openFormEditProperty(row)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteProperty(row.id_client, row.reference_number, row.property_name)">
+          <button mat-icon-button color="warn" (click)="deleteProperty(row.id_property, row.reference_number, row.property_name)">
             <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="basic" (click)="archiveProperty(row.id_property,row.reference_number, row.property_name)">
+            <mat-icon>archive</mat-icon>
           </button>
         </td>
       </ng-container>

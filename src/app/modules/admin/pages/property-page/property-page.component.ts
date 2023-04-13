@@ -75,6 +75,72 @@ export class PropertyPageComponent implements OnInit {
     })
   }
 
+  archiveProperty(id: number, reference_number: number, property_name: string) {
+    Swal.fire({
+      title: '¿Desea archivar la propiedad?',
+      text: `Nro de Referencia: ${reference_number} - Nombre/Numeración: ${property_name}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Archivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.propertyService.archiveProperty(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Propiedad archivada correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllProperties();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
+  unarchiveProperty(id: number, reference_number: number, property_name: string) {
+    Swal.fire({
+      title: '¿Desea desarchivar la propiedad?',
+      text: `Nro de Referencia: ${reference_number} - Nombre/Numeración: ${property_name}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Desarchivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.propertyService.unarchiveProperty(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Propiedad desarchivada correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllProperties();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

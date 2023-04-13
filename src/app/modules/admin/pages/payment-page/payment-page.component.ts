@@ -40,6 +40,14 @@ export class PaymentPageComponent  {
     })
   }
 
+  findAllArchived() {
+    this.paymentService.findAllArchived().subscribe(data => {
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+
   deletePayment(id: number, payment_number: number, payment_amount_total: number) {
     Swal.fire({
       title: '¿Desea eliminar el pago?',
@@ -63,6 +71,72 @@ export class PaymentPageComponent  {
                 timer: 1800
               }).then(() => {
                 this.findAllPayments();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
+  archivePayment(id: number, payment_number: number, payment_amount_total: number) {
+    Swal.fire({
+      title: '¿Desea archivar el cobro?',
+      text: `Cobro Nro: ${payment_number} - Monto Total: ${payment_amount_total}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Archivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.paymentService.archivePayment(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Cobro archivado correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllPayments();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
+  unarchivePayment(id: number, payment_number: number, payment_amount_total: number) {
+    Swal.fire({
+      title: '¿Desea desarchivar el cobro?',
+      text: `Cobro Nro: ${payment_number} - Monto Total: ${payment_amount_total}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Desarchivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.paymentService.unarchivePayment(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Cobro desarchivado correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllArchived();
               })
             },
             error(e) {

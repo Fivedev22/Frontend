@@ -40,10 +40,18 @@ export class ReservationPageComponent implements OnInit {
     })
   }
 
+  findAllArchived() {
+    this.reservationService.findAllReservationsArchived().subscribe(data => {
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+
   deleteReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea eliminar la reserva?',
-      text: `Nro de Reserva: ${booking_number} - Fecha de Reserva: ${check_in_date}`,
+      text: `Reserva Nro: ${booking_number} - Check-in: ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 
@@ -73,6 +81,71 @@ export class ReservationPageComponent implements OnInit {
     })
   }
 
+  archiveReservation(id: number, booking_number: number, check_in_date: Date) {
+    Swal.fire({
+      title: '¿Desea archivar la reserva?',
+      text: `Reserva Nro: ${booking_number} - Fecha Check-in: ${check_in_date}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Archivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reservationService.archiveReservation(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Reserva archivada correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllReservations();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
+  unarchiveReservation(id: number, booking_number: number, check_in_date: Date) {
+    Swal.fire({
+      title: '¿Desea desarchivar la reserva?',
+      text: `Reserva Nro: ${booking_number} - Check-in: ${check_in_date}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Desarchivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reservationService.unarchiveReservation(+id)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Reserva desarchivada correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllArchived();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

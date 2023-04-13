@@ -17,8 +17,16 @@ export class ReservationService {
     return this.http.get<IReservation[]>(this.RESERVATION_URL);
   }
 
+  findAllReservationsArchived(): Observable<IReservation[]> {
+    return this.http.get<IReservation[]>(`${this.RESERVATION_URL}archived`);
+  }
+
   findOneReservation(id: number): Observable<IReservation> {
     return this.http.get<IReservation>(`${this.RESERVATION_URL}${+id}`)
+  }
+
+  findOneReservationArchived(id: number): Observable<IReservation> {
+    return this.http.get<IReservation>(`${this.RESERVATION_URL}archived/${+id}`)
   }
 
   createReservation(reservation: IReservation): Observable<IReservation> {
@@ -33,12 +41,12 @@ export class ReservationService {
     return this.http.delete<IReservation>(`${this.RESERVATION_URL}remove/${+id}`);
   }
 
-  archiveReservation(id: number, reservation: IReservation): Observable<IReservation> {
-    return this.http.patch<IReservation>(`${this.RESERVATION_URL}archive/${+id}`, reservation)
+  archiveReservation(id: number): Observable<IReservation> {
+    return this.http.patch<IReservation>(`${this.RESERVATION_URL}archive/${+id}`, null)
   }
 
-  unarchiveReservation(id: number, reservation: IReservation): Observable<IReservation> {
-    return this.http.patch<IReservation>(`${this.RESERVATION_URL}unarchive/${+id}`, reservation)
+  unarchiveReservation(id: number): Observable<IReservation> {
+    return this.http.patch<IReservation>(`${this.RESERVATION_URL}unarchive/${+id}`, null)
   }
 
   searchByNumber(reservation_number: number): Observable<IReservation> {

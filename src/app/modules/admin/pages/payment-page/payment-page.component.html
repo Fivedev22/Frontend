@@ -46,6 +46,9 @@
           <button mat-icon-button color="warn" (click)="deletePayment(row.id_payment, row.payment_number, row.payment_amount_total)">
             <mat-icon>delete</mat-icon>
           </button>
+          <button mat-icon-button color="warn" (click)="archivePayment(row.id_payment, row.payment_number, row.payment_amount_total)">
+            <mat-icon>archive</mat-icon>
+          </button>
         </td>
       </ng-container>
 

@@ -17,8 +17,16 @@ export class PropertyService {
     return this.http.get<IProperty[]>(this.PROPERTY_URL);
   }
 
+  findAllArchived(): Observable<IProperty[]>{
+    return this.http.get<IProperty[]>(`${this.PROPERTY_URL}archived`);
+  }
+
   findOneProperty(id: number): Observable<IProperty> {
     return this.http.get<IProperty>(`${this.PROPERTY_URL}${+id}`)
+  }
+ 
+  findOneArchived(id: number): Observable<IProperty> {
+    return this.http.get<IProperty>(`${this.PROPERTY_URL}archived/${+id}`)
   }
 
   createProperty(property: IProperty): Observable<IProperty> {
@@ -33,12 +41,12 @@ export class PropertyService {
     return this.http.delete<IProperty>(`${this.PROPERTY_URL}remove/${+id}`);
   }
 
-  archiveProperty(id: number, property: IProperty): Observable<IProperty> {
-    return this.http.patch<IProperty>(`${this.PROPERTY_URL}archive/${+id}`, property)
+  archiveProperty(id: number): Observable<IProperty> {
+    return this.http.patch<IProperty>(`${this.PROPERTY_URL}archive/${+id}`, null)
   }
 
-  unarchiveProperty(id: number, property: IProperty): Observable<IProperty> {
-    return this.http.patch<IProperty>(`${this.PROPERTY_URL}unarchive/${+id}`, property)
+  unarchiveProperty(id: number): Observable<IProperty> {
+    return this.http.patch<IProperty>(`${this.PROPERTY_URL}unarchive/${+id}`, null)
   }
 
   searchByReference(reference_number: number): Observable<IProperty> {

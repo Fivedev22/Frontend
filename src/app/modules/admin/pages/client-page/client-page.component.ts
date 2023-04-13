@@ -41,6 +41,15 @@ export class ClientPageComponent implements OnInit {
     })
   }
 
+  findAllArchived() {
+    this.clientService.findAllArchived().subscribe(data => {
+      this.dataSource = new MatTableDataSource(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    })
+  }
+  
+
   deleteClient(id: number, name: string, last_name: string) {
     Swal.fire({
       title: '¿Desea eliminar el cliente?',
@@ -74,7 +83,7 @@ export class ClientPageComponent implements OnInit {
     })
   }
 
-  archiveClient(id: number, name: string, last_name: string, is_active: IClient) {
+  archiveClient(id_client: number, name: string, last_name: string) {
     Swal.fire({
       title: '¿Desea archivar el cliente?',
       text: `${name} ${last_name}`,
@@ -86,7 +95,7 @@ export class ClientPageComponent implements OnInit {
 
     }).then((result) => {
       if (result.isConfirmed) {
-        this.clientService.archiveClient(+id, is_active)
+        this.clientService.archiveClient(+id_client)
           .subscribe({
             next: (res) => {
               Swal.fire({
@@ -97,6 +106,39 @@ export class ClientPageComponent implements OnInit {
                 timer: 1800
               }).then(() => {
                 this.findAllClients();
+              })
+            },
+            error(e) {
+              alert(e)
+            },
+          })
+      }
+    })
+  }
+
+  unarchiveClient(id_client: number, name: string, last_name: string) {
+    Swal.fire({
+      title: '¿Desea desarchivar el cliente?',
+      text: `${name} ${last_name}`,
+      icon: 'error',
+      showCancelButton: true,
+
+      confirmButtonText: 'Desarchivar',
+      cancelButtonText: 'Cancelar',
+
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clientService.unarchiveClient(+id_client)
+          .subscribe({
+            next: (res) => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Cliente desarchivado correctamente',
+                showConfirmButton: false,
+                timer: 1800
+              }).then(() => {
+                this.findAllArchived();
               })
             },
             error(e) {

@@ -54,7 +54,7 @@
           <button mat-icon-button color="warn" (click)="deleteReservation(row.id_booking, row.booking_number, row.check_in_date)">
             <mat-icon>delete</mat-icon>
           </button>
-          <button  mat-icon-button color="basic">
+          <button  mat-icon-button color="basic" (click)="archiveReservation(row.id_booking, row.booking_number, row.check_in_date)">
             <mat-icon>archive</mat-icon>
           </button>
         </td>

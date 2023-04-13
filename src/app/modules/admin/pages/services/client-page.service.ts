@@ -21,6 +21,14 @@ export class ClientService {
     return this.http.get<IClient>(`${this.CLIENT_URL}${+id}`)
   }
 
+  findAllArchived(): Observable<IClient[]> {
+    return this.http.get<IClient[]>(`${this.CLIENT_URL}archived`);
+  }
+
+  findOneArchived(id: number): Observable<IClient> {
+    return this.http.get<IClient>(`${this.CLIENT_URL}archived/${+id}`)
+  }
+
   createClient(client: IClient): Observable<IClient> {
     return this.http.post<IClient>(`${this.CLIENT_URL}create`, client);
   }
@@ -33,12 +41,12 @@ export class ClientService {
     return this.http.delete<IClient>(`${this.CLIENT_URL}remove/${+id}`);
   }
 
-  archiveClient(id: number, client: IClient): Observable<IClient> {
-    return this.http.patch<IClient>(`${this.CLIENT_URL}archive/${+id}`, client)
+  archiveClient(id: number): Observable<IClient> {
+    return this.http.patch<IClient>(`${this.CLIENT_URL}archive/${+id}`, null)
   }
 
-  unarchiveClient(id: number, client: IClient): Observable<IClient> {
-    return this.http.patch<IClient>(`${this.CLIENT_URL}unarchive/${+id}`, client)
+  unarchiveClient(id: number): Observable<IClient> {
+    return this.http.patch<IClient>(`${this.CLIENT_URL}unarchive/${+id}`, null)
   }
 
   searchByDocument(document_number: string): Observable<IClient> {

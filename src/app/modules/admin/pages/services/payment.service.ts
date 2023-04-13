@@ -17,8 +17,16 @@ export class PaymentService {
     return this.http.get<IPayment[]>(this.PAYMENT_URL);
   }
 
+  findAllArchived(): Observable<IPayment[]> {
+    return this.http.get<IPayment[]>(`${this.PAYMENT_URL}archived`);
+  }
+
   findOnePayment(id: number): Observable<IPayment> {
     return this.http.get<IPayment>(`${this.PAYMENT_URL}${+id}`)
+  }
+
+  findOneArchived(id: number): Observable<IPayment> {
+    return this.http.get<IPayment>(`${this.PAYMENT_URL}archived/${+id}`)
   }
 
   createPayment(payment: IPayment): Observable<IPayment> {
@@ -33,12 +41,12 @@ export class PaymentService {
     return this.http.delete<IPayment>(`${this.PAYMENT_URL}remove/${+id}`);
   }
 
-  archivePayment(id: number, payment: IPayment): Observable<IPayment> {
-    return this.http.patch<IPayment>(`${this.PAYMENT_URL}archive/${+id}`, payment)
+  archivePayment(id: number): Observable<IPayment> {
+    return this.http.patch<IPayment>(`${this.PAYMENT_URL}archive/${+id}`, null)
   }
 
-  unarchivePayment(id: number, payment: IPayment): Observable<IPayment> {
-    return this.http.patch<IPayment>(`${this.PAYMENT_URL}unarchive/${+id}`, payment)
+  unarchivePayment(id: number): Observable<IPayment> {
+    return this.http.patch<IPayment>(`${this.PAYMENT_URL}unarchive/${+id}`, null)
   }
 
   searchByNumber(payment_number: number): Observable<IPayment> {
