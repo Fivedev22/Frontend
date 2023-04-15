@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ClientPageComponent } from './pages/client-page/client-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
@@ -63,7 +63,8 @@ import { BookingPipe } from './pages/pipes/booking.pipe';
     SharedModule,
     ReactiveFormsModule,
     SweetAlert2Module.forRoot(),
-    RouterModule
+    RouterModule,
+    FormsModule,
   ],
 })
 export class AdminModule {}

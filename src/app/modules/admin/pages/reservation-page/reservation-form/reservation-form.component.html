@@ -11,7 +11,14 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Reserva</mat-label>
-                    <input formControlName="booking_number" matInput placeholder="" type="number" readonly>
+                    <input formControlName="booking_number" matInput placeholder="" type="number">
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de Reserva</mat-label>
+                    <input formControlName="createdAt" matInput placeholder="" type="date" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -46,19 +53,22 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
-                    <mat-select formControlName="client" placeholder="Seleccione...">
-                        <mat-option *ngFor="let client of clients" [value]="client.id_client">
-                            {{client.name}} {{client.last_name}}</mat-option>
-                    </mat-select>
+                    <input matInput type="text" formControlName="client" placeholder="Buscar..." (input)="filterClients($any(event.target).value)">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('client','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
+                <ul>
+                    <li *ngFor="let client of filteredClients">
+                        {{client.document_number}}
+                    </li>
+                </ul>
                 <button mat-icon-button (click)="openFormCreateClient()">
                     <mat-icon>add</mat-icon>
                   </button>
             </mat-grid-tile>
+            
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
@@ -106,23 +116,29 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Llegada</mat-label>
-                    <input formControlName="check_in_date" matInput placeholder="" type="date">
+                    <input formControlName="check_in_date" matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker></mat-datepicker>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('check_in_date','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
-                </mat-form-field>
+                        <mat-error align=" end" *ngIf="hasError('check_in_date','required')">
+                            <strong>Campo requerido</strong>
+                        </mat-error>
+                  </mat-form-field>
             </mat-grid-tile>
-
+            
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Salida</mat-label>
-                    <input formControlName="check_out_date" matInput placeholder="" type="date">
+                    <input formControlName="check_out_date" matInput [matDatepicker]="picker2">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker2></mat-datepicker>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('check_out_date','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
-                </mat-form-field>
+                        <mat-error align=" end" *ngIf="hasError('check_out_date','required')">
+                            <strong>Campo requerido</strong>
+                        </mat-error>
+                  </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>

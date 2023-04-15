@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { IReservationType } from '../../services/interfaces/reservation_type.interface';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { IReservationOrigin } from '../../services/interfaces/reservation_origin.interface';
 import { IClient } from '../../services/interfaces/client.interface';
@@ -24,10 +24,12 @@ export class ReservationFormComponent implements OnInit {
   booking_origins!: IReservationOrigin[];
   clients!: IClient[];
   properties!: IProperty[];
+  filteredClients: IClient[] = [];
 
 
   reservationForm!: FormGroup;
   precioReserva!: number;
+  
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -35,6 +37,7 @@ export class ReservationFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
+event: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private reservationData: any,
@@ -47,6 +50,7 @@ export class ReservationFormComponent implements OnInit {
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
+    
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
@@ -68,9 +72,18 @@ export class ReservationFormComponent implements OnInit {
     return this.reservationForm.controls[controlName].hasError(errorName);
   }
 
+  filterClients(searchValue:string): void {
+    this.filteredClients = this.clients.filter(client =>{
+      client.document_number.includes(searchValue);
+    })
+
+  }
+
+
   initForm(): FormGroup {
     return this.formBuilder.group({
-      booking_number: [this.generateRandomNumber()],
+      booking_number: [''],
+      createdAt: [''],
       booking_type: ['', [Validators.required]],
       booking_origin: ['',[Validators.required]],
       client: ['', [Validators.required,]],
@@ -99,6 +112,7 @@ export class ReservationFormComponent implements OnInit {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
     this.reservationForm.controls['booking_number'].setValue(data.booking_number);
+    this.reservationForm.controls['createdAt'].setValue(data.createdAt);
     this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
     this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
     this.reservationForm.controls['client'].setValue(data.client.id_client);
@@ -198,5 +212,4 @@ export class ReservationFormComponent implements OnInit {
         }
       });
   }
-
 }
