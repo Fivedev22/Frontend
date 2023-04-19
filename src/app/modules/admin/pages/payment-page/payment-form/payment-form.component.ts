@@ -26,9 +26,6 @@ export class PaymentFormComponent implements OnInit {
   payment_statuses!: IPaymentStatus[];
   payment_types!: IPaymentType[];
   reservations!: IReservation[];
-
-
-
   paymentForm!: FormGroup;
 
 
@@ -38,7 +35,6 @@ export class PaymentFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
-data: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private paymentData: any,
@@ -76,14 +72,13 @@ data: any;
   initForm(): FormGroup {
     return this.formBuilder.group({
       payment_number: [this.generateRandomNumber()],
-      createdAt: [''],
       booking: ['', [Validators.required]],
       client: ['', [Validators.required,]],
       property: ['', [Validators.required]],
       check_in_date: ['', [Validators.required]],
       check_out_date: ['', [Validators.required]],
       booking_amount: ['', [Validators.required]],
-      discount: [''],
+      booking_discount: [''],
       deposit_amount: ['', [Validators.required]],
       payment_amount_subtotal: ['', [Validators.required]],
       payment_amount_total: ['', [Validators.required]],
@@ -101,15 +96,14 @@ data: any;
     this.actionTitle = 'Modificar Cobro'
     this.actionButton = 'Actualizar'
     this.paymentForm.controls['payment_number'].setValue(data.payment_number);
-    this.paymentForm.controls['createdAt'].setValue(data.booking.createdAt)
     this.paymentForm.controls['booking'].setValue(data.booking.id_booking);
-    this.paymentForm.controls['client'].setValue(data.booking.id_client);
-    this.paymentForm.controls['property'].setValue(data.booking.id_property);
-    this.paymentForm.controls['check_in_date'].setValue(data.booking.check_in_date);
-    this.paymentForm.controls['check_out_date'].setValue(data.booking.check_out_date);
-    this.paymentForm.controls['booking_amount'].setValue(data.booking.booking_amount);
-    this.paymentForm.controls['discount'].setValue(data.booking.discount);
-    this.paymentForm.controls['deposit_amount'].setValue(data.booking.deposit_amount);
+    this.paymentForm.controls['client'].setValue(data.client.id_client);
+    this.paymentForm.controls['property'].setValue(data.property.id_property);
+    this.paymentForm.controls['check_in_date'].setValue(data.check_in_date);
+    this.paymentForm.controls['check_out_date'].setValue(data.check_out_date);
+    this.paymentForm.controls['booking_amount'].setValue(data.booking_amount);
+    this.paymentForm.controls['booking_discount'].setValue(data.booking_discount);
+    this.paymentForm.controls['deposit_amount'].setValue(data.deposit_amount);
     this.paymentForm.controls['payment_amount_subtotal'].setValue(data.payment_amount_subtotal);
     this.paymentForm.controls['payment_amount_total'].setValue(data.payment_amount_total);
     this.paymentForm.controls['payment_type'].setValue(data.payment_type.id);

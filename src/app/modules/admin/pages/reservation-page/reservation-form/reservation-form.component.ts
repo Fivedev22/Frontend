@@ -12,6 +12,8 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
+import { Observable, map, startWith } from 'rxjs';
+
 
 @Component({
   selector: 'app-reservation-form',
@@ -24,8 +26,6 @@ export class ReservationFormComponent implements OnInit {
   booking_origins!: IReservationOrigin[];
   clients!: IClient[];
   properties!: IProperty[];
-  filteredClients: IClient[] = [];
-
 
   reservationForm!: FormGroup;
   precioReserva!: number;
@@ -37,7 +37,6 @@ export class ReservationFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
-event: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private reservationData: any,
@@ -72,18 +71,10 @@ event: any;
     return this.reservationForm.controls[controlName].hasError(errorName);
   }
 
-  filterClients(searchValue:string): void {
-    this.filteredClients = this.clients.filter(client =>{
-      client.document_number.includes(searchValue);
-    })
-
-  }
-
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      booking_number: [''],
-      createdAt: [''],
+      booking_number: [this.generateRandomNumber()],
       booking_type: ['', [Validators.required]],
       booking_origin: ['',[Validators.required]],
       client: ['', [Validators.required,]],
@@ -105,14 +96,13 @@ event: any;
 
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(3);
+    return randomNum.padStart(6,'01');
   }
 
   addReservationData(data: any) {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
     this.reservationForm.controls['booking_number'].setValue(data.booking_number);
-    this.reservationForm.controls['createdAt'].setValue(data.createdAt);
     this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
     this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
     this.reservationForm.controls['client'].setValue(data.client.id_client);

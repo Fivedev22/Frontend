@@ -17,18 +17,8 @@
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
-                    <mat-label>Fecha de Cobro</mat-label>
-                    <input formControlName="createdAt" matInput placeholder="" type="date" readonly>
-                </mat-form-field>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <mat-form-field appearance="outline">
                     <mat-label>Número de Reserva</mat-label>
-                    <mat-select formControlName="booking" placeholder="Seleccione...">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.booking_number}}</mat-option>
-                    </mat-select>
+                    <input formControlName="booking" matInput placeholder="" type="number">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('booking','required')">
                         <strong>Campo requerido</strong>
@@ -41,8 +31,8 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
                     <mat-select formControlName="client" placeholder="Seleccione...">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.client}}</mat-option>
+                        <mat-option *ngFor="let client of clients" [value]="client.id_client">
+                            {{client.name}} {{client.last_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('client','required')">
@@ -56,8 +46,8 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Propiedad</mat-label>
                     <mat-select formControlName="property" placeholder="Seleccione...">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.property}}</mat-option>
+                        <mat-option *ngFor="let property of properties" [value]="property.id_property">
+                            {{property.property_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('property','required')">
@@ -69,39 +59,35 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Llegada</mat-label>
-                    <mat-select formControlName="check_in_date" placeholder="">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.check_in_date}}</mat-option>
-                    </mat-select>
+                    <input formControlName="check_in_date" matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker></mat-datepicker>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('check_in_date','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
-                </mat-form-field>
+                        <mat-error align=" end" *ngIf="hasError('check_in_date','required')">
+                            <strong>Campo requerido</strong>
+                        </mat-error>
+                  </mat-form-field>
             </mat-grid-tile>
-
             
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Salida</mat-label>
-                    <mat-select formControlName="check_out_date" placeholder="">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.check_out_date}}</mat-option>
-                    </mat-select>
+                    <input formControlName="check_out_date" matInput [matDatepicker]="picker2">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker touchUi #picker2></mat-datepicker>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('check_out_date','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
-                </mat-form-field>
+                        <mat-error align=" end" *ngIf="hasError('check_out_date','required')">
+                            <strong>Campo requerido</strong>
+                        </mat-error>
+                  </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Monto de Reserva</mat-label>
-                    <mat-select formControlName="booking_amount" placeholder="">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.booking_amount}}</mat-option>
-                    </mat-select>
+                    <input formControlName="booking_amount" matInput placeholder="" type="number">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('booking_amount','required')">
                         <strong>Campo requerido</strong>
@@ -112,24 +98,14 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Descuento de Reserva</mat-label>
-                    <mat-select formControlName="discount" placeholder="">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.discount}}</mat-option>
-                    </mat-select>
-                    <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('discount','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
+                    <input formControlName="booking_discount" matInput placeholder="" type="number">
                 </mat-form-field>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Monto de Seña</mat-label>
-                    <mat-select formControlName="deposit_amount" placeholder="">
-                        <mat-option *ngFor="let reservation of reservations" [value]="reservation.id_booking">
-                            {{reservation.deposit_amount}}</mat-option>
-                    </mat-select>
+                    <input formControlName="deposit_amount" matInput placeholder="" type="number">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('deposit_amount','required')">
                         <strong>Campo requerido</strong>
@@ -163,7 +139,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Forma de Pago</mat-label>
-                    <mat-select formControlName="payment_type" placeholder="">
+                    <mat-select formControlName="payment_type" placeholder="Seleccione...">
                         <mat-option *ngFor="let payment_type of payment_types" [value]="payment_type.id">
                             {{payment_type.payment_type_name}}</mat-option>
                     </mat-select>
@@ -177,7 +153,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Estado de Pago</mat-label>
-                    <mat-select formControlName="payment_status" placeholder="">
+                    <mat-select formControlName="payment_status" placeholder="Seleccione...">
                         <mat-option *ngFor="let payment_status of payment_statuses" [value]="payment_status.id_payment_status">
                             {{payment_status.payment_status_name}}</mat-option>
                     </mat-select>

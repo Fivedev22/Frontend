@@ -11,14 +11,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Reserva</mat-label>
-                    <input formControlName="booking_number" matInput placeholder="" type="number">
-                </mat-form-field>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <mat-form-field appearance="outline">
-                    <mat-label>Fecha de Reserva</mat-label>
-                    <input formControlName="createdAt" matInput placeholder="" type="date" readonly>
+                    <input formControlName="booking_number" matInput placeholder="" type="number" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -53,22 +46,19 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
-                    <input matInput type="text" formControlName="client" placeholder="Buscar..." (input)="filterClients($any(event.target).value)">
+                    <mat-select formControlName="client" placeholder="Buscar...">
+                        <mat-option *ngFor="let client of clients" [value]="client.id_client">
+                            {{client.name}} {{client.last_name}}</mat-option>
+                    </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('client','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
-                <ul>
-                    <li *ngFor="let client of filteredClients">
-                        {{client.document_number}}
-                    </li>
-                </ul>
                 <button mat-icon-button (click)="openFormCreateClient()">
                     <mat-icon>add</mat-icon>
                   </button>
             </mat-grid-tile>
-            
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
