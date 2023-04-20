@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { IProperty } from '../../services/interfaces/property.interface';
 import { IClient } from '../../services/interfaces/client.interface';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PaymentService } from '../../services/payment.service';
@@ -13,6 +13,8 @@ import { PaymentTypeService } from '../../services/payment_type.service';
 import { PaymentStatusService } from '../../services/payment_status.service';
 import { IReservation } from '../../services/interfaces/reservation.interface';
 import { ReservationService } from '../../services/reservation.service';
+import { Observable, map } from 'rxjs';
+import { IPayment } from '../../services/interfaces/payment.interface';
 
 @Component({
   selector: 'app-payment-form',
@@ -61,7 +63,7 @@ export class PaymentFormComponent implements OnInit {
     this.findAllPaymentStatuses();
 
     if (this.paymentData) {
-      this.addReservationData(this.paymentData);
+      this.addPaymentData(this.paymentData);
     }
   }
 
@@ -70,29 +72,41 @@ export class PaymentFormComponent implements OnInit {
   }
 
   initForm(): FormGroup {
+    var dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      payment_number: [this.generateRandomNumber()],
+      payment_number: [this.generateRandomNumber(), [Validators.required], this.validatePaymentNumber.bind(this)],
+      createdAt: [dateDay],
       booking: ['', [Validators.required]],
-      client: ['', [Validators.required,]],
+      client: ['', [Validators.required]],
       property: ['', [Validators.required]],
       check_in_date: ['', [Validators.required]],
       check_out_date: ['', [Validators.required]],
-      booking_amount: ['', [Validators.required]],
-      booking_discount: [''],
-      deposit_amount: ['', [Validators.required]],
-      payment_amount_subtotal: ['', [Validators.required]],
-      payment_amount_total: ['', [Validators.required]],
+      booking_amount: ['', [Validators.required, Validators.min(10000)]],
+      booking_discount: ['', [Validators.min(0)]],
+      deposit_amount: ['', [Validators.required, Validators.min(10000)]],
+      payment_amount_subtotal: ['', [Validators.required, Validators.min(0)]],
+      payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
-      payment_status: ['',[Validators.required]],
+      payment_status: ['', [Validators.required]],
     });
   }
+  
+  validatePaymentNumber(control: AbstractControl): Observable<ValidationErrors | null> {
+    const paymentNumber = control.value;
+    return this.paymentService.searchByNumber(paymentNumber).pipe(
+      map((payment: IPayment) => {
+        return payment ? { paymentNumberTaken: true } : null;
+      })
+    );
+  }
+  
 
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
     return randomNum.padStart(4, '1');
   }
 
-  addReservationData(data: any) {
+  addPaymentData(data: any) {
     this.actionTitle = 'Modificar Cobro'
     this.actionButton = 'Actualizar'
     this.paymentForm.controls['payment_number'].setValue(data.payment_number);

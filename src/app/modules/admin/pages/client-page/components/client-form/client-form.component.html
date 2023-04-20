@@ -14,14 +14,13 @@
                     <mat-label>Nombre</mat-label>
                     <input formControlName="name" matInput placeholder="Nombre" type="text">
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align="end" *ngIf="hasError('name','pattern')">
-                        <strong>Este campo no acepta numeros o caracteres especiales</strong>
-                    </mat-error>
                     <mat-error align=" end" *ngIf="hasError('name','required')"><strong>Campo requerido</strong>
                     </mat-error>
-                    <mat-error align="end" *ngIf="hasError('name','minlength')">Minimo <strong>3 caracteres</strong>
+                    <mat-error align="end" *ngIf="hasError('name','minlength')">Mínimo <strong>3 caracteres</strong>
                     </mat-error>
-                    <mat-error align="end" *ngIf="hasError('name','maxlength')">Maximo <strong>20 caracteres</strong>
+                    <mat-error align="end" *ngIf="hasError('name','maxlength')">Máximo <strong>20 caracteres</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('name','pattern')"><strong>El dato ingresado es invalido</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
@@ -31,15 +30,14 @@
                     <mat-label>Apellido</mat-label>
                     <input formControlName="last_name" matInput placeholder="Apellido" type="text">
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align="end" *ngIf="hasError('last_name','pattern')">
-                        <strong>Este campo no acepta numeros o caracteres especiales</strong>
+                    <mat-error align="end" *ngIf="hasError('last_name','pattern')"><strong>El dato ingresado es invalido</strong>
                     </mat-error>
-                    <mat-error align=" end" *ngIf="hasError('last_name','required')"><strong>Campo requerido</strong>
+                    <mat-error align="end" *ngIf="hasError('last_name','required')"><strong>Campo requerido</strong>
                     </mat-error>
-                    <mat-error align="end" *ngIf="hasError('last_name','minlength')">Minimo <strong>3
+                    <mat-error align="end" *ngIf="hasError('last_name','minlength')">Mínimo <strong>3
                             caracteres</strong>
                     </mat-error>
-                    <mat-error align="end" *ngIf="hasError('last_name','maxlength')">Maximo <strong>20
+                    <mat-error align="end" *ngIf="hasError('last_name','maxlength')">Máximo <strong>20
                             caracteres</strong>
                     </mat-error>
                 </mat-form-field>
@@ -51,7 +49,7 @@
                     <input formControlName="email" matInput placeholder="Email" type="email">
                     <mat-hint align="end">Campo requerido - Ejemplo: ejemplo@gmail.com</mat-hint>
                     <mat-error align="end" *ngIf="hasError('email','pattern')">
-                        <strong>Este campo no acepta el formato de email</strong>
+                        <strong>El formato de email ingresado es invalido</strong>
                     </mat-error>
                     <mat-error align=" end" *ngIf="hasError('email','required')"><strong>Campo requerido</strong>
                     </mat-error>
@@ -70,10 +68,10 @@
                         <strong>Campo requerido</strong>
                     </mat-error>
                     <mat-error align="end" *ngIf="hasError('phone_number','minlength')">
-                        <strong>Minimo 10 caracteres</strong>
+                        <strong>Mínimo 10 caracteres</strong>
                     </mat-error>
                     <mat-error align="end" *ngIf="hasError('phone_number','maxlength')">
-                        <strong>Maximo 20 caracteres</strong>
+                        <strong>Máximo 20 caracteres</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
@@ -114,10 +112,10 @@
                         <strong>Campo requerido</strong>
                     </mat-error>
                     <mat-error align="end" *ngIf="hasError('document_number','minlength')">
-                        <strong>Minimo 8 caracteres</strong>
+                        <strong>Mínimo 8 caracteres</strong>
                     </mat-error>
                     <mat-error align="end" *ngIf="hasError('document_number','maxlength')">
-                        <strong>Maximo 20 caracteres</strong>
+                        <strong>Máximo 20 caracteres</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>

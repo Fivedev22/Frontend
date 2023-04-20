@@ -23,6 +23,10 @@
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('property_name','required')"><strong>Campo requerido</strong>
                     </mat-error>
+                    <mat-error align="end" *ngIf="hasError('property_name','minlength')">Mínimo <strong>5 caracteres</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('property_name','maxlength')">Maximo <strong>50 caracteres</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -34,7 +38,7 @@
                             {{propertyType.property_type_name}}</mat-option>
                     </mat-select>
                     <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('property_name','required')"><strong>Campo requerido</strong>
+                    <mat-error align=" end" *ngIf="hasError('property_type','required')"><strong>Campo requerido</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
@@ -43,6 +47,10 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Metros Cuadrados</mat-label>
                     <input formControlName="square_meter" matInput placeholder="Ingrese los metros cuadrados" type="text">
+                    <mat-error align="end" *ngIf="hasError('square_meter','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('square_meter','maxlength')">Máximo <strong>20 caracteres</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -52,6 +60,12 @@
                     <input formControlName="street" matInput placeholder="Ingrese la calle" type="text">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('street','required')"><strong>Campo requerido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('street','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('street','minlength')">Minimo <strong>3 caracteres</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('street','maxlength')">Máximo <strong>50 caracteres</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
@@ -63,6 +77,10 @@
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('street_number','required')"><strong>Campo requerido</strong>
                     </mat-error>
+                    <mat-error align="end" *ngIf="hasError('street_number','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('street_number','maxlength')">Máximo <strong>4 caracteres</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -70,6 +88,10 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Piso</mat-label>
                     <input formControlName="building_floor" matInput placeholder="Ingrese el piso" type="text">
+                    <mat-error align="end" *ngIf="hasError('building_floor','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('building_floor','maxlength')">Máximo <strong>10 caracteres</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
             
@@ -94,6 +116,12 @@
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('town','required')"><strong>Campo requerido</strong>
                     </mat-error>
+                    <mat-error align="end" *ngIf="hasError('town','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('town','minlength')">Mínimo <strong>3 caracteres</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('town','maxlength')">Máximo <strong>30 caracteres</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -103,6 +131,12 @@
                     <input formControlName="district" matInput placeholder="Ingrese el barrio" type="text">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('district','required')"><strong>Campo requerido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('district','pattern')"><strong>El dato ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('district','minlength')">Mínimo <strong>3 caracteres</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('district','maxlength')">Máximo <strong>30 caracteres</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
@@ -157,6 +191,10 @@
                     <mat-error align=" end" *ngIf="hasError('rooms_number','required')">
                         <strong>Campo requerido</strong>
                     </mat-error>
+                    <mat-error align="end" *ngIf="hasError('rooms_number','pattern')"><strong>El número ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('rooms_number','minlength')">Mínimo <strong>0 como valor</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -167,6 +205,10 @@
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('bathrooms_number','required')">
                         <strong>Campo requerido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('bathrooms_number','pattern')"><strong>El número ingresado es invalido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('bathrooms_number','minlength')">Mínimo <strong>0 como valor</strong>
                     </mat-error>
                 </mat-form-field>
             </mat-grid-tile>

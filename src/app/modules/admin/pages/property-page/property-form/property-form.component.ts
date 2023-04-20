@@ -73,20 +73,20 @@ export class PropertyFormComponent implements OnInit {
   initForm(): FormGroup {
     return this.formBuilder.group({
       reference_number: [this.generateRandomNumber()],
-      property_name: ['', [Validators.required]],
+      property_name: ['', [Validators.required, Validators.minLength(5),Validators.maxLength(50)]],
       property_type: ['', [Validators.required]],
-      square_meter: [''],
-      street: ['', [Validators.required,]],
-      street_number: ['', [Validators.required]],
-      building_floor: [''],
+      square_meter: ['', [Validators.maxLength(20),Validators.pattern('^[0-9]+(\.[0-9]{1,2})?$')]],
+      street: ['', [Validators.required,Validators.minLength(3), Validators.maxLength(50), Validators.pattern('^[a-zA-ZáéíóúñÁÉÍÓÚÑ ]+$')]],
+      street_number: ['', [Validators.required, Validators.maxLength(4), Validators.pattern('^[0-9]+$')]],
+      building_floor: ['', [Validators.maxLength(10),Validators.pattern('^[a-zA-Z0-9 ]+$')]],
       province: ['', [Validators.required]],
-      town: ['', [Validators.required]],
-      district: ['', [Validators.required]],
+      town: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30),Validators.pattern('^[a-zA-ZáéíóúñÁÉÍÓÚÑ ]+$')]],
+      district: ['', [Validators.required,Validators.minLength(3), Validators.maxLength(30),Validators.pattern('^[a-zA-ZáéíóúñÁÉÍÓÚÑ ]+$')]],
       daily_rent: ['', [Validators.required]],
       monthly_rent: ['', [Validators.required]],
       annual_rent: ['', [Validators.required]],
-      rooms_number: ['', [Validators.required]],
-      bathrooms_number: ['', [Validators.required]],
+      rooms_number: ['', [Validators.required, Validators.min(0),,Validators.pattern('^[0-9]+$')]],
+      bathrooms_number: ['', [Validators.required, Validators.min(0),Validators.pattern('^[0-9]+$')]],
       internet: ['', [Validators.required]],
       pool: ['', [Validators.required]],
       kitchen: ['', [Validators.required]],
@@ -98,7 +98,8 @@ export class PropertyFormComponent implements OnInit {
       availability_status: ['', [Validators.required]],
       activity_status: ['', [Validators.required]],
     });
-  }
+ }
+
 
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
