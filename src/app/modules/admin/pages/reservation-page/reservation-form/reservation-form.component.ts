@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { IReservationType } from '../../services/interfaces/reservation_type.interface';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { IReservationOrigin } from '../../services/interfaces/reservation_origin.interface';
 import { IClient } from '../../services/interfaces/client.interface';
@@ -12,9 +12,7 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
-import { Observable, map } from 'rxjs';
-import { IReservation } from '../../services/interfaces/reservation.interface';
-import { DatePipe } from '@angular/common';
+
 
 
 @Component({
@@ -28,10 +26,9 @@ export class ReservationFormComponent implements OnInit {
   booking_origins!: IReservationOrigin[];
   clients!: IClient[];
   properties!: IProperty[];
-
   reservationForm!: FormGroup;
   precioReserva!: number;
-
+  counter: number = 1;
   
 
   actionTitle: string = 'Registrar Reserva'
@@ -74,10 +71,12 @@ export class ReservationFormComponent implements OnInit {
     return this.reservationForm.controls[controlName].hasError(errorName);
   }
 
+
   initForm(): FormGroup {
     var dateDay = new Date().toLocaleDateString();
+    this.counter++;
     return this.formBuilder.group({
-      booking_number: [this.generateRandomNumber(), [Validators.required], this.validateBookingNumber.bind(this)],
+      booking_number: [this.counter, [Validators.required]],
       createdAt: [dateDay],
       booking_type: ['', [Validators.required]],
       booking_origin: ['', [Validators.required]],
@@ -95,39 +94,9 @@ export class ReservationFormComponent implements OnInit {
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
       booking_amount: ['', [Validators.required, Validators.min(10000)]],
-    }, {
-      validator: this.dateRangeValidator('check_in_date', 'check_out_date')
     });
   }
-
-  dateRangeValidator(startControlName: string, endControlName: string) {
-    return (group: FormGroup) => {
-      const startControl = group.controls[startControlName];
-      const endControl = group.controls[endControlName];
-
-      if (endControl.errors && !endControl.errors['dateRangeError']) {
-        // Si ya existe un error en el campo de salida y no es el error que estamos agregando, no hacemos nada.
-        return;
-      }
-
-      if (startControl.value > endControl.value) {
-        endControl.setErrors({ dateRangeError: true });
-      } else {
-        endControl.setErrors(null);
-      }
-    };
-  }
   
-  validateBookingNumber(control: AbstractControl): Observable<ValidationErrors | null> {
-    const bookingNumber = control.value;
-    return this.reservationService.searchByNumber(bookingNumber).pipe(
-      map((booking: IReservation) => {
-        return booking ? { bookingNumberTaken: true } : null;
-      })
-    );
-  }
-  
-
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
     return randomNum.padStart(6,'01');
