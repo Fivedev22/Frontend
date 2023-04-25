@@ -1,7 +1,7 @@
 export interface IPayment {
     id_payment?: number;
-    payment_number: number;
     createdAt: Date;
+    payment_number: number;
     booking: number;
     client: number;
     property: number;

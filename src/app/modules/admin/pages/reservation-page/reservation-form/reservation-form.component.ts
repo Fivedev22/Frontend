@@ -13,6 +13,8 @@ import { ReservationTypeService } from '../../services/reservation_type.service'
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
 
+
+
 @Component({
   selector: 'app-reservation-form',
   templateUrl: './reservation-form.component.html',
@@ -24,10 +26,10 @@ export class ReservationFormComponent implements OnInit {
   booking_origins!: IReservationOrigin[];
   clients!: IClient[];
   properties!: IProperty[];
-
-
   reservationForm!: FormGroup;
   precioReserva!: number;
+  counter: number = 1;
+  
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -46,11 +48,12 @@ export class ReservationFormComponent implements OnInit {
     private clientService: ClientService,
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
-    private reservationOriginService: ReservationOriginService,
+    private reservationOriginService: ReservationOriginService,    
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) { }
+  
 
   ngOnInit(): void {
     this.reservationForm = this.initForm();
@@ -68,37 +71,42 @@ export class ReservationFormComponent implements OnInit {
     return this.reservationForm.controls[controlName].hasError(errorName);
   }
 
+
   initForm(): FormGroup {
+    var dateDay = new Date().toLocaleDateString();
+    this.counter++;
     return this.formBuilder.group({
-      booking_number: [this.generateRandomNumber()],
+      booking_number: [this.counter, [Validators.required]],
+      createdAt: [dateDay],
       booking_type: ['', [Validators.required]],
-      booking_origin: ['',[Validators.required]],
-      client: ['', [Validators.required,]],
+      booking_origin: ['', [Validators.required]],
+      client: ['', [Validators.required]],
       property: ['', [Validators.required]],
-      adults_number: ['', [Validators.required]],
-      kids_number: ['', [Validators.required]],
-      pets_number: [''],
+      adults_number: ['', [Validators.required, Validators.min(1),Validators.pattern('^[0-9]+$')]],
+      kids_number: ['', [Validators.required, Validators.min(0),Validators.pattern('^[0-9]+$')]],
+      pets_number: ['', [Validators.min(0),Validators.pattern('^[0-9]+$')]],
       check_in_date: ['', [Validators.required]],
       check_out_date: ['', [Validators.required]],
       check_in_hour: ['', [Validators.required]],
       check_out_hour: ['', [Validators.required]],
-      starting_price: ['', [Validators.required]],
-      discount: [''],
-      deposit_amount: ['', [Validators.required]],
-      estimated_amount_deposit: [20000],
-      booking_amount: ['', [Validators.required]],
+      starting_price: ['', [Validators.required, Validators.min(10000)]],
+      discount: ['', Validators.min(0)],
+      deposit_amount: ['', [Validators.required, Validators.min(10000)]],
+      estimated_amount_deposit: [10000],
+      booking_amount: ['', [Validators.required, Validators.min(10000)]],
     });
   }
-
+  
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(3);
+    return randomNum.padStart(6,'01');
   }
 
   addReservationData(data: any) {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
     this.reservationForm.controls['booking_number'].setValue(data.booking_number);
+    this.reservationForm.controls['createdAt'].setValue(data.createdAt);
     this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
     this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
     this.reservationForm.controls['client'].setValue(data.client.id_client);
@@ -198,5 +206,4 @@ export class ReservationFormComponent implements OnInit {
         }
       });
   }
-
 }

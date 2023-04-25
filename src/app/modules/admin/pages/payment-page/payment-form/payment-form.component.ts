@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { IProperty } from '../../services/interfaces/property.interface';
 import { IClient } from '../../services/interfaces/client.interface';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PaymentService } from '../../services/payment.service';
@@ -13,6 +13,8 @@ import { PaymentTypeService } from '../../services/payment_type.service';
 import { PaymentStatusService } from '../../services/payment_status.service';
 import { IReservation } from '../../services/interfaces/reservation.interface';
 import { ReservationService } from '../../services/reservation.service';
+import { Observable, map } from 'rxjs';
+import { IPayment } from '../../services/interfaces/payment.interface';
 
 @Component({
   selector: 'app-payment-form',
@@ -26,9 +28,6 @@ export class PaymentFormComponent implements OnInit {
   payment_statuses!: IPaymentStatus[];
   payment_types!: IPaymentType[];
   reservations!: IReservation[];
-
-
-
   paymentForm!: FormGroup;
 
 
@@ -38,7 +37,6 @@ export class PaymentFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
-data: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private paymentData: any,
@@ -65,7 +63,7 @@ data: any;
     this.findAllPaymentStatuses();
 
     if (this.paymentData) {
-      this.addReservationData(this.paymentData);
+      this.addPaymentData(this.paymentData);
     }
   }
 
@@ -74,42 +72,52 @@ data: any;
   }
 
   initForm(): FormGroup {
+    var dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      payment_number: [this.generateRandomNumber()],
-      createdAt: [''],
+      payment_number: [this.generateRandomNumber(), [Validators.required], this.validatePaymentNumber.bind(this)],
+      createdAt: [dateDay],
       booking: ['', [Validators.required]],
-      client: ['', [Validators.required,]],
+      client: ['', [Validators.required]],
       property: ['', [Validators.required]],
       check_in_date: ['', [Validators.required]],
       check_out_date: ['', [Validators.required]],
-      booking_amount: ['', [Validators.required]],
-      discount: [''],
-      deposit_amount: ['', [Validators.required]],
-      payment_amount_subtotal: ['', [Validators.required]],
-      payment_amount_total: ['', [Validators.required]],
+      booking_amount: ['', [Validators.required, Validators.min(10000)]],
+      booking_discount: ['', [Validators.min(0)]],
+      deposit_amount: ['', [Validators.required, Validators.min(10000)]],
+      payment_amount_subtotal: ['', [Validators.required, Validators.min(0)]],
+      payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
-      payment_status: ['',[Validators.required]],
+      payment_status: ['', [Validators.required]],
     });
   }
+  
+  validatePaymentNumber(control: AbstractControl): Observable<ValidationErrors | null> {
+    const paymentNumber = control.value;
+    return this.paymentService.searchByNumber(paymentNumber).pipe(
+      map((payment: IPayment) => {
+        return payment ? { paymentNumberTaken: true } : null;
+      })
+    );
+  }
+  
 
   generateRandomNumber(): string {
     const randomNum = Math.floor(Math.random() * 1000).toString();
     return randomNum.padStart(4, '1');
   }
 
-  addReservationData(data: any) {
+  addPaymentData(data: any) {
     this.actionTitle = 'Modificar Cobro'
     this.actionButton = 'Actualizar'
     this.paymentForm.controls['payment_number'].setValue(data.payment_number);
-    this.paymentForm.controls['createdAt'].setValue(data.booking.createdAt)
     this.paymentForm.controls['booking'].setValue(data.booking.id_booking);
-    this.paymentForm.controls['client'].setValue(data.booking.id_client);
-    this.paymentForm.controls['property'].setValue(data.booking.id_property);
-    this.paymentForm.controls['check_in_date'].setValue(data.booking.check_in_date);
-    this.paymentForm.controls['check_out_date'].setValue(data.booking.check_out_date);
-    this.paymentForm.controls['booking_amount'].setValue(data.booking.booking_amount);
-    this.paymentForm.controls['discount'].setValue(data.booking.discount);
-    this.paymentForm.controls['deposit_amount'].setValue(data.booking.deposit_amount);
+    this.paymentForm.controls['client'].setValue(data.client.id_client);
+    this.paymentForm.controls['property'].setValue(data.property.id_property);
+    this.paymentForm.controls['check_in_date'].setValue(data.check_in_date);
+    this.paymentForm.controls['check_out_date'].setValue(data.check_out_date);
+    this.paymentForm.controls['booking_amount'].setValue(data.booking_amount);
+    this.paymentForm.controls['booking_discount'].setValue(data.booking_discount);
+    this.paymentForm.controls['deposit_amount'].setValue(data.deposit_amount);
     this.paymentForm.controls['payment_amount_subtotal'].setValue(data.payment_amount_subtotal);
     this.paymentForm.controls['payment_amount_total'].setValue(data.payment_amount_total);
     this.paymentForm.controls['payment_type'].setValue(data.payment_type.id);

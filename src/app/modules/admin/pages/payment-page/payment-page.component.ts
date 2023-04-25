@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class PaymentPageComponent  {
   title = 'payment';
 
-  displayedColumns: string[] = ['booking', 'property', 'client', 'payment_amount_total','payment_status', 'actions'];
+  displayedColumns: string[] = ['payment_number','booking', 'property', 'client', 'payment_amount_total','payment_status', 'actions'];
 
   dataSource!: MatTableDataSource<IPayment>;
 
@@ -51,7 +51,7 @@ export class PaymentPageComponent  {
   deletePayment(id: number, payment_number: number, payment_amount_total: number) {
     Swal.fire({
       title: '¿Desea eliminar el pago?',
-      text: `${payment_number} ${payment_amount_total}`,
+      text: `Cobro Nro: ${payment_number} - Monto Total: ${payment_amount_total}`,
       icon: 'error',
       showCancelButton: true,
 
