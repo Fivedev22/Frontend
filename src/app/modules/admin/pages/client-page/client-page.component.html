@@ -1,75 +1,103 @@
-<h1 style="padding: 10px;">Clientes</h1>
-<div class="container-table">
-  <div class="container-table-head">
-    <button mat-raised-button color="link" (click)="openFormCreateClient()">Nuevo cliente</button>
-    <mat-form-field appearance="outline">
-      <mat-label>Buscar cliente</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar..." #input>
-      <div matSuffix mat-icon-button>
+<section class="client-main">
+  <app-head title="Espacio clientes"></app-head>
+  <div class="client-section-head">
+    <div class="client-section-head_buttons">
+      <app-button
+        label="Nuevo"
+        background="#898989"
+        (event)="openFormCreateClient()"
+      ></app-button>
+    </div>
+    <div class="client-section-head_search">
+      <input
+        class="client-input-search"
+        (keyup)="applyFilter($event)"
+        placeholder="Buscar..."
+        #input
+      />
+      <div class="client-button-search">
         <mat-icon>search</mat-icon>
       </div>
-    </mat-form-field>
+    </div>
   </div>
-  <div class="mat-elevation-z1">
-    <table mat-table [dataSource]="dataSource" matSort>
+
+  <div class="client-section-body">
+    <div class="cpc-tableTitle">Tabla de clientes</div>
+    <table
+      mat-table
+      class="client-section-table"
+      [dataSource]="dataSource"
+      matSort
+    >
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="last_name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
-        <td mat-cell *matCellDef="let row"> {{row.last_name}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
+        <td mat-cell *matCellDef="let row">{{ row.last_name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="document_number">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nro Documento </th>
-        <td mat-cell *matCellDef="let row"> {{row.document_number}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Nro. de documento
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.document_number }}</td>
       </ng-container>
 
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
       </ng-container>
 
       <ng-container matColumnDef="phone_number">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nro de Télefono</th>
-        <td mat-cell *matCellDef="let row"> {{row.phone_number}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Nro. de télefono
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.phone_number }}</td>
       </ng-container>
 
       <ng-container matColumnDef="is_foreign">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Extranjero </th>
-        <td mat-cell *matCellDef="let row"> {{row.is_foreign | foreign}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Extranjero</th>
+        <td mat-cell *matCellDef="let row">{{ row.is_foreign | foreign }}</td>
       </ng-container>
 
       <ng-container matColumnDef="province">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia </th>
-        <td mat-cell *matCellDef="let row"> {{row.province | province}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
+        <td mat-cell *matCellDef="let row">{{ row.province | province }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="basic" (click)="openFormEditClient(row)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteClient(row.id_client, row.name, row.last_name)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button color="basic" (click)="archiveClient(row.id_client, row.name, row.last_name)">
-            <mat-icon>archive</mat-icon>
-          </button>
+          <div class="content-icons">
+            <mat-icon ngClass="icons" (click)="openFormEditClient(row)"
+              >edit</mat-icon
+            >
+            <mat-icon
+              ngClass="icons"
+              (click)="deleteClient(row.id_client, row.name, row.last_name)"
+              >delete</mat-icon
+            >
+            <mat-icon
+              ngClass="icons"
+              (click)="archiveClient(row.id_client, row.name, row.last_name)"
+              >archive</mat-icon
+            >
+          </div>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef=" displayedColumns">
-      </tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No hay datos que coincidan con el filtro: "{{input.value}}"</td>
+        <td class="mat-cell">
+          No hay datos que coincidan con el filtro: {{ input.value }}
+        </td>
       </tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
   </div>
-</div>
+</section>

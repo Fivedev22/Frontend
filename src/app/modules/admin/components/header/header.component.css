@@ -1,0 +1,80 @@
+.navbar-container {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid #ccc;
+    z-index: 999;
+}
+
+.navbar-container_logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-container_logo img {
+    width: 24px;
+    height: 24px;
+}
+
+.navbar-container_logo h3 {
+    font-size: 1.2rem;
+    color: #6d6d6d;
+    margin: 0;
+}
+
+.navbar-container_profile {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    justify-content: center;
+}
+
+.navbar-container_profile img {
+    width: 100%;
+}
+
+.container-account {
+    padding: 10px;
+    border-bottom: 1px solid #dfe1e6;
+}
+
+.container-account_title {
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #686868;
+}
+
+.container-account_user {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+}
+
+.container-account_username {
+    font-size: 16px;
+    color: #686868;
+}
+
+.container-account_user img {
+    width: 34px;
+}
+
+.container-account-items {
+    display: flex;
+    align-items: center;
+}
+
+.container-account-items_name {
+    font-size: 15px;
+    color: #686868;
+}
+
+.container-account-items_icons {
+    font-size: 22px;
+}

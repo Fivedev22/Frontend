@@ -29,6 +29,9 @@ import { ReservationTypePipe } from './pages/pipes/reservation_type.pipe';
 import { ClientPipe } from './pages/pipes/client.pipe';
 import { PropertyPipe } from './pages/pipes/property.pipe';
 import { BookingPipe } from './pages/pipes/booking.pipe';
+import { HeaderComponent } from './components/header/header.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { ComponentsModule } from 'src/app/global/components/components.module';
 
 @NgModule({
   declarations: [
@@ -56,6 +59,8 @@ import { BookingPipe } from './pages/pipes/booking.pipe';
     ClientPipe,
     PropertyPipe,
     BookingPipe,
+    HeaderComponent,
+    SidebarComponent,
   ],
   imports: [
     CommonModule,
@@ -63,7 +68,8 @@ import { BookingPipe } from './pages/pipes/booking.pipe';
     SharedModule,
     ReactiveFormsModule,
     SweetAlert2Module.forRoot(),
-    RouterModule
+    RouterModule,
+    ComponentsModule,
   ],
 })
 export class AdminModule {}

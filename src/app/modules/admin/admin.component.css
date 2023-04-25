@@ -1,0 +1,15 @@
+.main-app {
+    height: 100%;
+    width: 100%;
+}
+
+.main-container {
+    width: 100%;
+    height: calc(100vh - 65px);
+    display: flex;
+}
+
+.main-content {
+    width: 100%;
+    padding: 20px;
+}

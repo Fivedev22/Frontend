@@ -1,0 +1,39 @@
+<nav class="navbar-container">
+  <div class="navbar-container_logo">
+    <button mat-icon-button (click)="toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <h3>Anahi apartamentos</h3>
+  </div>
+  <div class="navbar-container_profile">
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Example icon-button with a menu"
+    >
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" />
+    </button>
+    <mat-menu #menu="matMenu">
+      <div class="container-account">
+        <span class="container-account_title">Cuenta</span>
+        <div class="container-account_user">
+          <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" />
+          <span class="container-account_username">Laura </span>
+        </div>
+      </div>
+      <button mat-menu-item class="container-account-items">
+        <mat-icon class="container-account-items_icons">open_in_new</mat-icon>
+        <span class="container-account-items_name">Ingresar a la web</span>
+      </button>
+      <button mat-menu-item class="container-account-items">
+        <mat-icon class="container-account-items_icons"
+          >power_settings_new</mat-icon
+        >
+        <span class="container-account-items_name" (click)="logOut()"
+          >Cerrar sesión</span
+        >
+      </button>
+    </mat-menu>
+  </div>
+</nav>

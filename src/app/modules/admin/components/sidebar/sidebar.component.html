@@ -1,0 +1,17 @@
+<aside class="aside-container">
+  <nav class="container-nav">
+    <span class="container-nav_title">Modulos</span>
+    <ul class="container-list" *ngFor="let item of list">
+      <a
+        routerLink="{{ item.url }}"
+        routerLinkActive="active"
+        class="container-list_item"
+      >
+        <li class="items-container">
+          <mat-icon class="items-container_icon">{{ item.icon }}</mat-icon>
+          <p class="items-container_name">{{ item.name }}</p>
+        </li>
+      </a>
+    </ul>
+  </nav>
+</aside>

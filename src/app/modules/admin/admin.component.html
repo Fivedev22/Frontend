@@ -1,6 +1,10 @@
-<main>
-  <router-outlet></router-outlet>
-  <!-- Aca iria el router link -->
-  <!-- sidenav -->
-  <!-- navbar -->
+<main class="main-app">
+  <app-header (toggleSideBarForMe)="sideBarToggler($event)"></app-header>
+  <section class="main-container">
+    <app-sidebar id="toggle"></app-sidebar>
+
+    <section class="main-content">
+      <router-outlet></router-outlet>
+    </section>
+  </section>
 </main>
