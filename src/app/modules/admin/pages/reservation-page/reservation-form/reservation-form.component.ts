@@ -12,7 +12,7 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
-import { HttpClient } from '@angular/common/http';
+
 
 
 
@@ -29,7 +29,7 @@ export class ReservationFormComponent implements OnInit {
   properties!: IProperty[];
   reservationForm!: FormGroup;
   precioReserva!: number;
-  lastGeneratedNumber: number = 0;
+
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -44,11 +44,10 @@ export class ReservationFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private readonly dialog: MatDialog,
     private reservationService: ReservationService,
-    private http: HttpClient,
     private clientService: ClientService,
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
-    private reservationOriginService: ReservationOriginService,    
+    private reservationOriginService: ReservationOriginService,
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
@@ -56,10 +55,14 @@ export class ReservationFormComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.http.get<number>('http://localhost:3000/booking/get-last-number/').subscribe(last_number => {
-        this.lastGeneratedNumber = last_number ;
-        this.lastGeneratedNumber + 1;
-    });
+    this.reservationService.getLastNumber().subscribe(number => {
+      if (number) {
+          this.reservationForm.patchValue({booking_number: number + 1});
+        } else {
+          this.reservationForm.patchValue({booking_number: 1});
+        }      
+      });
+
     this.reservationForm = this.initForm();
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
@@ -81,7 +84,7 @@ export class ReservationFormComponent implements OnInit {
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      booking_number: [this.lastGeneratedNumber],
+      booking_number: [''],
       createdAt: [dateDay],
       booking_type: ['', [Validators.required]],
       booking_origin: ['', [Validators.required]],
@@ -98,8 +101,9 @@ export class ReservationFormComponent implements OnInit {
       discount: ['', Validators.min(0)],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
-      booking_amount: ['', [Validators.required, Validators.min(10000)]],
+      booking_amount: [this.precioReserva, [Validators.required, Validators.min(10000)]],
     });
+    
   }
 
   addReservationData(data: any) {
@@ -133,7 +137,6 @@ export class ReservationFormComponent implements OnInit {
     const montoSenia = Number(this.reservationForm.controls['deposit_amount'].value);
      this.precioReserva = montoConDescuento - montoSenia;
   }
-
 
   sendReservation() {
     if (!this.reservationData) this.createReservation();
@@ -208,5 +211,4 @@ export class ReservationFormComponent implements OnInit {
       });
   }
 
-  
 }
