@@ -11,7 +11,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Número de Reserva</mat-label>
-                    <input formControlName="booking_number"  matInput placeholder="" type="number" readonly>
+                    <input formControlName="booking_number" matInput placeholder="" type="number" readonly>
                 </mat-form-field>
             </mat-grid-tile>
 
@@ -187,7 +187,10 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Descuento</mat-label>
-                    <input formControlName="discount" matInput placeholder="Ingrese descuento" type="number">
+                    <div class="input-group">
+                        <input formControlName="discount" matInput placeholder="Ingrese descuento" type="number">
+                        <span class="input-group-addon">%</span>
+                    </div>
                 <mat-error align="end" *ngIf="hasError('discount','min')"><strong>Mínimo 0 como valor</strong>
                 </mat-error>
             </mat-form-field>

@@ -12,6 +12,7 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -28,8 +29,7 @@ export class ReservationFormComponent implements OnInit {
   properties!: IProperty[];
   reservationForm!: FormGroup;
   precioReserva!: number;
-  counter: number = 1;
-  
+  lastGeneratedNumber: number = 0;
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -43,8 +43,8 @@ export class ReservationFormComponent implements OnInit {
 
     private formBuilder: FormBuilder,
     private readonly dialog: MatDialog,
-
     private reservationService: ReservationService,
+    private http: HttpClient,
     private clientService: ClientService,
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
@@ -52,15 +52,21 @@ export class ReservationFormComponent implements OnInit {
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
-  ) { }
+  ) {}
   
 
   ngOnInit(): void {
+    this.http.get<number>('http://localhost:3000/booking/get-last-number/').subscribe(last_number => {
+        this.lastGeneratedNumber = last_number ;
+        this.lastGeneratedNumber + 1;
+    });
     this.reservationForm = this.initForm();
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
     this.findAllProperties();
     this.findAllClients();
+
+    this.formBuilder.group
 
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
@@ -73,10 +79,9 @@ export class ReservationFormComponent implements OnInit {
 
 
   initForm(): FormGroup {
-    var dateDay = new Date().toLocaleDateString();
-    this.counter++;
+    const dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      booking_number: [this.counter, [Validators.required]],
+      booking_number: [this.lastGeneratedNumber],
       createdAt: [dateDay],
       booking_type: ['', [Validators.required]],
       booking_origin: ['', [Validators.required]],
@@ -95,11 +100,6 @@ export class ReservationFormComponent implements OnInit {
       estimated_amount_deposit: [10000],
       booking_amount: ['', [Validators.required, Validators.min(10000)]],
     });
-  }
-  
-  generateRandomNumber(): string {
-    const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(6,'01');
   }
 
   addReservationData(data: any) {
@@ -139,6 +139,7 @@ export class ReservationFormComponent implements OnInit {
     if (!this.reservationData) this.createReservation();
     else this.updateReservation();
   }
+
 
   createReservation() {
     if (this.reservationForm.valid) {
@@ -206,4 +207,6 @@ export class ReservationFormComponent implements OnInit {
         }
       });
   }
+
+  
 }
