@@ -60,7 +60,6 @@ export class ClientFormComponent implements OnInit {
 
   changeStateProvince() {
     if (this.clientForm.controls['is_foreign'].value) {
-      console.log(this.clientForm.controls['is_foreign'].value);
       this.clientForm.controls['province'].disable();
       this.clientForm.controls['province'].reset();
     } else {
