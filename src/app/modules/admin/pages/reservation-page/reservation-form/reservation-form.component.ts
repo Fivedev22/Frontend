@@ -15,6 +15,7 @@ import { ClientFormComponent } from '../../client-page/components/client-form/cl
 
 
 
+
 @Component({
   selector: 'app-reservation-form',
   templateUrl: './reservation-form.component.html',
@@ -28,8 +29,7 @@ export class ReservationFormComponent implements OnInit {
   properties!: IProperty[];
   reservationForm!: FormGroup;
   precioReserva!: number;
-  counter: number = 1;
-  
+
 
   actionTitle: string = 'Registrar Reserva'
   actionButton: string = 'Registrar';
@@ -43,24 +43,33 @@ export class ReservationFormComponent implements OnInit {
 
     private formBuilder: FormBuilder,
     private readonly dialog: MatDialog,
-
     private reservationService: ReservationService,
     private clientService: ClientService,
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
-    private reservationOriginService: ReservationOriginService,    
+    private reservationOriginService: ReservationOriginService,
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
-  ) { }
+  ) {}
   
 
   ngOnInit(): void {
+    this.reservationService.getLastNumber().subscribe(number => {
+      if (number) {
+          this.reservationForm.patchValue({booking_number: number + 1});
+        } else {
+          this.reservationForm.patchValue({booking_number: 1});
+        }      
+      });
+
     this.reservationForm = this.initForm();
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
     this.findAllProperties();
     this.findAllClients();
+
+    this.formBuilder.group
 
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
@@ -73,10 +82,9 @@ export class ReservationFormComponent implements OnInit {
 
 
   initForm(): FormGroup {
-    var dateDay = new Date().toLocaleDateString();
-    this.counter++;
+    const dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      booking_number: [this.counter, [Validators.required]],
+      booking_number: [''],
       createdAt: [dateDay],
       booking_type: ['', [Validators.required]],
       booking_origin: ['', [Validators.required]],
@@ -93,13 +101,9 @@ export class ReservationFormComponent implements OnInit {
       discount: ['', Validators.min(0)],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
-      booking_amount: ['', [Validators.required, Validators.min(10000)]],
+      booking_amount: [this.precioReserva, [Validators.required, Validators.min(10000)]],
     });
-  }
-  
-  generateRandomNumber(): string {
-    const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(6,'01');
+    
   }
 
   addReservationData(data: any) {
@@ -134,11 +138,11 @@ export class ReservationFormComponent implements OnInit {
      this.precioReserva = montoConDescuento - montoSenia;
   }
 
-
   sendReservation() {
     if (!this.reservationData) this.createReservation();
     else this.updateReservation();
   }
+
 
   createReservation() {
     if (this.reservationForm.valid) {
@@ -206,4 +210,5 @@ export class ReservationFormComponent implements OnInit {
         }
       });
   }
+
 }

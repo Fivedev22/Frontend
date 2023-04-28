@@ -53,4 +53,12 @@ export class ReservationService {
     return this.http.get<IReservation>(`${this.RESERVATION_URL}search/${reservation_number}`)
   }
 
+  getLastNumber(): Observable<number> {
+    return this.http.get<number>('http://localhost:3000/booking/get-last-number/:')
+  }
+
+  getBookingNumber(): Observable<number> {
+    return this.http.get<number>('http://localhost:3000/booking/:id/booking_number')
+  }
+
 }
