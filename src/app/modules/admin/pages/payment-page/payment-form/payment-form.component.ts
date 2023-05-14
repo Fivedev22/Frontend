@@ -55,6 +55,16 @@ export class PaymentFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (!this.paymentData) {
+      this.paymentService.getLastNumber().subscribe(number => {
+        if (number) {
+            this.paymentForm.patchValue({payment_number: number + 1});
+          } else {
+            this.paymentForm.patchValue({payment_number: 1});
+          }      
+        });
+    }
+
     this.paymentForm = this.initForm();
     this.findAllProperties();
     this.findAllClients();
@@ -74,7 +84,7 @@ export class PaymentFormComponent implements OnInit {
   initForm(): FormGroup {
     var dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group({
-      payment_number: [this.generateRandomNumber(), [Validators.required], this.validatePaymentNumber.bind(this)],
+      payment_number: [''],
       createdAt: [dateDay],
       booking: ['', [Validators.required]],
       client: ['', [Validators.required]],
@@ -91,20 +101,6 @@ export class PaymentFormComponent implements OnInit {
     });
   }
   
-  validatePaymentNumber(control: AbstractControl): Observable<ValidationErrors | null> {
-    const paymentNumber = control.value;
-    return this.paymentService.searchByNumber(paymentNumber).pipe(
-      map((payment: IPayment) => {
-        return payment ? { paymentNumberTaken: true } : null;
-      })
-    );
-  }
-  
-
-  generateRandomNumber(): string {
-    const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(4, '1');
-  }
 
   addPaymentData(data: any) {
     this.actionTitle = 'Modificar Cobro'

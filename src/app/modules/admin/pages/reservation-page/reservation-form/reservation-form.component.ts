@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IReservationType } from '../../services/interfaces/reservation_type.interface';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { IReservationOrigin } from '../../services/interfaces/reservation_origin.interface';
 import { IClient } from '../../services/interfaces/client.interface';
@@ -12,14 +12,16 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
-
+import { Observable, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 
 
 @Component({
   selector: 'app-reservation-form',
   templateUrl: './reservation-form.component.html',
-  styleUrls: ['./reservation-form.component.css']
+  styleUrls: ['./reservation-form.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ReservationFormComponent implements OnInit {
 
@@ -28,7 +30,13 @@ export class ReservationFormComponent implements OnInit {
   clients!: IClient[];
   properties!: IProperty[];
   reservationForm!: FormGroup;
-  precioReserva!: number;
+  occupiedDates$!: Observable<Date[]>;
+  id_property!: number;
+  occupiedDates: Date[]=[];
+  propertyControl = new FormControl();
+  filteredProperties: IProperty[] = [];
+  selectedPropertyControl = new FormControl();
+
 
 
   actionTitle: string = 'Registrar Reserva'
@@ -37,6 +45,8 @@ export class ReservationFormComponent implements OnInit {
   @ViewChild('createAlert') createAlert!: SwalComponent;
   @ViewChild('updateAlert') updateAlert!: SwalComponent;
   @ViewChild('errorAlert') errorAlert!: SwalComponent;
+  
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private reservationData: any,
@@ -51,35 +61,78 @@ export class ReservationFormComponent implements OnInit {
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
-  ) {}
+  ) {
+    this.propertyControl.valueChanges.subscribe((value) => {
+      this.filteredProperties = this.filterProperties(value);
+      console.log(value);
+    });
+  }
+  
+  minDate = new Date(2023, 0, 1);
+  maxDate = new Date(2100,0,1);
   
 
-  ngOnInit(): void {
-    this.reservationService.getLastNumber().subscribe(number => {
-      if (number) {
-          this.reservationForm.patchValue({booking_number: number + 1});
-        } else {
-          this.reservationForm.patchValue({booking_number: 1});
-        }      
-      });
+  ngOnInit(): void {  
+    if (!this.reservationData) {
+      this.reservationService.getLastNumber().subscribe(number => {
+        if (number) {
+            this.reservationForm.patchValue({booking_number: number + 1});
+          } else {
+            this.reservationForm.patchValue({booking_number: 1});
+          }      
+        });
+    }
 
     this.reservationForm = this.initForm();
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
     this.findAllProperties();
     this.findAllClients();
-
+    this.getBookingsOcuped();
     this.formBuilder.group
+
+    this.reservationForm.get('starting_price')?.valueChanges.subscribe(() => {
+      this.calcularPrecioReserva();
+    });
+  
+    this.reservationForm.get('discount')?.valueChanges.subscribe(() => {
+      this.calcularPrecioReserva();
+    });
+  
+    this.reservationForm.get('deposit_amount')?.valueChanges.subscribe(() => {
+      this.calcularPrecioReserva();
+    });
 
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
     }
+
   }
+
+
+  filterProperties(value: string): IProperty[] {
+    const filterValue = value.toString().toLowerCase();
+  
+    return this.properties.filter(
+      (property) =>
+        property.property_name.toString().toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  onPropertySelected(event: MatAutocompleteSelectedEvent): void {
+    const property = event.option.value;
+    this.reservationForm.controls['property'].setValue(property.id_property);
+  }
+
+  displayProperty(property: IProperty) {
+    return property ? property.property_name : '';
+  }
+  
+  
 
   public hasError = (controlName: string, errorName: string) => {
-    return this.reservationForm.controls[controlName].hasError(errorName);
+    return this.reservationForm.controls[controlName].hasError(errorName);  
   }
-
 
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
@@ -101,11 +154,48 @@ export class ReservationFormComponent implements OnInit {
       discount: ['', Validators.min(0)],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
-      booking_amount: [this.precioReserva, [Validators.required, Validators.min(10000)]],
-    });
-    
+      booking_amount: ['',[Validators.required, Validators.min(10000)]],
+
+      
+    }); 
+  
   }
 
+  getBookingsOcuped() {
+    this.reservationForm.controls['property'].valueChanges.subscribe(propertyId => {
+      if (propertyId) {
+        this.reservationService.getOccupiedDatesForProperty(propertyId).subscribe(occupiedDates => {
+          console.log('Fechas ocupadas:', occupiedDates);
+          this.occupiedDates = occupiedDates;
+          console.log('Fechas ocupadas:', this.occupiedDates);
+        });
+      } 
+    });    
+  }
+
+
+  dateClass = (date: Date): string => {
+    return this.dateFilter(date) ? 'disabled-date' : '';
+  }
+  
+  
+  dateFilter = (date: Date | null) => {
+    if (!date) {
+      return true; // permitir fechas vacías
+    }
+  
+    const dateStr = date.toISOString().slice(0, 10);
+    const occupiedDatesHash: { [key: string]: boolean } = {};
+    this.occupiedDates.forEach((date) => {
+      const dateObj = new Date(date);
+      const dateStr = dateObj.toISOString().slice(0, 10);
+      occupiedDatesHash[dateStr] = true;
+    });
+  
+    return !occupiedDatesHash[dateStr];
+  }
+
+  
   addReservationData(data: any) {
     this.actionTitle = 'Modificar Reserva'
     this.actionButton = 'Actualizar'
@@ -135,13 +225,18 @@ export class ReservationFormComponent implements OnInit {
     const descuento = montoInicial * (porcentajeDescuento / 100);
     const montoConDescuento = montoInicial - descuento;
     const montoSenia = Number(this.reservationForm.controls['deposit_amount'].value);
-     this.precioReserva = montoConDescuento - montoSenia;
-  }
+    let precioReserva = montoConDescuento - montoSenia;
+    if (precioReserva < 0) {
+        precioReserva = 0;
+    }
+    this.reservationForm.patchValue({ booking_amount: precioReserva });
+}
 
   sendReservation() {
     if (!this.reservationData) this.createReservation();
     else this.updateReservation();
   }
+
 
 
   createReservation() {
@@ -178,6 +273,7 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
+
   findAllReservationTypes() {
     this.reservationTypeService.findAll().subscribe(data => {
       this.booking_types = data;
@@ -190,18 +286,19 @@ export class ReservationFormComponent implements OnInit {
     });
   }
 
+
   findAllClients() {
     this.clientService.findAllClients().subscribe(data => {
       this.clients = data;
     });
   }
-
+ 
   findAllProperties() {
     this.propertyService.findAllProperties().subscribe(data => {
       this.properties = data;
     });
   }
-
+  
   openFormCreateClient() {
     this.dialog.open(ClientFormComponent, { width: '800px', disableClose: true }).afterClosed()
       .subscribe(val => {

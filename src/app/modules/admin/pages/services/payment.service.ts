@@ -53,4 +53,8 @@ export class PaymentService {
     return this.http.get<IPayment>(`${this.PAYMENT_URL}search/${payment_number}`)
   }
 
+  getLastNumber(): Observable<number> {
+    return this.http.get<number>('http://localhost:3000/payment/get-last-number/:')
+  }
+
 }

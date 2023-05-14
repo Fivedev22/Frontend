@@ -97,21 +97,19 @@
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Propiedad</mat-label>
-          <mat-select formControlName="property" placeholder="Seleccione...">
-            <mat-option
-              *ngFor="let property of properties"
-              [value]="property.id_property"
-            >
-              {{ property.property_name }}</mat-option
-            >
-          </mat-select>
+          <input matInput type="search" formControlName="property" [formControl]="propertyControl" placeholder="Buscar propiedad..." [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPropertySelected($event)">
+            <mat-option *ngFor="let property of filteredProperties" [value]="{property_name: property.property_name, id_property: property.id_property}">
+              {{ property.property_name }}
+            </mat-option>
+          </mat-autocomplete>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('property', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
-
+          
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Cantidad de Adultos</mat-label>
@@ -180,21 +178,28 @@
           <input
             formControlName="check_in_date"
             matInput
+            [min]="minDate" 
+            [max]="maxDate"
             [matDatepicker]="picker"
+            [matDatepickerFilter]="dateFilter"
           />
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matIconSuffix
             [for]="picker"
           ></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
+          <mat-datepicker 
+          touchUi 
+          #picker
+          color="accent"
+          ></mat-datepicker>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('check_in_date', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
-
+      
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Fecha de Salida</mat-label>
@@ -202,13 +207,15 @@
             formControlName="check_out_date"
             matInput
             [matDatepicker]="picker2"
+            [matDatepickerFilter]="dateFilter"
           />
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matIconSuffix
             [for]="picker2"
           ></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker2></mat-datepicker>
+          <mat-datepicker touchUi #picker2 color="accent">
+          </mat-datepicker>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
             align=" end"
@@ -265,8 +272,10 @@
             formControlName="starting_price"
             matInput
             placeholder="Ingrese monto"
-            type="number"
-          />
+            type="text"
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
+            />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
             align=" end"
@@ -302,7 +311,9 @@
             formControlName="deposit_amount"
             matInput
             placeholder="Ingrese monto de seña"
-            type="number"
+            type="text"
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
@@ -324,8 +335,10 @@
             formControlName="estimated_amount_deposit"
             matInput
             placeholder="Monto estimado de seña"
-            type="number"
+            type="text"
             readonly
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
         </mat-form-field>
       </mat-grid-tile>
@@ -337,7 +350,10 @@
             formControlName="booking_amount"
             matInput
             placeholder=""
-            type="number"
+            type="text"
+            readonly
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error

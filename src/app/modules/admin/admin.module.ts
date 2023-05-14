@@ -32,6 +32,9 @@ import { BookingPipe } from './pages/pipes/booking.pipe';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ComponentsModule } from 'src/app/global/components/components.module';
+import { CurrencyMaskModule } from "ng2-currency-mask";
+
+
 
 @NgModule({
   declarations: [
@@ -71,6 +74,7 @@ import { ComponentsModule } from 'src/app/global/components/components.module';
     RouterModule,
     ComponentsModule,
     FormsModule,
+    CurrencyMaskModule,
   ],
 })
 export class AdminModule {}

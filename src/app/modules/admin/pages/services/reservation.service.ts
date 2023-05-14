@@ -57,8 +57,9 @@ export class ReservationService {
     return this.http.get<number>('http://localhost:3000/booking/get-last-number/:')
   }
 
-  getBookingNumber(): Observable<number> {
-    return this.http.get<number>('http://localhost:3000/booking/:id/booking_number')
+  getOccupiedDatesForProperty(propertyId: number): Observable<Date[]> {
+    const url = `${this.RESERVATION_URL}${propertyId}/occupied-dates`;
+    return this.http.get<Date[]>(url);
   }
-
+  
 }
