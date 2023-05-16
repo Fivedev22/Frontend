@@ -76,28 +76,23 @@
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Cliente</mat-label>
-          <mat-select formControlName="client" placeholder="Buscar...">
-            <mat-option
-              *ngFor="let client of clients"
-              [value]="client.id_client"
-            >
-              {{ client.name }} {{ client.last_name }}</mat-option
-            >
-          </mat-select>
+          <input matInput placeholder="Buscar por nro de documento..." formControlName="client" [matAutocomplete]="auto1" [formControl]="searchControl" type="search">
+          <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onClientSelected($event)">
+            <mat-option *ngFor="let client of filteredClients" [value]="{name: client.name, last_name: client.last_name, id_client: client.id_client}">
+              {{ client.name }} {{ client.last_name }}
+            </mat-option>
+          </mat-autocomplete>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('client', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
-        <button mat-icon-button (click)="openFormCreateClient()">
-          <mat-icon>add</mat-icon>
-        </button>
       </mat-grid-tile>
-
+    
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Propiedad</mat-label>
-          <input matInput type="search" formControlName="property" [formControl]="propertyControl" placeholder="Buscar propiedad..." [matAutocomplete]="auto">
+          <input matInput type="search" [formControl]="propertyControl" formControlName="property" placeholder="Buscar..." [matAutocomplete]="auto" (input)="onInputChanged()">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPropertySelected($event)">
             <mat-option *ngFor="let property of filteredProperties" [value]="{property_name: property.property_name, id_property: property.id_property}">
               {{ property.property_name }}
@@ -108,7 +103,9 @@
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
+          <b *ngIf="showNotFoundMessage">Propiedad no encontrada</b>
       </mat-grid-tile>
+
           
       <mat-grid-tile>
         <mat-form-field appearance="outline">

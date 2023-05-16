@@ -35,8 +35,11 @@ export class ReservationFormComponent implements OnInit {
   occupiedDates: Date[]=[];
   propertyControl = new FormControl();
   filteredProperties: IProperty[] = [];
-  selectedPropertyControl = new FormControl();
+  searchControl = new FormControl();
+  filteredClients: IClient[]=[];
+  showNotFoundMessage: any;
 
+  
 
 
   actionTitle: string = 'Registrar Reserva'
@@ -66,13 +69,18 @@ export class ReservationFormComponent implements OnInit {
       this.filteredProperties = this.filterProperties(value);
       console.log(value);
     });
+
+     this.searchControl.valueChanges.subscribe((value) => {
+      this.filteredClients = this.filterClients(value);
+      console.log(value);
+    });
   }
   
   minDate = new Date(2023, 0, 1);
   maxDate = new Date(2100,0,1);
   
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     if (!this.reservationData) {
       this.reservationService.getLastNumber().subscribe(number => {
         if (number) {
@@ -106,7 +114,6 @@ export class ReservationFormComponent implements OnInit {
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
     }
-
   }
 
 
@@ -119,20 +126,44 @@ export class ReservationFormComponent implements OnInit {
     );
   }
 
+  filterClients(value: string): IClient[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.clients.filter(
+      (client) =>
+        client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
+    );
+  }
+  
+
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
     const property = event.option.value;
     this.reservationForm.controls['property'].setValue(property.id_property);
+    this.propertyControl.setValue(property.property_name); // Asignar el valor del nombre al campo de entrada
   }
 
-  displayProperty(property: IProperty) {
-    return property ? property.property_name : '';
+  onClientSelected(event: MatAutocompleteSelectedEvent): void {
+    const client = event.option.value;
+    this.reservationForm.controls['client'].setValue(client.id_client);
+    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada
   }
-  
-  
 
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);  
   }
+
+  onInputChanged() {
+    const value = this.propertyControl.value;
+  
+    // Comprueba si el valor ingresado está en la lista de opciones
+    const optionExists = this.filteredProperties.some((property) => {
+      return property.property_name.toLowerCase().includes(value.toLowerCase());
+    });
+  
+    // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "propiedad no encontrada"
+    this.showNotFoundMessage = value && !optionExists;
+  }
+  
+  
 
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
@@ -142,7 +173,7 @@ export class ReservationFormComponent implements OnInit {
       booking_type: ['', [Validators.required]],
       booking_origin: ['', [Validators.required]],
       client: ['', [Validators.required]],
-      property: ['', [Validators.required]],
+      property: ['',[Validators.required]],
       adults_number: ['', [Validators.required, Validators.min(1),Validators.pattern('^[0-9]+$')]],
       kids_number: ['', [Validators.required, Validators.min(0),Validators.pattern('^[0-9]+$')]],
       pets_number: ['', [Validators.min(0),Validators.pattern('^[0-9]+$')]],
@@ -154,11 +185,8 @@ export class ReservationFormComponent implements OnInit {
       discount: ['', Validators.min(0)],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
-      booking_amount: ['',[Validators.required, Validators.min(10000)]],
-
-      
-    }); 
-  
+      booking_amount: ['',[Validators.required, Validators.min(10000)]],  
+    });   
   }
 
   getBookingsOcuped() {
@@ -203,8 +231,19 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['createdAt'].setValue(data.createdAt);
     this.reservationForm.controls['booking_type'].setValue(data.booking_type.id);
     this.reservationForm.controls['booking_origin'].setValue(data.booking_origin.id);
-    this.reservationForm.controls['client'].setValue(data.client.id_client);
-    this.reservationForm.controls['property'].setValue(data.property.id_property);
+    const selectedClient = {
+      name: data.client.name,
+      last_name: data.client.last_name,
+      id_client: data.client.id_client
+    };
+    this.searchControl.setValue(selectedClient.name + ' ' + selectedClient.last_name)
+    this.reservationForm.controls['client'].setValue(selectedClient.id_client);
+    const selectedProperty = {
+      property_name: data.property.property_name,
+      id_property: data.property.id_property
+    };
+    this.propertyControl.setValue(selectedProperty.property_name);
+    this.reservationForm.controls['property'].setValue(selectedProperty.id_property);  
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);
     this.reservationForm.controls['kids_number'].setValue(data.kids_number);
     this.reservationForm.controls['pets_number'].setValue(data.pets_number);
