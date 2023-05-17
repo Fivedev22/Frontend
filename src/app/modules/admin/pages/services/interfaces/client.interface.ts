@@ -1,3 +1,5 @@
+import { IGenderType } from "./gender_type.interface";
+
 export interface IClient {
     id_client?: number,
     name: string,
@@ -7,7 +9,7 @@ export interface IClient {
     document_number: string,
     is_foreign: boolean,
     is_active?: boolean,
-    gender_type: number,
+    gender_type: IGenderType,
     document_type: number,
     province?: number
 }

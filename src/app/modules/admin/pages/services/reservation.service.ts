@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IReservation } from './interfaces/reservation.interface';
+import { IClient } from './interfaces/client.interface';
 
 
 @Injectable({
@@ -61,5 +62,5 @@ export class ReservationService {
     const url = `${this.RESERVATION_URL}${propertyId}/occupied-dates`;
     return this.http.get<Date[]>(url);
   }
-  
+
 }
