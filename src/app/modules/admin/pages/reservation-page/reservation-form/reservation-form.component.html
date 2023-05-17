@@ -76,7 +76,7 @@
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Cliente</mat-label>
-          <input matInput placeholder="Buscar por nro de documento..." formControlName="client" [matAutocomplete]="auto1" [formControl]="searchControl" type="search">
+          <input matInput placeholder="Buscar por nro de documento..." formControlName="client" [matAutocomplete]="auto1" [formControl]="searchControl" type="search" (input)="onInputChangedClient()">
           <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onClientSelected($event)">
             <mat-option *ngFor="let client of filteredClients" [value]="{name: client.name, last_name: client.last_name, id_client: client.id_client}">
               {{ client.name }} {{ client.last_name }}
@@ -87,12 +87,13 @@
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
+        <b *ngIf="showNotFoundMessage2">Cliente no encontrado</b>
       </mat-grid-tile>
     
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Propiedad</mat-label>
-          <input matInput type="search" [formControl]="propertyControl" formControlName="property" placeholder="Buscar..." [matAutocomplete]="auto" (input)="onInputChanged()">
+          <input matInput type="search" [formControl]="propertyControl" formControlName="property" placeholder="Buscar por nombre..." [matAutocomplete]="auto" (input)="onInputChanged()">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPropertySelected($event)">
             <mat-option *ngFor="let property of filteredProperties" [value]="{property_name: property.property_name, id_property: property.id_property}">
               {{ property.property_name }}
@@ -103,7 +104,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
-          <b *ngIf="showNotFoundMessage">Propiedad no encontrada</b>
+          <b *ngIf="showNotFoundMessage1">Propiedad no encontrada</b>
       </mat-grid-tile>
 
           

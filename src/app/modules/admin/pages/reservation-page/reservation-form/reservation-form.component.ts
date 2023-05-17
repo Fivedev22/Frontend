@@ -37,7 +37,8 @@ export class ReservationFormComponent implements OnInit {
   filteredProperties: IProperty[] = [];
   searchControl = new FormControl();
   filteredClients: IClient[]=[];
-  showNotFoundMessage: any;
+  showNotFoundMessage1: any;
+  showNotFoundMessage2: any;
 
   
 
@@ -120,19 +121,32 @@ export class ReservationFormComponent implements OnInit {
   filterProperties(value: string): IProperty[] {
     const filterValue = value.toString().toLowerCase();
   
-    return this.properties.filter(
-      (property) =>
-        property.property_name.toString().toLowerCase().indexOf(filterValue) === 0
-    );
+    if (Array.isArray(this.properties)) {
+      return this.properties.filter(
+        (property) =>
+          property.property_name.toString().toLowerCase().indexOf(filterValue) === 0
+      );
+    } else {
+      // Manejar el caso en el que this.properties no sea un arreglo
+      return [];
+    }
   }
+  
 
   filterClients(value: string): IClient[] {
     const filterValue = value.toString().toLowerCase();
-    return this.clients.filter(
-      (client) =>
-        client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
-    );
+  
+    if (Array.isArray(this.clients)) {
+      return this.clients.filter(
+        (client) =>
+          client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
+      );
+    } else {
+      // Manejar el caso en el que this.clients no sea un arreglo
+      return [];
+    }
   }
+  
   
 
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
@@ -144,7 +158,7 @@ export class ReservationFormComponent implements OnInit {
   onClientSelected(event: MatAutocompleteSelectedEvent): void {
     const client = event.option.value;
     this.reservationForm.controls['client'].setValue(client.id_client);
-    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada
+    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada    
   }
 
   public hasError = (controlName: string, errorName: string) => {
@@ -160,7 +174,19 @@ export class ReservationFormComponent implements OnInit {
     });
   
     // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "propiedad no encontrada"
-    this.showNotFoundMessage = value && !optionExists;
+    this.showNotFoundMessage1 = value && !optionExists;
+  }
+
+  onInputChangedClient() {
+    const value = this.searchControl.value;
+  
+    // Comprueba si el valor ingresado está en la lista de opciones
+    const optionExists = this.filteredClients.some((client) => {
+      return client.document_number.toLowerCase().includes(value.toLowerCase());
+    });
+  
+    // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "cliente no encontrado"
+    this.showNotFoundMessage2 = value && !optionExists;
   }
   
   
