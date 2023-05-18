@@ -89,6 +89,13 @@
         </mat-form-field>
         <b *ngIf="showNotFoundMessage2">Cliente no encontrado</b>
       </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente Seleccionado</mat-label>
+          <input matInput type="text" [formControl]="clientDetail" readonly>
+        </mat-form-field>
+      </mat-grid-tile>
     
       <mat-grid-tile>
         <mat-form-field appearance="outline">
@@ -107,6 +114,12 @@
           <b *ngIf="showNotFoundMessage1">Propiedad no encontrada</b>
       </mat-grid-tile>
 
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Propiedad Seleccionada</mat-label>
+          <input matInput type="text" [formControl]="propertyDetail" readonly>
+        </mat-form-field>
+      </mat-grid-tile>
           
       <mat-grid-tile>
         <mat-form-field appearance="outline">
@@ -217,9 +230,9 @@
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
             align=" end"
-            *ngIf="hasError('check_out_date', 'required')"
+            *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
           >
-            <strong>Campo requerido</strong>
+            <strong>La fecha de check-out debe ser POSTERIOR a la fecha de check-in</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>

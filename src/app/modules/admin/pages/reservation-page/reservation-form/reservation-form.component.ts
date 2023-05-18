@@ -39,7 +39,8 @@ export class ReservationFormComponent implements OnInit {
   filteredClients: IClient[]=[];
   showNotFoundMessage1: any;
   showNotFoundMessage2: any;
-
+  propertyDetail = new FormControl();
+  clientDetail = new FormControl();
   
 
 
@@ -153,12 +154,16 @@ export class ReservationFormComponent implements OnInit {
     const property = event.option.value;
     this.reservationForm.controls['property'].setValue(property.id_property);
     this.propertyControl.setValue(property.property_name); // Asignar el valor del nombre al campo de entrada
+    this.propertyDetail.setValue(property.property_name);
+    this.propertyControl.setValue('');
   }
 
   onClientSelected(event: MatAutocompleteSelectedEvent): void {
     const client = event.option.value;
     this.reservationForm.controls['client'].setValue(client.id_client);
-    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada    
+    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada 
+    this.clientDetail.setValue(client.name + ' ' + client.last_name); 
+    this.searchControl.setValue(''); 
   }
 
   public hasError = (controlName: string, errorName: string) => {
@@ -212,7 +217,18 @@ export class ReservationFormComponent implements OnInit {
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
       booking_amount: ['',[Validators.required, Validators.min(10000)]],  
-    });   
+    },{ validator: this.checkInCheckOutValidator });
+  }
+
+  checkInCheckOutValidator(reservationForm: FormGroup) {
+    const checkInDate = reservationForm.get('check_in_date')?.value;
+    const checkOutDate = reservationForm.get('check_out_date')?.value;
+  
+    if (checkInDate && checkOutDate && checkInDate > checkOutDate) {
+      reservationForm.get('check_out_date')?.setErrors({ 'checkOutBeforeCheckIn': true });
+    } else {
+      reservationForm.get('check_out_date')?.setErrors(null);
+    }
   }
 
   getBookingsOcuped() {
@@ -262,13 +278,13 @@ export class ReservationFormComponent implements OnInit {
       last_name: data.client.last_name,
       id_client: data.client.id_client
     };
-    this.searchControl.setValue(selectedClient.name + ' ' + selectedClient.last_name)
+    this.clientDetail.setValue(selectedClient.name + ' ' + selectedClient.last_name)
     this.reservationForm.controls['client'].setValue(selectedClient.id_client);
     const selectedProperty = {
       property_name: data.property.property_name,
       id_property: data.property.id_property
     };
-    this.propertyControl.setValue(selectedProperty.property_name);
+    this.propertyDetail.setValue(selectedProperty.property_name);
     this.reservationForm.controls['property'].setValue(selectedProperty.id_property);  
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);
     this.reservationForm.controls['kids_number'].setValue(data.kids_number);

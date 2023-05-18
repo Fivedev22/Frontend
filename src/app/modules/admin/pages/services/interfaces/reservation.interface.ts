@@ -14,8 +14,8 @@ export interface IReservation {
     adults_number: number;
     kids_number: number;
     pets_number?: number;
-    check_in_date: string;
-    check_out_date: string;
+    check_in_date: Date;
+    check_out_date: Date;
     check_in_hour: string;
     check_out_hour: string;
     starting_price: number;

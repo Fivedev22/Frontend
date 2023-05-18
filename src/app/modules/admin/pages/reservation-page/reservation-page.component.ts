@@ -246,8 +246,8 @@ export class ReservationPageComponent implements OnInit {
       doc.line(10, lineY, 200, lineY); // Ajusta la longitud de la línea
   
       // Establece la fuente y el tamaño del texto de agradecimiento
-      doc.setFont('Arial', 'bolditalic'); // Utiliza 'italic' para establecer la fuente en cursiva
-      doc.setFontSize(18);
+      doc.setFont('Arial', 'italic'); // Utiliza 'italic' para establecer la fuente en cursiva
+      doc.setFontSize(20);
       doc.text('Gracias por reservar!', 10, lineY + 10); // Ajusta la coordenada Y del texto
 
   
