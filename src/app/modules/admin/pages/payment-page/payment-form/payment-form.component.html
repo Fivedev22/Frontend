@@ -93,8 +93,51 @@
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
+                    <mat-label>Precio Inicial</mat-label>
+                    <input formControlName="booking_starting_price" 
+                    matInput placeholder="" type="text" readonly
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
+                    <mat-hint align="end">Campo requerido</mat-hint>
+                    <mat-error align=" end" *ngIf="hasError('booking_starting_price','required')">
+                        <strong>Campo requerido</strong>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Descuento de Reserva</mat-label>
+                    <input formControlName="booking_discount" 
+                    matInput placeholder="" 
+                    type="text" readonly
+                    currencyMask [options]="{ prefix: '% ', thousands: '.', decimal: ',', align: 'left'}">
+                </mat-form-field>
+                <mat-error align="end" *ngIf="hasError('booking_discount','min')"><strong>Mínimo 0 como valor</strong>
+                </mat-error>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Monto de Seña</mat-label>
+                    <input formControlName="deposit_amount" 
+                    matInput placeholder="" 
+                    type="text" readonly
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
+                    <mat-hint align="end">Campo requerido</mat-hint>
+                    <mat-error align=" end" *ngIf="hasError('deposit_amount','required')">
+                        <strong>Campo requerido</strong>
+                    </mat-error>
+                    <mat-error align="end" *ngIf="hasError('deposit_amount','min')"><strong>Mínimo 10.000 como monto de reserva</strong>
+                    </mat-error>
+                </mat-form-field>
+            </mat-grid-tile>
+
+             <mat-grid-tile>
+                <mat-form-field appearance="outline">
                     <mat-label>Monto de Reserva</mat-label>
-                    <input formControlName="booking_amount" matInput placeholder="" type="number">
+                    <input formControlName="booking_amount" 
+                    matInput placeholder="" type="text" readonly
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('booking_amount','required')">
                         <strong>Campo requerido</strong>
@@ -106,31 +149,22 @@
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
-                    <mat-label>Descuento de Reserva</mat-label>
-                    <input formControlName="booking_discount" matInput placeholder="" type="number">
-                </mat-form-field>
-                <mat-error align="end" *ngIf="hasError('booking_discount','min')"><strong>Mínimo 0 como valor</strong>
-                </mat-error>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <mat-form-field appearance="outline">
-                    <mat-label>Monto de Seña</mat-label>
-                    <input formControlName="deposit_amount" matInput placeholder="" type="number">
-                    <mat-hint align="end">Campo requerido</mat-hint>
-                    <mat-error align=" end" *ngIf="hasError('deposit_amount','required')">
-                        <strong>Campo requerido</strong>
-                    </mat-error>
-                    <mat-error align="end" *ngIf="hasError('deposit_amount','min')"><strong>Mínimo 10.000 como monto de reserva</strong>
-                    </mat-error>
+                    <mat-label>Gastos Extras</mat-label>
+                    <input formControlName="extra_expenses" 
+                    matInput 
+                    placeholder="Ingrese monto..." type="text"
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
                 </mat-form-field>
             </mat-grid-tile>
-
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Subtotal</mat-label>
-                    <input formControlName="payment_amount_subtotal" matInput placeholder="" type="number">
+                    <input formControlName="payment_amount_subtotal" 
+                    matInput placeholder="" 
+                    type="text" 
+                    readonly
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('payment_amount_subtotal','required')">
                         <strong>Campo requerido</strong>
@@ -143,7 +177,12 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Total</mat-label>
-                    <input formControlName="payment_amount_total" matInput placeholder="" type="number">
+                    <input 
+                    formControlName="payment_amount_total" 
+                    matInput placeholder="" 
+                    type="text"  
+                    readonly
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
                     <mat-hint align="end">Campo requerido</mat-hint>
                     <mat-error align=" end" *ngIf="hasError('payment_amount_total','required')">
                         <strong>Campo requerido</strong>

@@ -12,7 +12,7 @@ import { PropertyService } from '../../services/property-page.service';
 import { ReservationTypeService } from '../../services/reservation_type.service';
 import { ReservationOriginService } from '../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../client-page/components/client-form/client-form.component';
-import { Observable, debounceTime, distinctUntilChanged, map, of, startWith, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 
@@ -147,7 +147,6 @@ export class ReservationFormComponent implements OnInit {
       return [];
     }
   }
-  
   
 
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {

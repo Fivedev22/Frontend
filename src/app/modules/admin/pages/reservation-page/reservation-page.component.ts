@@ -261,23 +261,27 @@ export class ReservationPageComponent implements OnInit {
       const newWindow = window.open();
       if (newWindow != null) {
         newWindow.document.write('<iframe src="' + pdfUrl + '" style="width:100%;height:100%;" frameborder="0"></iframe>');
-        newWindow.document.title = 'Comprobante Reserva Apartamentos Anahí.pdf'; // Establece el título de la ventana
+        newWindow.document.title = 'Comprobante de Reserva - Apartamentos Anahí.pdf'; // Establece el título de la ventana
       }
     });
   }
 
 
-openPaymentForm(reservationId: number) {
-  const dialogRef = this.dialog.open(PaymentFormComponent, { width: '800px', disableClose: true, data: { reservationId: reservationId } });
-  dialogRef.afterClosed().subscribe(result => {
-    if (result === 'save') {
-      // Actualizar la lista de cobros
-      this.router.navigate(['/payments']); // Redirigir a la página de cobros
-    }
-  });
-}
-
+  openPaymentForm(reservationId: number) {
+    const dialogRef = this.dialog.open(PaymentFormComponent, {
+      width: '800px',
+      disableClose: true,
+      data: { reservationId: reservationId } // Pasa el ID de reserva al componente PaymentFormComponent
+    });
   
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'save') { 
+        // Actualizar la lista de cobros
+        this.router.navigate(['/payments']); // Redirigir a la página de cobros
+      }
+    });
+  }
   
+ 
 }  
 
