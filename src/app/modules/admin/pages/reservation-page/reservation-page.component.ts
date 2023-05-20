@@ -56,7 +56,7 @@ export class ReservationPageComponent implements OnInit {
   deleteReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea eliminar la reserva?',
-      text: `Reserva Nro: ${booking_number} - Check-in: ${check_in_date}`,
+      text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 
@@ -89,7 +89,7 @@ export class ReservationPageComponent implements OnInit {
   archiveReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea archivar la reserva?',
-      text: `Reserva Nro: ${booking_number} - Fecha Check-in: ${check_in_date}`,
+      text: `Reserva N°: ${booking_number} - Fecha Check-in: ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 
@@ -122,7 +122,7 @@ export class ReservationPageComponent implements OnInit {
   unarchiveReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({
       title: '¿Desea desarchivar la reserva?',
-      text: `Reserva Nro: ${booking_number} - Check-in: ${check_in_date}`,
+      text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
       icon: 'error',
       showCancelButton: true,
 
@@ -277,7 +277,7 @@ export class ReservationPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'save') { 
         // Actualizar la lista de cobros
-        this.router.navigate(['/payments']); // Redirigir a la página de cobros
+        this.router.navigate(['admin/payments']); // Redirigir a la página de cobros
       }
     });
   }

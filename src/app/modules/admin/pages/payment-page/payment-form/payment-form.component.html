@@ -149,11 +149,11 @@
 
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
-                    <mat-label>Gastos Extras</mat-label>
-                    <input formControlName="extra_expenses" 
-                    matInput 
-                    placeholder="Ingrese monto..." type="text"
+                    <mat-label>Gastos Adicionales</mat-label>
+                    <input matInput placeholder="" type="text" formControlName="extra_expenses"
                     currencyMask [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}">
+                    <mat-error align="end" *ngIf="hasError('extra_expenses','min')"><strong>Mínimo 0 como valor</strong>
+                    </mat-error>
                 </mat-form-field>
             </mat-grid-tile>
 

@@ -17,11 +17,6 @@
               type="text"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align="end" *ngIf="hasError('name', 'pattern')">
-              <strong
-                >Este campo no acepta numeros o caracteres especiales</strong
-              >
-            </mat-error>
             <mat-error align=" end" *ngIf="hasError('name', 'required')"
               ><strong>Campo requerido</strong>
             </mat-error>
@@ -44,11 +39,6 @@
               type="text"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align="end" *ngIf="hasError('last_name', 'pattern')">
-              <strong
-                >Este campo no acepta numeros o caracteres especiales</strong
-              >
-            </mat-error>
             <mat-error align=" end" *ngIf="hasError('last_name', 'required')"
               ><strong>Campo requerido</strong>
             </mat-error>

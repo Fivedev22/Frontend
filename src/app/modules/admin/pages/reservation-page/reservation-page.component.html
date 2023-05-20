@@ -55,12 +55,12 @@
 
       <ng-container matColumnDef="check_in_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Check-in</th>
-        <td mat-cell *matCellDef="let row">{{ row.check_in_date }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.check_in_date | date: 'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="check_out_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Check-out</th>
-        <td mat-cell *matCellDef="let row">{{ row.check_out_date }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.check_out_date | date: 'dd/MM/yyyy' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

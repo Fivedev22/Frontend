@@ -59,7 +59,9 @@ export class PaymentFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.paymentData) {
+
+    
+    if (this.reservationId){
       this.paymentService.getLastNumber().subscribe(number => {
         if (number) {
             this.paymentForm.patchValue({payment_number: number + 1});
@@ -68,6 +70,7 @@ export class PaymentFormComponent implements OnInit {
           }      
         });
     }
+   
 
     if (this.reservationId) {
       this.reservationService.findOneReservation(this.reservationId).subscribe(reservation => {
@@ -106,17 +109,10 @@ export class PaymentFormComponent implements OnInit {
   }
 
   addReservationData(reservation: IReservation) {
-    this.paymentService.getLastNumber().subscribe(number => {
-      if (number) {
-          this.paymentForm.patchValue({payment_number: number + 1});
-        } else {
-          this.paymentForm.patchValue({payment_number: 1});
-        }      
-      });
     // Asigna los datos de la reserva al formulario
     this.paymentForm.patchValue({
       // Asigna los valores correspondientes a cada control del formulario
-      booking: reservation.id_booking,
+      booking: reservation.booking_number,
       client: reservation.client.id_client,
       property: reservation.property.id_property,
       check_in_date: reservation.check_in_date,
@@ -125,6 +121,7 @@ export class PaymentFormComponent implements OnInit {
       booking_discount: reservation.discount,
       deposit_amount: reservation.deposit_amount,
       booking_amount: reservation.booking_amount,
+      extra_expenses: 0,
     });
   }
   
@@ -143,7 +140,7 @@ export class PaymentFormComponent implements OnInit {
       booking_discount: ['', [Validators.min(0)]],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       booking_amount: ['', [Validators.required, Validators.min(10000)]],
-      extra_expenses: [''],
+      extra_expenses: ['', [Validators.min(0)]],
       payment_amount_subtotal: ['', [Validators.required, Validators.min(0)]],
       payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
@@ -175,28 +172,26 @@ export class PaymentFormComponent implements OnInit {
 
   calcularPrecioFinal() {
     const montoReserva = Number(this.paymentForm.controls['booking_amount'].value);
-    const gastosExtras = Number(this.paymentForm.controls['extra_expenses'].value);
-    let precioReserva = montoReserva + gastosExtras;
+    const gastosExtras = this.paymentForm.controls['extra_expenses'].value ?? 0;
+    const gastosExtrasNum = gastosExtras ? Number(gastosExtras) : 0;
+    let precioReserva = montoReserva + gastosExtrasNum;
     if (precioReserva < 0) {
-        precioReserva = 0;
+      precioReserva = 0;
     }
-    this.paymentForm.patchValue({payment_amount_subtotal: precioReserva});
+    this.paymentForm.patchValue({ payment_amount_subtotal: precioReserva });
     this.paymentForm.patchValue({ payment_amount_total: precioReserva });
   }
   
   
 
   sendPayment() {
-    if (this.paymentForm.valid) {
-      if (!this.paymentForm.value.payment_number) {
+      if (!this.paymentData || !this.paymentData.id_payment) {
         this.createPayment();
-      }
-      else {
+      } else {
         this.updatePayment();
       }
     }
-  }
-  
+    
 
   createPayment() {
     if (this.paymentForm.valid) {

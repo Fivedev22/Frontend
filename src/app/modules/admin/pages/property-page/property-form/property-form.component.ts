@@ -160,8 +160,8 @@ export class PropertyFormComponent implements OnInit {
   }
 
   generateRandomNumber(): string {
-    const randomNum = Math.floor(Math.random() * 1000).toString();
-    return randomNum.padStart(4, '0');
+    const randomNum = Math.floor(Math.random() * 10000).toString();
+    return randomNum.padStart(4, '');
   }
 
   addPropertyData(data: any) {

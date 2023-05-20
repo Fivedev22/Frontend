@@ -77,7 +77,6 @@ export class ClientFormComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('[a-zA-Z\u00E0-\u00FC\u00f1\u00d1]*'),
           Validators.minLength(3),
           Validators.maxLength(20),
         ],
@@ -86,7 +85,6 @@ export class ClientFormComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('[a-zA-Z\u00E0-\u00FC\u00f1\u00d1]*'),
           Validators.minLength(3),
           Validators.maxLength(20),
         ],
@@ -124,6 +122,8 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
+  
+
   addClientData(data: any) {
     this.actionTitle = 'Modificar Cliente';
     this.actionButton = 'Actualizar';
@@ -144,6 +144,7 @@ export class ClientFormComponent implements OnInit {
       : this.clientForm.controls['province'].setValue(
           data.province.id_province
         );
+        this.changeStateProvince(); // Agregar esta línea
   }
 
   sendClient() {
