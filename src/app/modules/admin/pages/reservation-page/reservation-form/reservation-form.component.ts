@@ -41,6 +41,7 @@ export class ReservationFormComponent implements OnInit {
   showNotFoundMessage2: any;
   propertyDetail = new FormControl();
   clientDetail = new FormControl();
+
   
 
 
@@ -63,6 +64,7 @@ export class ReservationFormComponent implements OnInit {
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
+
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
@@ -94,6 +96,8 @@ export class ReservationFormComponent implements OnInit {
     }
 
     this.reservationForm = this.initForm();
+    this.reservationForm.controls['discount'].setValue(0); // Inicializar el campo 'discount' en cero
+    this.reservationForm.controls['booking_amount'].setValue(0);
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
     this.findAllProperties();
@@ -116,6 +120,22 @@ export class ReservationFormComponent implements OnInit {
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
     }
+
+
+    if (this.reservationData) {
+      const checkInDate = new Date(this.reservationData.check_in_date);
+      const checkOutDate = new Date(this.reservationData.check_out_date);
+      
+      // Ajustar las fechas según la zona horaria local
+      checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
+      checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+      
+      // Asignar las fechas ajustadas a los controles del formulario
+      this.reservationForm.controls['check_in_date'].setValue(checkInDate);
+      this.reservationForm.controls['check_out_date'].setValue(checkOutDate);
+      
+    }
+    
   }
 
 
@@ -215,7 +235,7 @@ export class ReservationFormComponent implements OnInit {
       discount: ['', Validators.min(0)],
       deposit_amount: ['', [Validators.required, Validators.min(10000)]],
       estimated_amount_deposit: [10000],
-      booking_amount: ['',[Validators.required, Validators.min(10000)]],  
+      booking_amount: ['',[Validators.required, Validators.min(0)]],  
     },{ validator: this.checkInCheckOutValidator });
   }
 
@@ -231,15 +251,17 @@ export class ReservationFormComponent implements OnInit {
   }
 
   getBookingsOcuped() {
-    this.reservationForm.controls['property'].valueChanges.subscribe(propertyId => {
-      if (propertyId) {
-        this.reservationService.getOccupiedDatesForProperty(propertyId).subscribe(occupiedDates => {
-          console.log('Fechas ocupadas:', occupiedDates);
-          this.occupiedDates = occupiedDates;
-          console.log('Fechas ocupadas:', this.occupiedDates);
-        });
-      } 
-    });    
+    if (!this.reservationData) {
+      this.reservationForm.controls['property'].valueChanges.subscribe(propertyId => {
+        if (propertyId) {
+          this.reservationService.getOccupiedDatesForProperty(propertyId).subscribe(occupiedDates => {
+            console.log('Fechas ocupadas:', occupiedDates);
+            this.occupiedDates = occupiedDates;
+            console.log('Fechas ocupadas:', this.occupiedDates);
+          });
+        } 
+      }); 
+    }
   }
 
 
@@ -252,6 +274,7 @@ export class ReservationFormComponent implements OnInit {
     if (!date) {
       return true; // permitir fechas vacías
     }
+    
   
     const dateStr = date.toISOString().slice(0, 10);
     const occupiedDatesHash: { [key: string]: boolean } = {};
