@@ -4,6 +4,7 @@ import { AuthComponent } from './auth.component';
 import { ForgotPasswordPageComponent } from './pages/forgot-password-page/forgot-password-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-password-page.component';
+import { SuccessForgotPasswordPageComponent } from './pages/success-forgot-password/success-forgot-password-page.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,7 @@ const routes: Routes = [
       { path: 'login', component: LoginPageComponent },
       { path: 'forgot-password', component: ForgotPasswordPageComponent },
       { path: 'reset-password', component: ResetPasswordPageComponent },
+      { path: 'success-forgot-password', component: SuccessForgotPasswordPageComponent },
     ],
   },
 ];

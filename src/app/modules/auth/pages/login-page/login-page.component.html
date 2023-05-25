@@ -1,6 +1,6 @@
 <section class="section">
   <h2 class="section__h2">Inicio de sesión</h2>
-  <form [formGroup]="formLogin" class="form">
+  <form [formGroup]="formLogin" class="form" (submit)="onLogin()">
     <div class="form__div">
       <mat-label ngClass="form__label">Usuario</mat-label>
       <mat-form-field appearance="outline">
