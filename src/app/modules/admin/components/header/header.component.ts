@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {}
 
   logOut() {
+    localStorage.removeItem("anahi.accesstoken");
     this.router.navigate(['/auth']);
   }
 

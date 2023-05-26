@@ -5,6 +5,7 @@ import { Observable, tap } from 'rxjs';
 import { IForgotPassword } from '../interfaces/forgot-password.interface';
 import { IResetPassword } from '../interfaces/reset-password.interface';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -35,8 +36,11 @@ export class AuthService {
   }
 
 
-  get isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
-    return !!token;
+  public isAuthenticated(): boolean {
+    // const token: any = localStorage.getItem('token');
+    if (!localStorage.getItem('anahi.accesstoken')) {
+      return false;
+    }
+    return true;
   }
 }
