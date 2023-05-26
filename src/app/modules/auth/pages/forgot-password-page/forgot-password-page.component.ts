@@ -38,16 +38,16 @@ export class ForgotPasswordPageComponent implements OnInit {
       (data) => {
         if (!data) {
           this.Alert('Correo incorrecto', 'warning', '#F25D5D', '#fff');
-          alert('ups...');
         } else {
           this.Alert('Te enviamos un correo', 'success', '#75CB8D', '#fff');
 
-          console.log(data.token);
+          localStorage.setItem('anahi.refreshToken', data.resetToken);
+
           setTimeout(()=>{
             this.router.navigate(["auth/success-forgot-password"])
           }, 1200)
          
-          // localStorage.setItem('tokenpass', data.token);
+         
         }
       },
       (error) => {

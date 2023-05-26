@@ -14,7 +14,7 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'login' },
       { path: 'login', component: LoginPageComponent },
       { path: 'forgot-password', component: ForgotPasswordPageComponent },
-      { path: 'reset-password', component: ResetPasswordPageComponent },
+      { path: 'reset-password/:token', component: ResetPasswordPageComponent },
       { path: 'success-forgot-password', component: SuccessForgotPasswordPageComponent },
     ],
   },
