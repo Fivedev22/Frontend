@@ -123,20 +123,31 @@ export class ReservationFormComponent implements OnInit {
 
 
     if (this.reservationData) {
-      const checkInDate = new Date(this.reservationData.check_in_date);
-      const checkOutDate = new Date(this.reservationData.check_out_date);
-      
-      // Ajustar las fechas según la zona horaria local
-      checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-      checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
-      
-      // Asignar las fechas ajustadas a los controles del formulario
-      this.reservationForm.controls['check_in_date'].setValue(checkInDate);
-      this.reservationForm.controls['check_out_date'].setValue(checkOutDate);
-      
-    }
-    
+  const checkInDate = new Date(this.reservationData.check_in_date);
+  const checkOutDate = new Date(this.reservationData.check_out_date);
+
+  // Verificar si los controles han sido modificados
+  const checkInControl = this.reservationForm.controls['check_in_date'];
+  const checkOutControl = this.reservationForm.controls['check_out_date'];
+  const checkInValue = checkInControl.value;
+  const checkOutValue = checkOutControl.value;
+  const datesModified = checkInControl.dirty || checkOutControl.dirty;
+
+  // Asignar las fechas ajustadas o no ajustadas a los controles del formulario
+  if (!datesModified) {
+    // Ajustar las fechas según la zona horaria local
+    checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
+    checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+
+    checkInControl.setValue(checkInDate);
+    checkOutControl.setValue(checkOutDate);
+  } else {
+    // Las fechas han sido modificadas, asignar los valores actuales sin ajuste
+    checkInControl.setValue(checkInValue);
+    checkOutControl.setValue(checkOutValue);
   }
+}
+}
 
 
   filterProperties(value: string): IProperty[] {

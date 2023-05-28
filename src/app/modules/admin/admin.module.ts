@@ -33,6 +33,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ComponentsModule } from 'src/app/global/components/components.module';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { ImageUploadDialogComponent } from './pages/property-page/image-upload-dialog/image-upload-dialog.component';
 
 
 
@@ -64,6 +66,7 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     BookingPipe,
     HeaderComponent,
     SidebarComponent,
+    ImageUploadDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +78,7 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     ComponentsModule,
     FormsModule,
     CurrencyMaskModule,
+    SlickCarouselModule,
   ],
 })
 export class AdminModule {}

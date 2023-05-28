@@ -1,0 +1,31 @@
+<button mat-icon-button mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+<h2>Carga de imágenes para propiedad</h2>
+<input type="file" (change)="uploadImages($event)" multiple>
+
+
+<h3>Lista de imágenes</h3>
+
+<div class="carousel-container">
+  <ngx-slick-carousel class="carousel slider" [config]="carouselConfig">
+    <div *ngFor="let image of images">
+      <img [src]="getImageUrl(image.filename)" alt="Image" class="carousel-image" />
+      <button (click)="deleteImage(image.id)" class="delete-button">Eliminar</button>
+    </div>
+      <p>{{ noImagesMessage }}</p>
+  </ngx-slick-carousel>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+</div>
+
+
+
+
+
+
+
+
+

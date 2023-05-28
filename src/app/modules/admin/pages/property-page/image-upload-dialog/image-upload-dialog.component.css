@@ -1,0 +1,15 @@
+.carousel-container {
+  width: 100%; /* Ajusta el ancho según tus necesidades */
+  height: 300px; /* Ajusta la altura según tus necesidades */
+}
+
+.carousel {
+  display: block;
+}
+
+
+.carousel-image {
+  width: 50%; /* Ajusta el ancho según tus necesidades */
+  height: 100%; /* Ajusta la altura según tus necesidades */
+  object-fit: cover; /* Ajusta el comportamiento de la imagen */
+}

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { PropertyFormComponent } from './property-form/property-form.component';
 import { PropertyService } from '../services/property-page.service';
 import { IProperty } from '../services/interfaces/property.interface';
+import { ImageUploadDialogComponent } from './image-upload-dialog/image-upload-dialog.component';
 
 
 @Component({
@@ -163,5 +164,24 @@ export class PropertyPageComponent implements OnInit {
           this.findAllProperties();
         }
       });
+  }
+
+  openImageUploadDialog(id_property: number) {
+    const dialogRef = this.dialog.open(ImageUploadDialogComponent, {
+      data: { id_property },
+      width: '1000px',
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'success') {
+        // Muestra el mensaje swal
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Imágenes cargadas exitosamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 }

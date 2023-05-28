@@ -9,6 +9,7 @@ import { IProperty } from './interfaces/property.interface';
 export class PropertyService {
   PROPERTY_URL = 'http://localhost:3000/property/';
 
+
   constructor(private readonly http: HttpClient) {}
 
   findAllProperties(): Observable<IProperty[]> {
@@ -61,4 +62,29 @@ export class PropertyService {
       `${this.PROPERTY_URL}search/${reference_number}`
     );
   }
+
+  uploadImages(id: number, images: File[]): Observable<IProperty[]> {
+    const formData = new FormData();
+    images.forEach((image, index) => {
+      formData.append('images', image, `image${index}`);
+    });
+
+    return this.http.post<IProperty[]>(
+      `${this.PROPERTY_URL}images/upload/${id}`,
+      formData
+    );
+  }
+
+  getPropertyImages(id: number): Observable<any> {
+    return this.http.get<any>(`${this.PROPERTY_URL}${id}/images`);
+  }
+
+  deleteImages(propertyId: number, imageIds: number[]): Observable<any> {
+    const body = { imageIds };
+    return this.http.delete<any>(
+      `${this.PROPERTY_URL}images/${propertyId}`,
+      { body }
+    );
+  }
+
 }

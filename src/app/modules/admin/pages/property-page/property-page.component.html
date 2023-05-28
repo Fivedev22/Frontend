@@ -54,6 +54,9 @@
           <button mat-icon-button color="basic" (click)="archiveProperty(row.id_property,row.reference_number, row.property_name)">
             <mat-icon>archive</mat-icon>
           </button>
+          <button mat-icon-button color="basic" (click)="openImageUploadDialog(row.id_property)">
+            <mat-icon>image</mat-icon>
+          </button>
         </td>
       </ng-container>
 
