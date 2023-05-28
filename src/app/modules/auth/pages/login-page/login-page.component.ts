@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-login-page',
@@ -12,19 +15,45 @@ export class LoginPageComponent implements OnInit {
   hide = true;
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private tokenService: TokenService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.formLogin = this.initForm();
   }
 
   onLogin(): void {
-    this.authService.login(this.formLogin.value).subscribe(
+    console.log(this.formLogin.value);
+
+    this.authService.ingresar(this.formLogin.value).subscribe(
       (data) => {
-        console.log(data);
+
+
+        if (!data) {
+
+          this.Alert('Datos incorrectos', 'warning', '#F25D5D', '#fff');
+        } else {
+          this.Alert('Autenticación correcta', 'success', '#75CB8D', '#fff');
+
+          localStorage.setItem(
+            'name',
+            this.formLogin.get('username')?.value
+          );
+
+      
+          
+
+          setTimeout(() => {
+            this.tokenService.setToken(data.token);
+            localStorage.setItem('anahi.accesstoken', data.token);
+            this.router.navigate(['/admin']);
+          }, 1900);
+        }
       },
       (error) => {
+        this.Alert('Datos incorrectos', 'warning', '#F25D5D', '#fff');
         console.error(error);
       }
     );
@@ -36,8 +65,27 @@ export class LoginPageComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      username: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      password: ['', Validators.required],
+      username: [null, [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      password: [null, Validators.required],
+    });
+  }
+
+  Alert(msg: any, status: any, bgColor: any, color: any) {
+    const Toast = Swal.mixin({
+      toast: true,
+      width: "30%",
+      position: 'top',
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      background: bgColor,
+      color: color,
+    });
+
+    Toast.fire({
+      icon: status,
+      title: msg,
+      iconColor: '#fff',
     });
   }
 }
