@@ -5,6 +5,8 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { Observable } from 'rxjs';
 import { IReservation } from '../services/interfaces/reservation.interface';
 import { ReservationService } from '../services/reservation.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-dashboard-page',
@@ -19,10 +21,12 @@ export class DashboardPageComponent implements AfterViewInit {
   private selectedReservation: IReservation | undefined;
 
 
-  constructor(private reservationService: ReservationService) {}
+  constructor(private reservationService: ReservationService, private snackBar: MatSnackBar) {}
 
   ngAfterViewInit() {
     this.initializeCalendar();
+    this.checkCurrentDateReservations(); // Agregar llamada al método para verificar las reservas en la fecha actual
+
   }
 
   initializeCalendar() {
@@ -92,7 +96,7 @@ export class DashboardPageComponent implements AfterViewInit {
 
   getColorByIndex(index: number): string {
     // Obtener el color en función del índice de la reserva
-    const colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow','mustard','gray','fuchsia','black']; // Lista de colores disponibles
+    const colors = ['red', 'blue', 'green', 'orange', 'purple','mustard','gray','fuchsia','black']; // Lista de colores disponibles
     const colorIndex = index % colors.length; // Obtener el índice del color en función del módulo
     return colors[colorIndex]; // Devolver el color correspondiente
   }
@@ -109,13 +113,34 @@ export class DashboardPageComponent implements AfterViewInit {
         // Abrir ventana emergente con los detalles de la reserva
         const popupWindow = window.open('', '_blank', 'width=600,height=400');
         popupWindow?.document.write(`
+        <html>
+        <head>
+          <style>
+            body {
+              background-color: #c8e6c9; /* Color de fondo verde manzana claro */
+              font-family: Georgia, 'Times New Roman', Times, serif; /* Fuente predeterminada */
+            }
+            h2, p {
+              font-style: italic; /* Fuente en cursiva */
+            }
+          </style>
+        </head>
+        <body>
           <h2>Detalles de la reserva</h2>
-          <p>Booking Number: ${reservation.booking_number}</p>
-          <p>Property Name: ${reservation.property.property_name}</p>
-          <p>Client Name: ${reservation.client.name} ${reservation.client.last_name}</p>
-          <p>Check-in Date: ${reservation.check_in_date}</p>
-          <p>Check-out Date: ${reservation.check_out_date}</p>
-          <!-- Agrega más detalles de la reserva según sea necesario -->
+          <p>- Número de reserva: <b>${reservation.booking_number}</b></p>
+          <p>- Propiedad: <b>${reservation.property.property_name}</b></p>
+          <p>- Cliente: <b>${reservation.client.name} ${reservation.client.last_name}</b></p>
+          <p>- Fecha check-in: <b>${reservation.check_in_date}</b></p>
+          <p>- Fecha check-out: <b>${reservation.check_out_date}</b></p>
+          <p>- Cantidad adultos: <b>${reservation.adults_number}</b></p>
+          <p>- Cantidad niños: <b>${reservation.kids_number}</b></p>
+          <p>- Mascotas: <b>${reservation.pets_number}</b></p>
+          <p>- Precio inicial: <b>$ ${reservation.starting_price.toLocaleString()}</b></p>
+          <p>- Descuento: <b>% ${reservation.discount}</b></p>
+          <p>- Monto depósito: <b>${reservation.deposit_amount.toLocaleString()}</b>$ </p>
+          <p>- Monto reserva: <b>$ ${reservation.booking_amount.toLocaleString()}</b></p>
+        </body>
+      </html>
         `);
       },
       (error) => {
@@ -139,5 +164,39 @@ export class DashboardPageComponent implements AfterViewInit {
       reservationDetailsElement.innerHTML = reservationDetailsHtml;
     }
   }
+
+  checkCurrentDateReservations() {
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0]; // Obtener la fecha actual en formato 'YYYY-MM-DD'
+    
+    this.reservationService.findAllReservations().subscribe(
+      (reservations: IReservation[]) => {
+        const hasReservations = reservations.some((reservation) => {
+          const eventStartDate = new Date(reservation.check_in_date).toISOString().split('T')[0]; // Obtener la fecha de check-in de la reserva en formato 'YYYY-MM-DD'
+          return eventStartDate === currentDateString;
+        });
+  
+        if (hasReservations) {
+          this.showNotification('¡Hay reservas para hoy!');
+        }  else {
+          this.showNotification('No hay reservas para hoy');
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+  
+  
+
+  showNotification(message: string) {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 86400000, // Duración de la notificación en milisegundos (24 horas)
+      horizontalPosition: 'center',
+      verticalPosition: 'top' // Cambia 'bottom' a 'top'
+    });
+  }
+  
   
 }

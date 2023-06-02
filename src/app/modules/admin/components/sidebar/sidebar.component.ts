@@ -39,5 +39,11 @@ export class SidebarComponent {
       icon: 'home',
       name: 'Apartamentos',
     },
+    {
+      id: 6,
+      url: 'statistics',
+      icon: 'query_stats',
+      name: 'Estadísticas',
+    },
   ];
 }

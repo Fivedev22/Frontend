@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PropertyService } from '../../services/property-page.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -91,15 +92,29 @@ export class ImageUploadDialogComponent implements OnInit {
     const idProperty: number = this.data.id_property;
     const imageIds: number[] = [imageId];
   
-    this.propertyService.deleteImages(idProperty, imageIds).subscribe(
-      () => {
-        // Imagen eliminada correctamente
-        this.getPropertyImages();
-      },
-      (error) => {
-        console.error('Error al eliminar la imagen:', error);
+    Swal.fire({
+      title: '¿Desea eliminar la imagen?',
+      text: 'Esta acción eliminará la imagen correspondiente a la propiedad.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Eliminar la imagen
+        this.propertyService.deleteImages(idProperty, imageIds).subscribe(
+          () => {
+            // Imagen eliminada correctamente
+            this.getPropertyImages();
+          },
+          (error) => {
+            console.error('Error al eliminar la imagen:', error);
+          }
+        );
       }
-    );
+    });
   }
 
 }

@@ -35,6 +35,9 @@ import { ComponentsModule } from 'src/app/global/components/components.module';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ImageUploadDialogComponent } from './pages/property-page/image-upload-dialog/image-upload-dialog.component';
+import { ContractUploadComponent } from './pages/reservation-page/contract-upload/contract-upload.component';
+import { UploadInventoryComponent } from './pages/property-page/upload-inventory/upload-inventory.component';
+import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
 
 
 
@@ -67,6 +70,9 @@ import { ImageUploadDialogComponent } from './pages/property-page/image-upload-d
     HeaderComponent,
     SidebarComponent,
     ImageUploadDialogComponent,
+    ContractUploadComponent,
+    UploadInventoryComponent,
+    StatisticPageComponent,
   ],
   imports: [
     CommonModule,

@@ -10,6 +10,7 @@ import { ReservationFormComponent } from './reservation-form/reservation-form.co
 import jsPDF from 'jspdf';
 import { PaymentFormComponent } from '../payment-page/payment-form/payment-form.component';
 import { Router } from '@angular/router';
+import { ContractUploadComponent } from './contract-upload/contract-upload.component';
 
 
 @Component({
@@ -179,6 +180,16 @@ export class ReservationPageComponent implements OnInit {
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe(data => {
       const doc = new jsPDF();
+
+      const addPageWithBackgroundColor = () => {
+        // Establece el color de fondo como azul cielo
+        const lightGreenColor = '#C1FFC1';
+        doc.setFillColor(lightGreenColor);
+        doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+      };
+
+      // Agrega la primera página con color de fondo
+      addPageWithBackgroundColor();
   
       // Agrega el logo y la información de la empresa
       const logo = new Image();
@@ -189,7 +200,7 @@ export class ReservationPageComponent implements OnInit {
       doc.text('Apartamentos Anahi', 50, 20);
       doc.setFontSize(12);
       doc.text('El Benteveo 990', 50, 30);
-      doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina', 50, 40);
+      doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158', 50, 40);
       doc.text('Telefono: 0 (3541) 64-8016', 50, 50);
       doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
   
@@ -212,12 +223,12 @@ export class ReservationPageComponent implements OnInit {
 
   
       // Establece la fuente y el tamaño del texto de detalles de reserva
-      doc.setFont('helvetica', 'bold'); // Cambia la fuente a negrita
+      doc.setFont('times', 'bolditalic'); // Cambia la fuente a negrita
       doc.setFontSize(14); // Reduce el tamaño del texto
       doc.text('Detalles de Reserva', 10, 90); // Agrega el nuevo título
   
       // Establece la fuente y el tamaño del texto de detalles
-      doc.setFont('helvetica', 'normal');
+      doc.setFont('arial', 'italic');
       doc.setFontSize(12);
   
       // Agrega los detalles de la reserva
@@ -234,11 +245,11 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
-      doc.text(`Precio Inicial: $ ${data.starting_price}`, 10, 230);
+      doc.text(`Precio Inicial: $ ${data.starting_price.toLocaleString()}`, 10, 230);
       doc.text(`Descuento: % ${data.discount}`, 10, 240);
-      doc.text(`Cantidad Deposito : $ ${data.deposit_amount}`, 10, 250);
-      doc.text(`Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit}`, 10, 260);
-      doc.text(`Monto de Reserva: $ ${data.booking_amount}`, 10, 270);
+      doc.text(`Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`, 10, 250);
+      doc.text(`Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit.toLocaleString()}`, 10, 260);
+      doc.text(`Monto de Reserva: $ ${data.booking_amount.toLocaleString()}`, 10, 270);
   
       // Dibuja una línea horizontal debajo de los detalles
       doc.setLineWidth(0.5);
@@ -278,6 +289,25 @@ export class ReservationPageComponent implements OnInit {
       if (result === 'save') { 
         // Actualizar la lista de cobros
         this.router.navigate(['admin/payments']); // Redirigir a la página de cobros
+      }
+    });
+  }
+
+  openUploadContract(id_booking: number) {
+    const dialogRef = this.dialog.open(ContractUploadComponent, {
+      data: { id_booking },
+      width: '1000px',
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'success') {
+        // Muestra el mensaje swal
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Contrato de alquiler subido exitosamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }

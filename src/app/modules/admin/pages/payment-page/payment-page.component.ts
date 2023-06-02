@@ -174,6 +174,15 @@ export class PaymentPageComponent  {
   generatePdfPayment(id: number) {
     this.paymentService.findOnePayment(id).subscribe(data => {
       const doc = new jsPDF();
+      const addPageWithBackgroundColor = () => {
+        // Establece el color de fondo como durazno
+        const lightGreenColor = '#C1FFC1';
+        doc.setFillColor(lightGreenColor);
+        doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+      };
+
+      // Agrega la primera página con color de fondo
+      addPageWithBackgroundColor();
   
       // Agrega el logo y la información de la empresa
       const logo = new Image();
@@ -184,15 +193,11 @@ export class PaymentPageComponent  {
       doc.text('Apartamentos Anahi', 50, 20);
       doc.setFontSize(12);
       doc.text('El Benteveo 990', 50, 30);
-      doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina', 50, 40);
-      doc.text('Telefono: 0 (3541) 64-8016', 50, 50);
+      doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158', 50, 40);
+      doc.text('Telefono: 0 (3541) 44-8820', 50, 50);
       doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
   
-      // Dibuja una línea horizontal debajo de la información de la empresa
-      doc.setLineWidth(0.5);
-      doc.line(10, 70, 200, 70);
   
-      // Establece la fuente y el tamaño del título de la factura
       // Establece la fuente y el tamaño del título de la factura
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
@@ -207,51 +212,49 @@ export class PaymentPageComponent  {
 
   
       // Establece la fuente y el tamaño del texto de detalles de reserva
-      doc.setFont('helvetica', 'bold'); // Cambia la fuente a negrita
-      doc.setFontSize(14); // Reduce el tamaño del texto
+      doc.setFont('helvetica', 'bolditalic'); // Cambia la fuente a negrita
+      doc.setFontSize(16); // Reduce el tamaño del texto
       doc.text('Detalles del pago', 10, 90); // Agrega el nuevo título
   
       // Establece la fuente y el tamaño del texto de detalles
-      doc.setFont('helvetica', 'normal');
+      doc.setFont('helvetica', 'italic');
       doc.setFontSize(12);
   
       // Agrega los detalles del pago
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
-      doc.text(`Nro Cobro: ${data.payment_number}`, 10, 110);
-      doc.text(`Recibido del Cliente: ${data.client.last_name} ${data.client.name}`, 10, 120);
+      doc.text(`Nro de cobro: ${data.payment_number}`, 10, 110);
+      doc.text(`Recibido del cliente: ${data.client.last_name} ${data.client.name}`, 10, 120);
       
-      doc.setFontSize(16); // Tamaño de fuente normal (12 puntos)
+      
+      doc.setFontSize(16); // Tamaño de fuente más grande (16 puntos)
+      doc.setFont('helvetica', 'italic');
+      doc.text('Estadia', 10, 130); // Subtítulo con tamaño de fuente más grande
 
-      
-      doc.text('Detalles de la estadia', 10, 130); // Subtítulo con tamaño de fuente más grande
-      doc.setFontSize(10); // Restaurar el tamaño de fuente normal
+      doc.setFontSize(12); // Restaurar el tamaño de fuente normal
    
-      doc.line(10, 125, 200, 135); // Línea horizontal
-
-
-      doc.text(`Nro Reserva: ${data.booking.booking_number}`, 10, 140);
+      doc.text(`Nro de reserva: ${data.booking.booking_number}`, 10, 140);
       doc.text(`Nombre de la propiedad: ${data.property.property_name}`, 10, 150);
-      doc.text(`Fecha de check-in: ${data.booking.check_in_date}`, 10, 160);
-      doc.text(`Fecha de check-out: ${data.booking.check_out_date}`, 10, 170);
+      doc.text(`Fecha de check in: ${data.booking.check_in_date}`, 10, 160);
+      doc.text(`Fecha de check out: ${data.booking.check_out_date}`, 10, 170);
 
  
       doc.setFontSize(16); // Tamaño de fuente más grande (16 puntos)
+      doc.setFont('helvetica', 'italic');
       doc.text('Importe Detallado', 10, 180); // Título "Importe"
-      doc.line(10, 155, 200, 185); // Línea horizontal para separar el título
 
       doc.setFontSize(12);  
 
-      doc.text(`Precio Inicial: $ ${data.booking.starting_price}`, 10, 190);
+      doc.text(`Precio inicial: $ ${data.booking.starting_price.toLocaleString()}`, 10, 190);
       doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
-      doc.text(`Cantidad Deposito : $ ${data.booking.deposit_amount}`, 10, 210);
-      doc.text(`Monto Reserva: $ ${data.booking.booking_amount}`, 10, 220);
-      doc.text(`Gastos Adicionales: $ ${data.extra_expenses}`, 10, 230);
-      doc.text(`Subtotal: $ ${data.payment_amount_subtotal}`, 10, 240);
-      doc.text(`Total: $ ${data.payment_amount_total}`, 10, 250);
+      doc.text(`Cantidad deposito : $ ${data.booking.deposit_amount.toLocaleString()}`, 10, 210);
+      doc.text(`Monto de reserva: $ ${data.booking.booking_amount.toLocaleString()}`, 10, 220);
+      doc.text(`Gastos adicionales: $ ${data.extra_expenses?.toLocaleString()}`, 10, 230);
+      doc.text(`Subtotal: $ ${data.payment_amount_subtotal.toLocaleString()}`, 10, 240);
+      doc.text(`Total: $ ${data.payment_amount_total.toLocaleString()}`, 10, 250);
   
       // Dibuja una línea horizontal debajo de los detalles
       doc.setLineWidth(0.5);
-      const lineY = 280; // Ajusta la coordenada Y para la línea
+      const lineY = 260; // Ajusta la coordenada Y para la línea
       doc.line(10, lineY, 200, lineY); // Ajusta la longitud de la línea
   
       // Establece la fuente y el tamaño del texto de agradecimiento

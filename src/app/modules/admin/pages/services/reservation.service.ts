@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { IReservation } from './interfaces/reservation.interface';
 import { IClient } from './interfaces/client.interface';
 
@@ -61,6 +61,24 @@ export class ReservationService {
   getOccupiedDatesForProperty(propertyId: number): Observable<Date[]> {
     const url = `${this.RESERVATION_URL}${propertyId}/occupied-dates`;
     return this.http.get<Date[]>(url);
+  }
+
+  uploadContract(id: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.RESERVATION_URL}contract/upload/${id}`, formData);
+  }
+
+  getBookingContracts(id: number): Observable<any> {
+    const url = `${this.RESERVATION_URL}contracts/${id}`; // Construye la URL para el nuevo endpoint
+    return this.http.get<any>(url).pipe(
+      map(response => response.contracts) // Extrae solo los contratos de la respuesta
+    );
+  }
+
+  deleteContract(contractId: number): Observable<any> {
+    return this.http.delete(`${this.RESERVATION_URL}contracts/${contractId}`);
   }
 
 }

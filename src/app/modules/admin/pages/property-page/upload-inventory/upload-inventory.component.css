@@ -1,0 +1,12 @@
+.custom-link {
+  color: #000;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Agrega un sombreado */
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.no-bullet {
+    list-style-type: none;
+}
+  

@@ -13,3 +13,7 @@
   height: 100%; /* Ajusta la altura según tus necesidades */
   object-fit: cover; /* Ajusta el comportamiento de la imagen */
 }
+
+.delete-icon {
+  cursor: pointer;
+}

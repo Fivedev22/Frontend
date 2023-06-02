@@ -1,0 +1,20 @@
+<h1>Inventario de Propiedad</h1>
+<button mat-icon-button mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+<input type="file" #fileInput>
+<button (click)="onFileSelected(fileInput.files)">Subir Inventario</button>
+
+<ul>
+    <li *ngFor="let inventory of inventories" class="no-bullet">
+      <a [href]="getDownloadUrl(inventory)" target="_blank" class="custom-link">
+        {{ inventory.filename }}
+      </a>
+      <button (click)="deleteInventory(inventory)">Eliminar</button>
+    </li>
+  </ul>
+
+  <div mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+  </div>
+  

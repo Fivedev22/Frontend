@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { IProperty } from './interfaces/property.interface';
 
 @Injectable({
@@ -85,6 +85,25 @@ export class PropertyService {
       `${this.PROPERTY_URL}images/${propertyId}`,
       { body }
     );
+  }
+
+
+  uploadInventory(id: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.PROPERTY_URL}inventory/upload/${id}`, formData);
+  }
+
+  getPropertyInventory(id: number): Observable<any> {
+    const url = `${this.PROPERTY_URL}inventories/${id}`; // Construye la URL para el nuevo endpoint
+    return this.http.get<any>(url).pipe(
+      map(response => response.inventory)
+    );
+  }
+
+  deleteInventory(InventoryId: number): Observable<any> {
+    return this.http.delete(`${this.PROPERTY_URL}inventories/${InventoryId}`);
   }
 
 }

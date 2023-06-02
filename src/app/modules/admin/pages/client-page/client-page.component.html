@@ -85,6 +85,16 @@
               (click)="archiveClient(row.id_client, row.name, row.last_name)"
               >archive</mat-icon
             >
+            <mat-icon
+            ngClass="icons"
+            (click)="generatePdfPayments(row.id_client)"
+            >payment</mat-icon
+            >
+            <mat-icon
+            ngClass="icons"
+            (click)="generatePdfBookings(row.id_client)"
+            >date_range</mat-icon
+            >
           </div>
         </td>
       </ng-container>

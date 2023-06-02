@@ -53,4 +53,12 @@ export class ClientService {
     return this.http.get<IClient>(`${this.CLIENT_URL}search/${document_number}`)
   }
 
+  getClientBookings(id: number): Observable<any> {
+    return this.http.get<any>(`${this.CLIENT_URL}${id}/bookings`);
+  }
+
+  getClientPayments(id: number): Observable<any> {
+    return this.http.get<any>(`${this.CLIENT_URL}${id}/payments`);
+  }
+
 }

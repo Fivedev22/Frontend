@@ -6,6 +6,7 @@ import { ClientPageComponent } from './pages/client-page/client-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 import { PropertyPageComponent } from './pages/property-page/property-page.component';
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
+import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'reservations', component: ReservationPageComponent },
       { path: 'properties', component: PropertyPageComponent },
       { path: 'payments', component: PaymentPageComponent },
+      { path: 'statistics', component: StatisticPageComponent },
     ],
   },
 ];

@@ -11,7 +11,9 @@
   <ngx-slick-carousel class="carousel slider" [config]="carouselConfig">
     <div *ngFor="let image of images">
       <img [src]="getImageUrl(image.filename)" alt="Image" class="carousel-image" />
-      <button (click)="deleteImage(image.id)" class="delete-button">Eliminar</button>
+      <button (click)="deleteImage(image.id)" class="delete-icon" >
+        <i class="material-icons">delete</i>
+      </button>           
     </div>
       <p>{{ noImagesMessage }}</p>
   </ngx-slick-carousel>
