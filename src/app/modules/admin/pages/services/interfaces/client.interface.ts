@@ -1,4 +1,5 @@
 import { IGenderType } from "./gender_type.interface";
+import { IProvince } from "./province.interface";
 
 export interface IClient {
     id_client?: number,
@@ -11,5 +12,5 @@ export interface IClient {
     is_active?: boolean,
     gender_type: IGenderType,
     document_type: number,
-    province?: number
+    province?: IProvince
 }

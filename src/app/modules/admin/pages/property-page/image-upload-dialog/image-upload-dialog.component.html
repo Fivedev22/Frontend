@@ -2,7 +2,8 @@
   <mat-icon>close</mat-icon>
 </button>
 <h2>Carga de imágenes para propiedad</h2>
-<input type="file" (change)="uploadImages($event)" multiple>
+<input type="file" (change)="onFileInputChange($event)" multiple>
+<button (click)="uploadImages()">Subir imágenes</button>
 
 
 <h3>Lista de imágenes</h3>

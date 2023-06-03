@@ -196,6 +196,10 @@ export class PaymentPageComponent  {
       doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158', 50, 40);
       doc.text('Telefono: 0 (3541) 44-8820', 50, 50);
       doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
+
+         // Dibuja una línea horizontal debajo de la información de la empresa
+         doc.setLineWidth(0.5);
+         doc.line(10, 70, 200, 70);
   
   
       // Establece la fuente y el tamaño del título de la factura
@@ -212,13 +216,13 @@ export class PaymentPageComponent  {
 
   
       // Establece la fuente y el tamaño del texto de detalles de reserva
-      doc.setFont('helvetica', 'bolditalic'); // Cambia la fuente a negrita
+      doc.setFont('arial', 'bolditalic'); // Cambia la fuente a negrita
       doc.setFontSize(16); // Reduce el tamaño del texto
       doc.text('Detalles del pago', 10, 90); // Agrega el nuevo título
   
       // Establece la fuente y el tamaño del texto de detalles
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(12);
+      doc.setFont('arial', 'italic');
+      doc.setFontSize(14);
   
       // Agrega los detalles del pago
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
@@ -227,10 +231,11 @@ export class PaymentPageComponent  {
       
       
       doc.setFontSize(16); // Tamaño de fuente más grande (16 puntos)
-      doc.setFont('helvetica', 'italic');
+      doc.setFont('arial', 'bolditalic');
       doc.text('Estadia', 10, 130); // Subtítulo con tamaño de fuente más grande
 
-      doc.setFontSize(12); // Restaurar el tamaño de fuente normal
+      doc.setFont('arial', 'italic');
+      doc.setFontSize(14); // Restaurar el tamaño de fuente normal
    
       doc.text(`Nro de reserva: ${data.booking.booking_number}`, 10, 140);
       doc.text(`Nombre de la propiedad: ${data.property.property_name}`, 10, 150);
@@ -239,14 +244,15 @@ export class PaymentPageComponent  {
 
  
       doc.setFontSize(16); // Tamaño de fuente más grande (16 puntos)
-      doc.setFont('helvetica', 'italic');
+      doc.setFont('arial', 'bolditalic');
       doc.text('Importe Detallado', 10, 180); // Título "Importe"
 
-      doc.setFontSize(12);  
+      doc.setFont('arial', 'italic');
+      doc.setFontSize(14);  
 
       doc.text(`Precio inicial: $ ${data.booking.starting_price.toLocaleString()}`, 10, 190);
-      doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
       doc.text(`Cantidad deposito : $ ${data.booking.deposit_amount.toLocaleString()}`, 10, 210);
+      doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
       doc.text(`Monto de reserva: $ ${data.booking.booking_amount.toLocaleString()}`, 10, 220);
       doc.text(`Gastos adicionales: $ ${data.extra_expenses?.toLocaleString()}`, 10, 230);
       doc.text(`Subtotal: $ ${data.payment_amount_subtotal.toLocaleString()}`, 10, 240);
@@ -258,9 +264,13 @@ export class PaymentPageComponent  {
       doc.line(10, lineY, 200, lineY); // Ajusta la longitud de la línea
   
       // Establece la fuente y el tamaño del texto de agradecimiento
-      doc.setFont('Arial', 'bolditalic'); // Utiliza 'italic' para establecer la fuente en cursiva
-      doc.setFontSize(18);
-      doc.text('Gracias por visitarnos!', 10, lineY + 10); // Ajusta la coordenada Y del texto
+      doc.setFont('Arial', 'italic'); // Utiliza 'italic' para establecer la fuente en cursiva
+      doc.setFontSize(20);
+      const text = 'Gracias por reservar!';
+      const textWidth = doc.getTextWidth(text);
+      const pageWidth2 = doc.internal.pageSize.getWidth();
+      const x = (pageWidth2 - textWidth) / 2;
+      doc.text(text, x, lineY + 10);
 
   
       // Obtiene los bytes del PDF

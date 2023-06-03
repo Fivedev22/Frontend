@@ -80,19 +80,21 @@ export class DashboardPageComponent implements AfterViewInit {
   }
 
   transformReservationsToEvents(reservations: IReservation[]): EventInput[] {
-    // Transformar los datos de las reservas en eventos para el calendario
     const events: EventInput[] = reservations.map((reservation, index) => {
+      const checkOutDate = new Date(reservation.check_out_date);
+      checkOutDate.setDate(checkOutDate.getDate() + 1); // Agregar un día a la fecha de check_out
       return {
         title: ` N° Rva: ${reservation.booking_number} - Propiedad: ${reservation.property.property_name} - Cliente: ${reservation.client.name} ${reservation.client.last_name}`,
         start: reservation.check_in_date,
-        end: reservation.check_out_date,
-        color: this.getColorByIndex(index), // Obtener el color en función del índice
-        id: reservation.id_booking?.toString() // Convierte a string el ID de la reserva
+        end: checkOutDate.toISOString().split('T')[0], // Utilizar la fecha ajustada de check_out
+        color: this.getColorByIndex(index),
+        id: reservation.id_booking?.toString()
       };
     });
-
+  
     return events;
   }
+  
 
   getColorByIndex(index: number): string {
     // Obtener el color en función del índice de la reserva

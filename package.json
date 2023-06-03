@@ -26,6 +26,7 @@
     "@sweetalert2/ngx-sweetalert2": "^12.1.0",
     "angular-sweetalert-2": "^1.0.1",
     "chart.js": "^4.3.0",
+    "chartjs-chart-geo": "^4.2.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "moment": "^2.29.4",

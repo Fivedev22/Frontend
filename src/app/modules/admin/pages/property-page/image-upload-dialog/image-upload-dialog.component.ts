@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 export class ImageUploadDialogComponent implements OnInit {
   images!: any[];
   noImagesMessage!: string;
+  selectedImages: File[] = [];
+
 
    carouselConfig: any = {
     slidesToShow: 1,
@@ -50,6 +52,7 @@ export class ImageUploadDialogComponent implements OnInit {
   ngOnInit() {
     this.getPropertyImages();
   }
+  
 
   getPropertyImages() {
     const idProperty: number = this.data.id_property;
@@ -68,12 +71,10 @@ export class ImageUploadDialogComponent implements OnInit {
     );
   }
 
-  uploadImages(event: any) {
-    const fileList: FileList = event.target.files;
-    const images: File[] = Array.from(fileList);
+  uploadImages() {
     const idProperty: number = this.data.id_property;
-
-    this.propertyService.uploadImages(idProperty, images).subscribe(
+  
+    this.propertyService.uploadImages(idProperty, this.selectedImages).subscribe(
       () => {
         this.getPropertyImages();
         this.dialogRef.close('success');
@@ -83,6 +84,13 @@ export class ImageUploadDialogComponent implements OnInit {
       }
     );
   }
+
+  onFileInputChange(event: any) {
+    const fileList: FileList = event.target.files;
+    this.selectedImages = Array.from(fileList);
+  }
+  
+  
 
   getImageUrl(filename: string): string {
     return 'http://localhost:3000/uploads/' + filename;

@@ -223,13 +223,13 @@ export class ReservationPageComponent implements OnInit {
 
   
       // Establece la fuente y el tamaño del texto de detalles de reserva
-      doc.setFont('times', 'bolditalic'); // Cambia la fuente a negrita
-      doc.setFontSize(14); // Reduce el tamaño del texto
-      doc.text('Detalles de Reserva', 10, 90); // Agrega el nuevo título
+      doc.setFont('arial', 'bolditalic'); // Cambia la fuente a negrita
+      doc.setFontSize(16); // Reduce el tamaño del texto
+      doc.text('Detalles de reserva', 10, 90); // Agrega el nuevo título
   
       // Establece la fuente y el tamaño del texto de detalles
       doc.setFont('arial', 'italic');
-      doc.setFontSize(12);
+      doc.setFontSize(14);
   
       // Agrega los detalles de la reserva
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
@@ -238,16 +238,16 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Procedencia de Reserva: ${data.booking_origin.origin_name}`, 10, 130);
       doc.text(`Cliente: ${data.client.name} ${data.client.last_name}`, 10, 140);
       doc.text(`Propiedad: ${data.property.property_name}`, 10, 150);
-      doc.text(`Adultos: ${data.adults_number}`, 10, 160);
-      doc.text(`Menores: ${data.kids_number}`, 10, 170);
-      doc.text(`Mascotas: ${data.pets_number}`, 10, 180);
+      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 160);
+      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 170);
+      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 180);
       doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 190);
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
       doc.text(`Precio Inicial: $ ${data.starting_price.toLocaleString()}`, 10, 230);
-      doc.text(`Descuento: % ${data.discount}`, 10, 240);
       doc.text(`Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`, 10, 250);
+      doc.text(`Descuento: % ${data.discount}`, 10, 240);
       doc.text(`Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit.toLocaleString()}`, 10, 260);
       doc.text(`Monto de Reserva: $ ${data.booking_amount.toLocaleString()}`, 10, 270);
   
@@ -259,8 +259,12 @@ export class ReservationPageComponent implements OnInit {
       // Establece la fuente y el tamaño del texto de agradecimiento
       doc.setFont('Arial', 'italic'); // Utiliza 'italic' para establecer la fuente en cursiva
       doc.setFontSize(20);
-      doc.text('Gracias por reservar!', 10, lineY + 10); // Ajusta la coordenada Y del texto
-
+      const text = 'Gracias por reservar!';
+      const textWidth = doc.getTextWidth(text);
+      const pageWidth2 = doc.internal.pageSize.getWidth();
+      const x = (pageWidth2 - textWidth) / 2;
+      doc.text(text, x, lineY + 10);
+      
   
       // Obtiene los bytes del PDF
       const pdfBytes = doc.output();
