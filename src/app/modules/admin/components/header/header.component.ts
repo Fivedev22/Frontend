@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private renderer: Renderer2) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   logOut() {
     localStorage.removeItem("anahi.accesstoken");
@@ -20,5 +20,9 @@ export class HeaderComponent implements OnInit {
 
   toggle() {
     this.toggleSideBarForMe.emit();
+  }
+  goToWebPage() {
+    const externalUrl = 'https://anahiapartamentosweb.vercel.app/';
+    window.location.href = externalUrl;
   }
 }
