@@ -9,9 +9,15 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
+  username!: any
+
   constructor(private router: Router, private renderer: Renderer2) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.username = localStorage.getItem('name')
+
+
+  }
 
   logOut() {
     localStorage.removeItem("anahi.accesstoken");
