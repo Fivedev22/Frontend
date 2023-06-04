@@ -8,6 +8,9 @@ import { IClient } from '../services/interfaces/client.interface';
 import Swal from 'sweetalert2';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import jsPDF from 'jspdf';
+import { UnarchiveClientComponent } from './unarchive-client/unarchive-client.component';
+import { PaymentService } from '../services/payment.service';
+import { ReservationService } from '../services/reservation.service';
 
 @Component({
   selector: 'app-client-page',
@@ -36,6 +39,8 @@ export class ClientPageComponent implements OnInit {
   constructor(
     private readonly dialog: MatDialog,
     private readonly clientService: ClientService,
+    private readonly paymentService: PaymentService,
+    private readonly reservationService: ReservationService,
     private customPaginator: MatPaginatorIntl
   ) {
     customPaginator.itemsPerPageLabel = 'Filas por página';
@@ -62,100 +67,122 @@ export class ClientPageComponent implements OnInit {
   }
 
   deleteClient(id: number, name: string, last_name: string) {
-    Swal.fire({
-      title: '¿Desea eliminar el cliente?',
-      text: `${name} ${last_name}`,
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#F25D5D',
-      cancelButtonColor: '#686868',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.clientService.removeClient(+id).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Cliente eliminado correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllClients();
-            });
+    this.reservationService.findAllReservations().subscribe({
+      next: (reservations) => {
+        this.paymentService.findAllPayments().subscribe({
+          next: (payments) => {
+            const hasReservations = reservations.some((reservation) => reservation.client.id_client === id);
+            const hasPayments = payments.some((payment) => payment.client.id_client === id);
+            if (hasReservations || hasPayments) {
+              Swal.fire({
+                title: 'No se puede eliminar el cliente',
+                text: `${name} ${last_name} tiene reservas o cobros asociados.`,
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#F25D5D',
+              });
+            } else {
+              Swal.fire({
+                title: '¿Desea eliminar el cliente?',
+                text: `${name} ${last_name}`,
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#F25D5D',
+                cancelButtonColor: '#686868',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.clientService.removeClient(id).subscribe({
+                    next: (res) => {
+                      Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Cliente eliminado correctamente',
+                        showConfirmButton: false,
+                        timer: 1800,
+                      }).then(() => {
+                        this.findAllClients();
+                      });
+                    },
+                    error(e) {
+                      alert(e);
+                    },
+                  });
+                }
+              });
+            }
           },
           error(e) {
             alert(e);
           },
         });
-      }
+      },
+      error(e) {
+        alert(e);
+      },
     });
   }
+  
 
   archiveClient(id_client: number, name: string, last_name: string) {
-    Swal.fire({
-      title: '¿Desea archivar el cliente?',
-      text: `${name} ${last_name}`,
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonText: 'Archivar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#F25D5D',
-      cancelButtonColor: '#686868',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.clientService.archiveClient(+id_client).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Cliente archivado correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllClients();
-            });
+    this.reservationService.findAllReservations().subscribe({
+      next: (reservations) => {
+        this.paymentService.findAllPayments().subscribe({
+          next: (payments) => {
+            const hasReservations = reservations.some((reservation) => reservation.client.id_client === id_client);
+            const hasPayments = payments.some((payment) => payment.client.id_client === id_client);
+            if (hasReservations || hasPayments) {
+              Swal.fire({
+                title: 'No se puede archivar el cliente',
+                text: `${name} ${last_name} tiene reservas o cobros asociados.`,
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#F25D5D',
+              });
+            } else {
+              Swal.fire({
+                title: '¿Desea archivar el cliente?',
+                text: `${name} ${last_name}`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Archivar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#F25D5D',
+                cancelButtonColor: '#686868',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.clientService.archiveClient(id_client).subscribe({
+                    next: (res) => {
+                      Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Cliente archivado correctamente',
+                        showConfirmButton: false,
+                        timer: 1800,
+                      }).then(() => {
+                        this.findAllClients();
+                      });
+                    },
+                    error(e) {
+                      alert(e);
+                    },
+                  });
+                }
+              });
+            }
           },
           error(e) {
             alert(e);
           },
         });
-      }
+      },
+      error(e) {
+        alert(e);
+      },
     });
   }
-
-  unarchiveClient(id_client: number, name: string, last_name: string) {
-    Swal.fire({
-      title: '¿Desea desarchivar el cliente?',
-      text: `${name} ${last_name}`,
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonText: 'Desarchivar',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#F25D5D',
-      cancelButtonColor: '#686868',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.clientService.unarchiveClient(+id_client).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Cliente desarchivado correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllArchived();
-            });
-          },
-          error(e) {
-            alert(e);
-          },
-        });
-      }
-    });
-  }
+  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -473,6 +500,18 @@ export class ClientPageComponent implements OnInit {
         console.error('Error al generar el PDF de los cobros del cliente:', error);
       }
     );
+  }
+
+  openArchivedClients() {
+    const dialogRef = this.dialog.open(UnarchiveClientComponent, {
+      width: '400px', // Especifica el ancho del diálogo
+      disableClose: true, // Evita que se cierre al hacer clic fuera del diálogo
+    });
+  
+    // Opcionalmente, puedes suscribirte a los eventos del diálogo
+    dialogRef.afterClosed().subscribe(result => {
+      this.findAllClients();
+    });
   }
   
 }

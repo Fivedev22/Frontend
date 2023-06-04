@@ -78,6 +78,8 @@ export class UploadInventoryComponent implements OnInit {
     return baseUrl + filename;
   }
 
+
+
   deleteInventory(inventory: any) {
     Swal.fire({
       title: '¿Desea eliminar el inventario?',

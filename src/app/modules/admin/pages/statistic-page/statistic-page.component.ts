@@ -196,7 +196,7 @@ export class StatisticPageComponent implements AfterViewInit {
   
         const labels = Object.keys(provinceCounts);
         const data = Object.values(provinceCounts);
-        const backgroundColors = this.generateRandomColors(labels.length);
+        const backgroundColors = this.generateFixedColors(labels.length);
   
         const chart = new Chart(ctx, {
           type: 'doughnut',
@@ -228,20 +228,31 @@ export class StatisticPageComponent implements AfterViewInit {
     }
   }
   
-  // Función auxiliar para generar colores aleatorios
-  generateRandomColors(count: number) {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const color = `rgba(${this.getRandomValue(0, 255)}, ${this.getRandomValue(0, 255)}, ${this.getRandomValue(0, 255)}, 0.8)`;
-      colors.push(color);
-    }
-    return colors;
+  generateFixedColors(count: number) {
+    const colors = [
+      'rgba(255, 0, 0, 0.8)',   // Rojo
+      'rgba(0, 255, 0, 0.8)',   // Verde
+      'rgba(0, 0, 255, 0.8)',   // Azul
+      'rgba(255, 255, 0, 0.8)', // Amarillo
+      'rgba(255, 0, 255, 0.8)', // Magenta
+      'rgba(0, 255, 255, 0.8)', // Cian
+      'rgba(128, 128, 128, 0.8)', // Gris
+      'rgba(255, 165, 0, 0.8)',  // Naranja
+      'rgba(0, 128, 0, 0.8)',    // Verde oscuro
+      'rgba(128, 0, 128, 0.8)',  // Púrpura
+      'rgba(0, 0, 128, 0.8)',    // Azul oscuro
+      'rgba(255, 192, 203, 0.8)',// Rosa
+      'rgba(128, 128, 0, 0.8)',  // Oliva
+      'rgba(128, 0, 0, 0.8)',    // Marrón
+      'rgba(0, 128, 128, 0.8)',  // Verde azulado
+      'rgba(0, 0, 0, 0.8)',      // Negro
+      'rgba(255, 255, 255, 0.8)' // Blanco
+    ];
+  
+    const colorCount = Math.min(count, colors.length);
+    return colors.slice(0, colorCount);
   }
   
-  // Función auxiliar para generar un valor aleatorio dentro de un rango
-  getRandomValue(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 
 
   createGenderChart() {
@@ -259,7 +270,7 @@ export class StatisticPageComponent implements AfterViewInit {
 
       const labels = Object.keys(genderCounts);
       const data = Object.values(genderCounts);
-      const backgroundColors = this.generateRandomColors(labels.length);
+      const backgroundColors = this.generateFixedColors(labels.length);
 
       const chart = new Chart(ctx, {
         type: 'polarArea',
@@ -309,7 +320,7 @@ topClientChart() {
       const topClients = Object.keys(clientCounts).sort((a, b) => clientCounts[b] - clientCounts[a]).slice(0, 5);
       const labels = topClients;
       const data = topClients.map(client => clientCounts[client]);
-      const backgroundColors = this.generateRandomColors(labels.length);
+      const backgroundColors = this.generateFixedColors(labels.length);
 
       const chart = new Chart(ctx, {
         type: 'bar',
@@ -388,7 +399,7 @@ topPaymentTypesChart() {
       const topPaymentTypes = Object.keys(paymentTypeCounts).sort((a, b) => paymentTypeCounts[b] - paymentTypeCounts[a]).slice(0, 5);
       const labels = topPaymentTypes;
       const data = topPaymentTypes.map(paymentType => paymentTypeCounts[paymentType]);
-      const backgroundColors = this.generateRandomColors(labels.length);
+      const backgroundColors = this.generateFixedColors(labels.length);
 
       const chart = new Chart(ctx, {
         type: 'pie',
@@ -548,7 +559,7 @@ createReservationsByMonthChart() {
       });
 
       // Generar colores aleatorios para las barras
-      const barColors = this.generateRandomColors(allMonths.length);
+      const barColors = this.generateFixedColors(allMonths.length);
 
       // Crear el gráfico de barras con los datos de cantidad de reservas por mes
       const chart = new Chart(ctx, {
@@ -607,7 +618,7 @@ createPropertyChart() {
 
       // Obtener los nombres de los tipos de propiedad y los colores para las barras
       const labels = Object.keys(typeCounts);
-      const backgroundColors = this.generateRandomColors(labels.length);
+      const backgroundColors = this.generateFixedColors(labels.length);
 
       // Obtener la cantidad de propiedades por tipo
       const data = Object.values(typeCounts);
@@ -670,7 +681,7 @@ PropertyByProvinceChart() {
 
       // Obtener los nombres de las provincias y los colores para las secciones del gráfico de pastel
       const labels = Object.keys(provinceCounts);
-      const backgroundColors = this.generateRandomColors(labels.length);
+      const backgroundColors = this.generateFixedColors(labels.length);
 
       // Obtener la cantidad de propiedades por provincia
       const data = Object.values(provinceCounts);

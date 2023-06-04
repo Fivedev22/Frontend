@@ -106,4 +106,8 @@ export class PropertyService {
     return this.http.delete(`${this.PROPERTY_URL}inventories/${InventoryId}`);
   }
 
+  getLastNumber(): Observable<number> {
+    return this.http.get<number>('http://localhost:3000/property/get-last-number/:')
+  }
+
 }

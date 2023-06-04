@@ -38,6 +38,7 @@ import { ImageUploadDialogComponent } from './pages/property-page/image-upload-d
 import { ContractUploadComponent } from './pages/reservation-page/contract-upload/contract-upload.component';
 import { UploadInventoryComponent } from './pages/property-page/upload-inventory/upload-inventory.component';
 import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
+import { UnarchiveClientComponent } from './pages/client-page/unarchive-client/unarchive-client.component';
 
 
 
@@ -73,6 +74,7 @@ import { StatisticPageComponent } from './pages/statistic-page/statistic-page.co
     ContractUploadComponent,
     UploadInventoryComponent,
     StatisticPageComponent,
+    UnarchiveClientComponent,
   ],
   imports: [
     CommonModule,

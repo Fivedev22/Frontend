@@ -295,7 +295,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
           <mat-error align="end" *ngIf="hasError('starting_price', 'min')"
-            ><strong>Mínimo 10.000 como monto inicial</strong>
+            ><strong>Mínimo $ 100 como monto inicial</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
@@ -316,6 +316,7 @@
         </mat-form-field>
       </mat-grid-tile>
 
+
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Monto de Seña</mat-label>
@@ -335,7 +336,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
           <mat-error align="end" *ngIf="hasError('deposit_amount', 'min')"
-            ><strong>Mínimo 10.000 como monto de seña</strong>
+            ><strong>Mínimo $ 100 como monto de seña</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>

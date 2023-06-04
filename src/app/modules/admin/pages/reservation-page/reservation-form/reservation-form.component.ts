@@ -41,6 +41,9 @@ export class ReservationFormComponent implements OnInit {
   showNotFoundMessage2: any;
   propertyDetail = new FormControl();
   clientDetail = new FormControl();
+  montoConDescuento!: number;
+
+
 
   
 
@@ -171,13 +174,16 @@ export class ReservationFormComponent implements OnInit {
     if (Array.isArray(this.clients)) {
       return this.clients.filter(
         (client) =>
-          client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
+          client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1 ||
+          client.name.toLowerCase().indexOf(filterValue) !== -1 ||
+          client.last_name.toLowerCase().indexOf(filterValue) !== -1
       );
     } else {
       // Manejar el caso en el que this.clients no sea un arreglo
       return [];
     }
   }
+  
   
 
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
@@ -217,12 +223,17 @@ export class ReservationFormComponent implements OnInit {
   
     // Comprueba si el valor ingresado está en la lista de opciones
     const optionExists = this.filteredClients.some((client) => {
-      return client.document_number.toLowerCase().includes(value.toLowerCase());
+      const documentNumberMatch = client.document_number.toLowerCase().includes(value.toLowerCase());
+      const firstNameMatch = client.name.toLowerCase().includes(value.toLowerCase());
+      const lastNameMatch = client.last_name.toLowerCase().includes(value.toLowerCase());
+  
+      return documentNumberMatch || firstNameMatch || lastNameMatch;
     });
   
     // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "cliente no encontrado"
     this.showNotFoundMessage2 = value && !optionExists;
   }
+  
   
   
 
@@ -242,10 +253,10 @@ export class ReservationFormComponent implements OnInit {
       check_out_date: ['', [Validators.required]],
       check_in_hour: ['', [Validators.required]],
       check_out_hour: ['', [Validators.required]],
-      starting_price: ['', [Validators.required, Validators.min(10000)]],
+      starting_price: ['', [Validators.required, Validators.min(100)]],
       discount: ['', Validators.min(0)],
-      deposit_amount: ['', [Validators.required, Validators.min(10000)]],
-      estimated_amount_deposit: [10000],
+      deposit_amount: ['', [Validators.required, Validators.min(100)]],
+      estimated_amount_deposit: [100],
       booking_amount: ['',[Validators.required, Validators.min(0)]],  
     },{ validator: this.checkInCheckOutValidator });
   }
@@ -337,9 +348,9 @@ export class ReservationFormComponent implements OnInit {
     const montoInicial = Number(this.reservationForm.controls['starting_price'].value);
     const porcentajeDescuento = Number(this.reservationForm.controls['discount'].value);
     const descuento = montoInicial * (porcentajeDescuento / 100);
-    const montoConDescuento = montoInicial - descuento;
+    this.montoConDescuento = montoInicial - descuento;
     const montoSenia = Number(this.reservationForm.controls['deposit_amount'].value);
-    let precioReserva = montoConDescuento - montoSenia;
+    let precioReserva = this.montoConDescuento - montoSenia;
     if (precioReserva < 0) {
         precioReserva = 0;
     }

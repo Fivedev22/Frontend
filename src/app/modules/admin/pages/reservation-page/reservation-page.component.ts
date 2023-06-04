@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import { PaymentFormComponent } from '../payment-page/payment-form/payment-form.component';
 import { Router } from '@angular/router';
 import { ContractUploadComponent } from './contract-upload/contract-upload.component';
+import { PaymentService } from '../services/payment.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class ReservationPageComponent implements OnInit {
   constructor(
     private readonly dialog: MatDialog,
     private readonly reservationService: ReservationService,
+    private readonly paymentService: PaymentService,
     private router: Router,
   ) { }
 
@@ -55,70 +57,102 @@ export class ReservationPageComponent implements OnInit {
   }
 
   deleteReservation(id: number, booking_number: number, check_in_date: Date) {
-    Swal.fire({
-      title: '¿Desea eliminar la reserva?',
-      text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
-      icon: 'error',
-      showCancelButton: true,
-
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar',
-
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.reservationService.removeReservation(+id)
-          .subscribe({
-            next: (res) => {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Reserva eliminada correctamente',
-                showConfirmButton: false,
-                timer: 1800
-              }).then(() => {
-                this.findAllReservations();
-              })
-            },
-            error(e) {
-              alert(e)
-            },
-          })
-      }
-    })
+    this.paymentService.findAllPayments().subscribe({
+      next: (payments) => {
+        const hasPayments = payments.some((payment) => payment.booking.id_booking === id);
+        if (hasPayments) {
+          Swal.fire({
+            title: 'No se puede eliminar la reserva',
+            text: `La reserva N°: ${booking_number} tiene un cobro asociado.`,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#F25D5D',
+          });
+        } else {
+          Swal.fire({
+            title: '¿Desea eliminar la reserva?',
+            text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.reservationService.removeReservation(id).subscribe({
+                next: (res) => {
+                  Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Reserva eliminada correctamente',
+                    showConfirmButton: false,
+                    timer: 1800,
+                  }).then(() => {
+                    this.findAllReservations();
+                  });
+                },
+                error(e) {
+                  alert(e);
+                },
+              });
+            }
+          });
+        }
+      },
+      error(e) {
+        alert(e);
+      },
+    });
   }
+  
 
   archiveReservation(id: number, booking_number: number, check_in_date: Date) {
-    Swal.fire({
-      title: '¿Desea archivar la reserva?',
-      text: `Reserva N°: ${booking_number} - Fecha Check-in: ${check_in_date}`,
-      icon: 'error',
-      showCancelButton: true,
-
-      confirmButtonText: 'Archivar',
-      cancelButtonText: 'Cancelar',
-
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.reservationService.archiveReservation(+id)
-          .subscribe({
-            next: (res) => {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Reserva archivada correctamente',
-                showConfirmButton: false,
-                timer: 1800
-              }).then(() => {
-                this.findAllReservations();
-              })
-            },
-            error(e) {
-              alert(e)
-            },
-          })
-      }
-    })
+    this.paymentService.findAllPayments().subscribe({
+      next: (payments) => {
+        const hasPayments = payments.some((payment) => payment.booking.id_booking === id);
+        if (hasPayments) {
+          Swal.fire({
+            title: 'No se puede archivar la reserva',
+            text: `La reserva N°: ${booking_number} tiene un cobro asociado.`,
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#F25D5D',
+          });
+        } else {
+          Swal.fire({
+            title: '¿Desea archivar la reserva?',
+            text: `Reserva N°: ${booking_number} - Fecha Check-in: ${check_in_date}`,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'Archivar',
+            cancelButtonText: 'Cancelar',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.reservationService.archiveReservation(id).subscribe({
+                next: (res) => {
+                  Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Reserva archivada correctamente',
+                    showConfirmButton: false,
+                    timer: 1800,
+                  }).then(() => {
+                    this.findAllReservations();
+                  });
+                },
+                error(e) {
+                  alert(e);
+                },
+              });
+            }
+          });
+        }
+      },
+      error(e) {
+        alert(e);
+      },
+    });
   }
+  
 
   unarchiveReservation(id: number, booking_number: number, check_in_date: Date) {
     Swal.fire({

@@ -52,6 +52,18 @@ export class PropertyFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (!this.propertyData) {
+      this.propertyService.getLastNumber().subscribe(number => {
+        if (number) {
+            this.propertyForm.patchValue({reference_number: number + 1});
+          } else {
+            this.propertyForm.patchValue({reference_number: 1});
+          }      
+        });
+    }
+
+
+
     this.propertyForm = this.initForm();
     this.findAllProvinces();
     this.findAllPropertyTypes();
@@ -69,7 +81,7 @@ export class PropertyFormComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      reference_number: [this.generateRandomNumber()],
+      reference_number: [''],
       property_name: [
         '',
         [
@@ -159,10 +171,7 @@ export class PropertyFormComponent implements OnInit {
     });
   }
 
-  generateRandomNumber(): string {
-    const randomNum = Math.floor(Math.random() * 10000).toString();
-    return randomNum.padStart(4, '');
-  }
+
 
   addPropertyData(data: any) {
     this.actionTitle = 'Modificar Propiedad';
