@@ -1,22 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PropertyService } from '../../services/property-page.service';
+import { PropertyService } from '../../../services/property-page.service';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-image-upload-dialog',
   templateUrl: './image-upload-dialog.component.html',
-  styleUrls: ['./image-upload-dialog.component.css']
+  styleUrls: ['./image-upload-dialog.component.css'],
 })
-
 export class ImageUploadDialogComponent implements OnInit {
   images!: any[];
   noImagesMessage!: string;
   selectedImages: File[] = [];
 
-
-   carouselConfig: any = {
+  carouselConfig: any = {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
@@ -28,8 +25,8 @@ export class ImageUploadDialogComponent implements OnInit {
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 480,
@@ -37,22 +34,21 @@ export class ImageUploadDialogComponent implements OnInit {
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
-          dots: true
-        }
-      }
-    ]
+          dots: true,
+        },
+      },
+    ],
   };
 
   constructor(
     private readonly dialogRef: MatDialogRef<ImageUploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id_property: number },
-    private readonly propertyService: PropertyService,
+    private readonly propertyService: PropertyService
   ) {}
 
   ngOnInit() {
     this.getPropertyImages();
   }
-  
 
   getPropertyImages() {
     const idProperty: number = this.data.id_property;
@@ -73,24 +69,24 @@ export class ImageUploadDialogComponent implements OnInit {
 
   uploadImages() {
     const idProperty: number = this.data.id_property;
-  
-    this.propertyService.uploadImages(idProperty, this.selectedImages).subscribe(
-      () => {
-        this.getPropertyImages();
-        this.dialogRef.close('success');
-      },
-      (error) => {
-        console.error('Error al cargar imágenes:', error);
-      }
-    );
+
+    this.propertyService
+      .uploadImages(idProperty, this.selectedImages)
+      .subscribe(
+        () => {
+          this.getPropertyImages();
+          this.dialogRef.close('success');
+        },
+        (error) => {
+          console.error('Error al cargar imágenes:', error);
+        }
+      );
   }
 
   onFileInputChange(event: any) {
     const fileList: FileList = event.target.files;
     this.selectedImages = Array.from(fileList);
   }
-  
-  
 
   getImageUrl(filename: string): string {
     return 'http://localhost:3000/uploads/' + filename;
@@ -99,7 +95,7 @@ export class ImageUploadDialogComponent implements OnInit {
   deleteImage(imageId: number) {
     const idProperty: number = this.data.id_property;
     const imageIds: number[] = [imageId];
-  
+
     Swal.fire({
       title: '¿Desea eliminar la imagen?',
       text: 'Esta acción eliminará la imagen correspondiente a la propiedad.',
@@ -108,7 +104,7 @@ export class ImageUploadDialogComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         // Eliminar la imagen
@@ -124,5 +120,4 @@ export class ImageUploadDialogComponent implements OnInit {
       }
     });
   }
-
 }

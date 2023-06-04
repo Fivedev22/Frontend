@@ -1,0 +1,566 @@
+<div mat-dialog-title>
+  <h1>{{ actionTitle }}</h1>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <mat-grid-list cols="2" rowHeight="2:0.5" gutterSize="15px">
+    <form [formGroup]="propertyForm" autocomplete="off" novalidate>
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Número de Referencia</mat-label>
+          <input
+            formControlName="reference_number"
+            matInput
+            placeholder="Número de Referencia"
+            type="number"
+          />
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input
+            formControlName="property_name"
+            matInput
+            placeholder="Ingrese el nombre"
+            type="text"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('property_name', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('property_name', 'minlength')"
+            >Mínimo <strong>5 caracteres</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('property_name', 'maxlength')"
+            >Maximo <strong>50 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de Propiedad</mat-label>
+          <mat-select formControlName="property_type" placeholder="Seleccione">
+            <mat-option
+              *ngFor="let propertyType of property_types"
+              [value]="propertyType.id"
+            >
+              {{ propertyType.property_type_name }}</mat-option
+            >
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('property_type', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Metros Cuadrados</mat-label>
+          <input
+            formControlName="square_meter"
+            matInput
+            placeholder="Ingrese los metros cuadrados"
+            type="text"
+          />
+          <mat-error align="end" *ngIf="hasError('square_meter', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('square_meter', 'maxlength')"
+            >Máximo <strong>20 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Calle</mat-label>
+          <input
+            formControlName="street"
+            matInput
+            placeholder="Ingrese la calle"
+            type="text"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('street', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('street', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('street', 'minlength')"
+            >Minimo <strong>3 caracteres</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('street', 'maxlength')"
+            >Máximo <strong>50 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Número</mat-label>
+          <input
+            formControlName="street_number"
+            matInput
+            placeholder="Ingrese el número"
+            type="text"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('street_number', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('street_number', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('street_number', 'maxlength')"
+            >Máximo <strong>4 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Piso</mat-label>
+          <input
+            formControlName="building_floor"
+            matInput
+            placeholder="Ingrese el piso"
+            type="text"
+          />
+          <mat-error align="end" *ngIf="hasError('building_floor', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('building_floor', 'maxlength')"
+            >Máximo <strong>10 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Provincia</mat-label>
+          <mat-select formControlName="province" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let province of provinces"
+              [value]="province.id_province"
+            >
+              {{ province.province_name }}</mat-option
+            >
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('province', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Ciudad</mat-label>
+          <input
+            formControlName="town"
+            matInput
+            placeholder="Ingrese la ciudad"
+            type="text"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('town', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('town', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('town', 'minlength')"
+            >Mínimo <strong>3 caracteres</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('town', 'maxlength')"
+            >Máximo <strong>30 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Barrio</mat-label>
+          <input
+            formControlName="district"
+            matInput
+            placeholder="Ingrese el barrio"
+            type="text"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('district', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('district', 'pattern')"
+            ><strong>El dato ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('district', 'minlength')"
+            >Mínimo <strong>3 caracteres</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('district', 'maxlength')"
+            >Máximo <strong>30 caracteres</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Alquiler Diario</mat-label>
+          <mat-select formControlName="daily_rent" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('daily_rent', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Alquiler Mensual</mat-label>
+          <mat-select
+            formControlName="monthly_rent"
+            placeholder="Seleccione..."
+          >
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('monthly_rent', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Alquiler Anual</mat-label>
+          <mat-select formControlName="annual_rent" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('annual_rent', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad de Habitaciones</mat-label>
+          <input
+            formControlName="rooms_number"
+            matInput
+            placeholder="Ingrese cantidad"
+            type="number"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('rooms_number', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('rooms_number', 'pattern')"
+            ><strong>El número ingresado es invalido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('rooms_number', 'minlength')"
+            >Mínimo <strong>0 como valor</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad de Baños</mat-label>
+          <input
+            formControlName="bathrooms_number"
+            matInput
+            placeholder="Ingrese cantidad"
+            type="number"
+          />
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error
+            align=" end"
+            *ngIf="hasError('bathrooms_number', 'required')"
+          >
+            <strong>Campo requerido</strong>
+          </mat-error>
+          <mat-error align="end" *ngIf="hasError('bathrooms_number', 'pattern')"
+            ><strong>El número ingresado es invalido</strong>
+          </mat-error>
+          <mat-error
+            align="end"
+            *ngIf="hasError('bathrooms_number', 'minlength')"
+            >Mínimo <strong>0 como valor</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Internet</mat-label>
+          <mat-select formControlName="internet" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('internet', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Pileta</mat-label>
+          <mat-select formControlName="pool" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('pool', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Cocina</mat-label>
+          <mat-select formControlName="kitchen" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('kitchen', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Equipo de Lavanderia</mat-label>
+          <mat-select
+            formControlName="laundry_equipment"
+            placeholder="Seleccione..."
+          >
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error
+            align=" end"
+            *ngIf="hasError('laundry_equipment', 'required')"
+          >
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Patio</mat-label>
+          <mat-select formControlName="yard" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('yard', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Estacionamiento</mat-label>
+          <mat-select formControlName="parking" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('parking', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Acceso para Discapacitados</mat-label>
+          <mat-select
+            formControlName="disabled_access"
+            placeholder="Seleccione..."
+          >
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error
+            align=" end"
+            *ngIf="hasError('disabled_access', 'required')"
+          >
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Camas para niños</mat-label>
+          <mat-select formControlName="kids_beds" placeholder="Seleccione...">
+            <mat-option
+              *ngFor="let boolean of booleanOptions"
+              [value]="boolean.id"
+              >{{ boolean.name }}
+            </mat-option>
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('kids_beds', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Disponibilidad</mat-label>
+          <mat-select
+            formControlName="availability_status"
+            placeholder="Seleccione"
+          >
+            <mat-option
+              *ngFor="let availability_status of availability_statuses"
+              [value]="availability_status.id"
+            >
+              {{ availability_status.availability_status_name }}</mat-option
+            >
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error
+            align=" end"
+            *ngIf="hasError('availability_status', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Actividad</mat-label>
+          <mat-select
+            formControlName="activity_status"
+            placeholder="Seleccione"
+          >
+            <mat-option
+              *ngFor="let activity_status of activity_statuses"
+              [value]="activity_status.id"
+            >
+              {{ activity_status.activity_status_name }}</mat-option
+            >
+          </mat-select>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error
+            align=" end"
+            *ngIf="hasError('activity_status', 'required')"
+            ><strong>Campo requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+    </form>
+  </mat-grid-list>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+  <button
+    mat-stroked-button
+    color="basic"
+    [disabled]="propertyForm.invalid"
+    (click)="sendClient()"
+  >
+    {{ actionButton }}
+  </button>
+</div>
+
+<swal
+  #createAlert
+  [swalOptions]="{
+    toast: true,
+    position: 'top',
+    width: 500,
+    showConfirmButton: false,
+    timer: 1800,
+    icon: 'success',
+    title: 'Se registro correctamente'
+  }"
+>
+</swal>
+
+<swal
+  #updateAlert
+  [swalOptions]="{
+    toast: true,
+    position: 'top',
+    width: 500,
+    showConfirmButton: false,
+    timer: 1800,
+    icon: 'success',
+    title: 'Se modifico correctamente'
+  }"
+>
+</swal>
+
+<swal
+  #errorAlert
+  [swalOptions]="{
+    toast: true,
+    position: 'top',
+    width: 500,
+    showConfirmButton: false,
+    timer: 1800,
+    icon: 'warning',
+    title: 'Ha ocurrido un problema'
+  }"
+>
+</swal>

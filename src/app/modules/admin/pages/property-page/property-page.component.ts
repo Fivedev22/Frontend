@@ -4,23 +4,30 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
-import { PropertyFormComponent } from './property-form/property-form.component';
+import { PropertyFormComponent } from './components/property-form/property-form.component';
 import { PropertyService } from '../services/property-page.service';
 import { IProperty } from '../services/interfaces/property.interface';
-import { ImageUploadDialogComponent } from './image-upload-dialog/image-upload-dialog.component';
-import { UploadInventoryComponent } from './upload-inventory/upload-inventory.component';
+import { ImageUploadDialogComponent } from './components/image-upload-dialog/image-upload-dialog.component';
+import { UploadInventoryComponent } from './components/upload-inventory/upload-inventory.component';
 import { ReservationService } from '../services/reservation.service';
-
 
 @Component({
   selector: 'app-property-page',
   templateUrl: './property-page.component.html',
-  styleUrls: ['./property-page.component.css']
+  styleUrls: ['./property-page.component.css'],
 })
 export class PropertyPageComponent implements OnInit {
   title = 'property';
 
-  displayedColumns: string[] = ['reference_number', 'property_name', 'property_type', 'province', 'availability_status', 'activity_status', 'actions'];
+  displayedColumns: string[] = [
+    'reference_number',
+    'property_name',
+    'property_type',
+    'province',
+    'availability_status',
+    'activity_status',
+    'actions',
+  ];
 
   dataSource!: MatTableDataSource<IProperty>;
 
@@ -31,25 +38,26 @@ export class PropertyPageComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly propertyService: PropertyService,
     private readonly reservationService: ReservationService
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
     this.findAllProperties();
   }
 
   findAllProperties() {
-    this.propertyService.findAllProperties().subscribe(data => {
+    this.propertyService.findAllProperties().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    })
+    });
   }
 
   deleteProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({
       next: (reservations) => {
-        const hasReservations = reservations.some((reservation) => reservation.property.id_property === id);
+        const hasReservations = reservations.some(
+          (reservation) => reservation.property.id_property === id
+        );
         if (hasReservations) {
           Swal.fire({
             title: 'No se puede eliminar la propiedad',
@@ -93,12 +101,13 @@ export class PropertyPageComponent implements OnInit {
       },
     });
   }
-  
 
   archiveProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({
       next: (reservations) => {
-        const hasReservations = reservations.some((reservation) => reservation.property.id_property === id);
+        const hasReservations = reservations.some(
+          (reservation) => reservation.property.id_property === id
+        );
         if (hasReservations) {
           Swal.fire({
             title: 'No se puede archivar la propiedad',
@@ -142,9 +151,12 @@ export class PropertyPageComponent implements OnInit {
       },
     });
   }
-  
 
-  unarchiveProperty(id: number, reference_number: number, property_name: string) {
+  unarchiveProperty(
+    id: number,
+    reference_number: number,
+    property_name: string
+  ) {
     Swal.fire({
       title: '¿Desea desarchivar la propiedad?',
       text: `Nro de Referencia: ${reference_number} - Nombre/Numeración: ${property_name}`,
@@ -153,28 +165,26 @@ export class PropertyPageComponent implements OnInit {
 
       confirmButtonText: 'Desarchivar',
       cancelButtonText: 'Cancelar',
-
     }).then((result) => {
       if (result.isConfirmed) {
-        this.propertyService.unarchiveProperty(+id)
-          .subscribe({
-            next: (res) => {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Propiedad desarchivada correctamente',
-                showConfirmButton: false,
-                timer: 1800
-              }).then(() => {
-                this.findAllProperties();
-              })
-            },
-            error(e) {
-              alert(e)
-            },
-          })
+        this.propertyService.unarchiveProperty(+id).subscribe({
+          next: (res) => {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Propiedad desarchivada correctamente',
+              showConfirmButton: false,
+              timer: 1800,
+            }).then(() => {
+              this.findAllProperties();
+            });
+          },
+          error(e) {
+            alert(e);
+          },
+        });
       }
-    })
+    });
   }
 
   applyFilter(event: Event) {
@@ -184,8 +194,10 @@ export class PropertyPageComponent implements OnInit {
   }
 
   openFormCreateProperty() {
-    this.dialog.open(PropertyFormComponent, { width: '800px', disableClose: true }).afterClosed()
-      .subscribe(val => {
+    this.dialog
+      .open(PropertyFormComponent, { width: '800px', disableClose: true })
+      .afterClosed()
+      .subscribe((val) => {
         if (val === 'save') {
           this.findAllProperties();
         }
@@ -193,8 +205,14 @@ export class PropertyPageComponent implements OnInit {
   }
 
   openFormEditProperty(row: IProperty) {
-    this.dialog.open(PropertyFormComponent, { width: '800px', data: row, disableClose: true }).afterClosed()
-      .subscribe(val => {
+    this.dialog
+      .open(PropertyFormComponent, {
+        width: '800px',
+        data: row,
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((val) => {
         if (val === 'update') {
           this.findAllProperties();
         }
@@ -206,7 +224,7 @@ export class PropertyPageComponent implements OnInit {
       data: { id_property },
       width: '1000px',
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
         // Muestra el mensaje swal
@@ -214,19 +232,18 @@ export class PropertyPageComponent implements OnInit {
           title: 'Éxito',
           text: 'Imágenes cargadas exitosamente',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
     });
   }
-
 
   openUploadInventory(id_property: number) {
     const dialogRef = this.dialog.open(UploadInventoryComponent, {
       data: { id_property },
       width: '1000px',
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
         // Muestra el mensaje swal
@@ -234,7 +251,7 @@ export class PropertyPageComponent implements OnInit {
           title: 'Éxito',
           text: 'Inventario de propiedad subido exitosamente',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
     });

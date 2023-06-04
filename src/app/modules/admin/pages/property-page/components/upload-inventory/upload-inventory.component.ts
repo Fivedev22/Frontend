@@ -1,20 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PropertyService } from '../../services/property-page.service';
+import { PropertyService } from '../../../services/property-page.service';
 import Swal from 'sweetalert2';
-
-
-
-
 
 @Component({
   selector: 'app-upload-inventory',
   templateUrl: './upload-inventory.component.html',
-  styleUrls: ['./upload-inventory.component.css']
+  styleUrls: ['./upload-inventory.component.css'],
 })
 export class UploadInventoryComponent implements OnInit {
   inventories: any[] = [];
-
 
   constructor(
     private dialogRef: MatDialogRef<UploadInventoryComponent>,
@@ -41,17 +36,19 @@ export class UploadInventoryComponent implements OnInit {
             title: 'Error',
             text: 'Ya existe un inventario para esta propiedad',
             icon: 'error',
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
           });
         } else {
-          this.propertyService.uploadInventory(this.data.id_property, file).subscribe(
-            () => {
-              this.dialogRef.close('success');
-            },
-            (error) => {
-              // Manejar el error apropiadamente
-            }
-          );
+          this.propertyService
+            .uploadInventory(this.data.id_property, file)
+            .subscribe(
+              () => {
+                this.dialogRef.close('success');
+              },
+              (error) => {
+                // Manejar el error apropiadamente
+              }
+            );
         }
       },
       (error) => {
@@ -63,7 +60,7 @@ export class UploadInventoryComponent implements OnInit {
   getInventory() {
     this.propertyService.getPropertyInventory(this.data.id_property).subscribe(
       (response) => {
-        console.log(response)
+        console.log(response);
         this.inventories = response;
       },
       (error) => {
@@ -78,8 +75,6 @@ export class UploadInventoryComponent implements OnInit {
     return baseUrl + filename;
   }
 
-
-
   deleteInventory(inventory: any) {
     Swal.fire({
       title: '¿Desea eliminar el inventario?',
@@ -89,7 +84,7 @@ export class UploadInventoryComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.propertyService.deleteInventory(inventory.id).subscribe(
@@ -108,5 +103,4 @@ export class UploadInventoryComponent implements OnInit {
       }
     });
   }
- 
 }

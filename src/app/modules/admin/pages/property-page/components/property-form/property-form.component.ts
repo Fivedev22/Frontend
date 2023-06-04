@@ -2,15 +2,15 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { IProvince } from '../../services/interfaces/province.interface';
-import { ProvinceService } from '../../services/province.service';
-import { PropertyService } from '../../services/property-page.service';
-import { IPropertyType } from '../../services/interfaces/property_type.interface';
-import { PropertyTypeService } from '../../services/property_type-service';
-import { IAvailabilityStatus } from '../../services/interfaces/availability_status.interface';
-import { AvailabilityStatusService } from '../../services/availability_status.service';
-import { IActivityStatus } from '../../services/interfaces/activity_status.interface';
-import { ActivityStatusService } from '../../services/activity_status.service';
+import { IProvince } from '../../../services/interfaces/province.interface';
+import { ProvinceService } from '../../../services/province.service';
+import { PropertyService } from '../../../services/property-page.service';
+import { IPropertyType } from '../../../services/interfaces/property_type.interface';
+import { PropertyTypeService } from '../../../services/property_type-service';
+import { IAvailabilityStatus } from '../../../services/interfaces/availability_status.interface';
+import { AvailabilityStatusService } from '../../../services/availability_status.service';
+import { IActivityStatus } from '../../../services/interfaces/activity_status.interface';
+import { ActivityStatusService } from '../../../services/activity_status.service';
 
 @Component({
   selector: 'app-property-form',
@@ -53,16 +53,14 @@ export class PropertyFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.propertyData) {
-      this.propertyService.getLastNumber().subscribe(number => {
+      this.propertyService.getLastNumber().subscribe((number) => {
         if (number) {
-            this.propertyForm.patchValue({reference_number: number + 1});
-          } else {
-            this.propertyForm.patchValue({reference_number: 1});
-          }      
-        });
+          this.propertyForm.patchValue({ reference_number: number + 1 });
+        } else {
+          this.propertyForm.patchValue({ reference_number: 1 });
+        }
+      });
     }
-
-
 
     this.propertyForm = this.initForm();
     this.findAllProvinces();
@@ -170,8 +168,6 @@ export class PropertyFormComponent implements OnInit {
       activity_status: ['', [Validators.required]],
     });
   }
-
-
 
   addPropertyData(data: any) {
     this.actionTitle = 'Modificar Propiedad';
