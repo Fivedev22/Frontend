@@ -20,6 +20,11 @@ const routes: Routes = [
     loadChildren: () =>
       import(`./modules/admin/admin.module`).then((m) => m.AdminModule),
   },
+  {
+    path: '**',
+    redirectTo: 'auth',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
