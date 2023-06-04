@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { IClient } from '../../services/interfaces/client.interface';
+import { IClient } from '../../../services/interfaces/client.interface';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { ClientService } from '../../services/client-page.service';
+import { ClientService } from '../../../services/client-page.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-unarchive-client',
   templateUrl: './unarchive-client.component.html',
-  styleUrls: ['./unarchive-client.component.css']
+  styleUrls: ['./unarchive-client.component.css'],
 })
 export class UnarchiveClientComponent implements OnInit {
   title = 'client';
@@ -19,10 +19,6 @@ export class UnarchiveClientComponent implements OnInit {
     'name',
     'last_name',
     'document_number',
-    'email',
-    'phone_number',
-    'is_foreign',
-    'province',
     'actions',
   ];
 
@@ -47,8 +43,6 @@ export class UnarchiveClientComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
-  
-
 
   findAllArchived() {
     this.clientService.findAllArchived().subscribe((data) => {
@@ -90,8 +84,6 @@ export class UnarchiveClientComponent implements OnInit {
     });
   }
 
-  
-
   unarchiveClient(id_client: number, name: string, last_name: string) {
     Swal.fire({
       title: '¿Desea desarchivar el cliente?',
@@ -129,5 +121,4 @@ export class UnarchiveClientComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
-
 }

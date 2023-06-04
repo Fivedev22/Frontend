@@ -1,24 +1,32 @@
 .client-main {
   height: 100%;
-  background-color: #ffffff;
+  padding: 20px;
+}
+.content-title-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+.dialog-title {
+  font-size: 25px;
+}
+
+.dialog-close {
+  cursor: pointer;
 }
 
 .client-section-head {
   display: flex;
-  padding: 0px 10px;
+  padding-top: 20px;
   justify-content: space-between;
   align-items: center;
 }
 
-.client-section-head_buttons {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
 .client-section-head_search {
   height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   position: relative;
@@ -26,12 +34,12 @@
 
 .client-input-search {
   height: 50px;
-  width: 300px;
+  width: 100%;
   font-size: 15px;
   padding: 0px 20px;
   color: #000000;
-  background: #ffffff;
-  border: 2px solid #dadada;
+  background: #fafbfc;
+  border: 2px solid #dfe1e6;
   border-radius: 5px;
   outline: none;
 }
@@ -48,10 +56,11 @@
   border: none;
   background: none;
   cursor: pointer;
+  color: #898989;
 }
 
 .client-section-body {
-  padding: 40px 10px;
+  padding: 30px 10px;
 }
 
 .client-section-table {
@@ -79,11 +88,11 @@ td {
   height: 100%;
 }
 
-th:last-child,
+/* th:last-child,
 td:last-child {
   flex: 0 0 auto;
   width: 200px;
-}
+} */
 
 .content-icons {
   display: flex;

@@ -1,19 +1,19 @@
 .head-standard {
-    padding: 20px 10px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    gap: 5px;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .head-title {
-    font-size: 30px;
-    line-height: 0px;
+  font-size: 1.5rem;
+  line-height: 0px;
 }
 
 .head-bar {
-    border-radius: 5px;
-    height: 6px;
-    width: 50px;
-    background: #15b9ff;
+  border-radius: 5px;
+  height: 6px;
+  width: 60px;
+  background: #000000;
 }
