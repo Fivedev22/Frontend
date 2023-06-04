@@ -32,15 +32,13 @@ import { BookingPipe } from './pages/pipes/booking.pipe';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ComponentsModule } from 'src/app/global/components/components.module';
-import { CurrencyMaskModule } from "ng2-currency-mask";
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ImageUploadDialogComponent } from './pages/property-page/image-upload-dialog/image-upload-dialog.component';
 import { ContractUploadComponent } from './pages/reservation-page/contract-upload/contract-upload.component';
 import { UploadInventoryComponent } from './pages/property-page/upload-inventory/upload-inventory.component';
 import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
-import { UnarchiveClientComponent } from './pages/client-page/unarchive-client/unarchive-client.component';
-
-
+import { UnarchiveClientComponent } from './pages/client-page/components/unarchive-client/unarchive-client.component';
 
 @NgModule({
   declarations: [

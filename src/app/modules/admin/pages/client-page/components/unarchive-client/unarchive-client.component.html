@@ -1,19 +1,10 @@
 <section class="client-main">
-  <app-head title="Espacio clientes"></app-head>
+  <div class="content-title-dialog">
+    <span class="dialog-title">Clientes archivados</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
   <div class="client-section-head">
-    <div class="client-section-head_buttons">
-      <app-button
-        label="Nuevo"
-        background="#FFFFFF"
-        (event)="openFormCreateClient()"
-      ></app-button>
-      <app-button
-        label="Archivados"
-        background="#FFFFFF"
-        (event)="openArchivedClients()"
-      >
-      </app-button>
-    </div>
     <div class="client-section-head_search">
       <input
         class="client-input-search"
@@ -28,7 +19,7 @@
   </div>
 
   <div class="client-section-body">
-    <div class="cpc-tableTitle">Tabla de clientes</div>
+    <div class="cpc-tableTitle">Tabla de clientes archivados</div>
     <table
       mat-table
       class="client-section-table"
@@ -52,49 +43,19 @@
         <td mat-cell *matCellDef="let row">{{ row.document_number }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="phone_number">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Nro. de télefono
-        </th>
-        <td mat-cell *matCellDef="let row">{{ row.phone_number }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="is_foreign">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Extranjero</th>
-        <td mat-cell *matCellDef="let row">{{ row.is_foreign | foreign }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="province">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
-        <td mat-cell *matCellDef="let row">{{ row.province | province }}</td>
-      </ng-container>
-
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
           <div class="content-icons">
-            <mat-icon ngClass="icons" (click)="openFormEditClient(row)"
-              >edit</mat-icon
+            <mat-icon
+              ngClass="icons"
+              (click)="deleteClient(row.id_client, row.name, row.last_name)"
+              >delete</mat-icon
             >
             <mat-icon
               ngClass="icons"
-              (click)="archiveClient(row.id_client, row.name, row.last_name)"
+              (click)="unarchiveClient(row.id_client, row.name, row.last_name)"
               >archive</mat-icon
-            >
-            <mat-icon
-              ngClass="icons"
-              (click)="generatePdfPayments(row.id_client)"
-              >payment</mat-icon
-            >
-            <mat-icon
-              ngClass="icons"
-              (click)="generatePdfBookings(row.id_client)"
-              >date_range</mat-icon
             >
           </div>
         </td>
