@@ -1,19 +1,45 @@
+.wrapper-dialog {
+  height: 100%;
+  max-width: 100%;
+  margin: 16px;
+}
+
+.content-title-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+
+.content-footer-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 0px;
+  gap: 20px;
+}
+
+.dialog-title {
+  font-size: 25px;
+}
+
+.dialog-close {
+  cursor: pointer;
+}
+
+.content-form-dialog {
+  width: 100%;
+  padding: 20px 0px;
+}
+
 mat-form-field {
-    width: 100%;
+  width: 100%;
+  padding: 10px;
 }
 
-.mat-dialog-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.mat-dialog-content {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.mat-dialog-title h1 {
-    margin: 0px
+.my-swal-class .swal-button--confirm {
+  background-color: green;
+  border-color: green;
 }

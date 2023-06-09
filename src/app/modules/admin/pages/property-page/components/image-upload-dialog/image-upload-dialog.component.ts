@@ -2,6 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PropertyService } from '../../../services/property-page.service';
 import Swal from 'sweetalert2';
+interface ImageFile {
+  file: File;
+  imageUrl: string;
+}
 
 @Component({
   selector: 'app-image-upload-dialog',
@@ -11,35 +15,8 @@ import Swal from 'sweetalert2';
 export class ImageUploadDialogComponent implements OnInit {
   images!: any[];
   noImagesMessage!: string;
-  selectedImages: File[] = [];
-
-  carouselConfig: any = {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    dots: true,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          arrows: false,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          arrows: false,
-          dots: true,
-        },
-      },
-    ],
-  };
-
+  selectedImages: any[] = [];
+  isUploadButtonDisabled: boolean = true;
   constructor(
     private readonly dialogRef: MatDialogRef<ImageUploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { id_property: number },
@@ -56,7 +33,6 @@ export class ImageUploadDialogComponent implements OnInit {
     this.propertyService.getPropertyImages(idProperty).subscribe(
       (response: any) => {
         this.images = response.images;
-        console.log(this.images);
         if (this.images.length === 0) {
           this.noImagesMessage = 'No hay imágenes cargadas para la propiedad';
         }
@@ -66,7 +42,6 @@ export class ImageUploadDialogComponent implements OnInit {
       }
     );
   }
-
   uploadImages() {
     const idProperty: number = this.data.id_property;
 
@@ -83,9 +58,31 @@ export class ImageUploadDialogComponent implements OnInit {
       );
   }
 
-  onFileInputChange(event: any) {
-    const fileList: FileList = event.target.files;
-    this.selectedImages = Array.from(fileList);
+  onFilesInputChange(event: any) {
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      this.selectedImages.push(file);
+      console.log(this.selectedImages);
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        file.imageUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    if (this.selectedImages.length >= 3) {
+      this.isUploadButtonDisabled = false;
+    } else {
+      this.isUploadButtonDisabled = true;
+    }
+  }
+  removeFile(index: number) {
+    this.selectedImages.splice(index, 1);
+    if (this.selectedImages.length >= 3) {
+      this.isUploadButtonDisabled = false;
+    } else {
+      this.isUploadButtonDisabled = true;
+    }
   }
 
   getImageUrl(filename: string): string {
@@ -107,10 +104,8 @@ export class ImageUploadDialogComponent implements OnInit {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Eliminar la imagen
         this.propertyService.deleteImages(idProperty, imageIds).subscribe(
           () => {
-            // Imagen eliminada correctamente
             this.getPropertyImages();
           },
           (error) => {
