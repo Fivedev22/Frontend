@@ -45,5 +45,11 @@ export class SidebarComponent {
       icon: 'query_stats',
       name: 'Estadísticas',
     },
+    {
+      id: 7,
+      url: 'reports',
+      icon: 'description',
+      name: 'Reporte Contable',
+    },
   ];
 }

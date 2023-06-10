@@ -11,24 +11,24 @@ import { PropertyPageComponent } from './pages/property-page/property-page.compo
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
 import { ClientFormComponent } from './pages/client-page/components/client-form/client-form.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { ForeignPipe } from './pages/pipes/foreign.pipe';
-import { ProvincePipe } from './pages/pipes/province.pipe';
-import { GenderTypePipe } from './pages/pipes/gender_type.pipe';
-import { DocumentTypePipe } from './pages/pipes/document_type.pipe';
+import { ForeignPipe } from '../../pipes/foreign.pipe';
+import { ProvincePipe } from '../../pipes/province.pipe';
+import { GenderTypePipe } from '../../pipes/gender_type.pipe';
+import { DocumentTypePipe } from '../../pipes/document_type.pipe';
 import { RouterModule } from '@angular/router';
 import { PropertyFormComponent } from './pages/property-page/components/property-form/property-form.component';
-import { AvailabilityStatusPipe } from './pages/pipes/availability_status.pipe';
-import { ActivityStatusPipe } from './pages/pipes/activity_status.pipe';
-import { PropertyTypePipe } from './pages/pipes/property_type.pipe';
+import { AvailabilityStatusPipe } from '../../pipes/availability_status.pipe';
+import { ActivityStatusPipe } from '../../pipes/activity_status.pipe';
+import { PropertyTypePipe } from '../../pipes/property_type.pipe';
 import { PaymentFormComponent } from './pages/payment-page/components/payment-form/payment-form.component';
 import { ReservationFormComponent } from './pages/reservation-page/components/reservation-form/reservation-form.component';
-import { PaymentStatusPipe } from './pages/pipes/payment_status.pipe';
-import { PaymentTypePipe } from './pages/pipes/payment_type.pipe';
-import { ReservationOriginPipe } from './pages/pipes/reservation_origin.pipe';
-import { ReservationTypePipe } from './pages/pipes/reservation_type.pipe';
-import { ClientPipe } from './pages/pipes/client.pipe';
-import { PropertyPipe } from './pages/pipes/property.pipe';
-import { BookingPipe } from './pages/pipes/booking.pipe';
+import { PaymentStatusPipe } from '../../pipes/payment_status.pipe';
+import { PaymentTypePipe } from '../../pipes/payment_type.pipe';
+import { ReservationOriginPipe } from '../../pipes/reservation_origin.pipe';
+import { ReservationTypePipe } from '../../pipes/reservation_type.pipe';
+import { ClientPipe } from '../../pipes/client.pipe';
+import { PropertyPipe } from '../../pipes/property.pipe';
+import { BookingPipe } from '../../pipes/booking.pipe';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ComponentsModule } from 'src/app/global/components/components.module';
@@ -42,6 +42,7 @@ import { UnarchiveClientComponent } from './pages/client-page/components/unarchi
 import { UnarchivePropertyComponent } from './pages/property-page/components/unarchive-property/unarchive-property.component';
 import { UnarchivePaymentComponent } from './pages/payment-page/components/unarchive-payment/unarchive-payment.component';
 import { UnarchiveReservationComponent } from './pages/reservation-page/components/unarchive-reservation/unarchive-reservation.component';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { UnarchiveReservationComponent } from './pages/reservation-page/componen
     ContractUploadComponent,
     UploadInventoryComponent,
     StatisticPageComponent,
+    ReportPageComponent,
     UnarchiveClientComponent,
     UnarchivePropertyComponent,
     UnarchivePaymentComponent,
