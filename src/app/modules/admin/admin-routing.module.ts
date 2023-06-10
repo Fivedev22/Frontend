@@ -7,6 +7,7 @@ import { ReservationPageComponent } from './pages/reservation-page/reservation-p
 import { PropertyPageComponent } from './pages/property-page/property-page.component';
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
 import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'properties', component: PropertyPageComponent },
       { path: 'payments', component: PaymentPageComponent },
       { path: 'statistics', component: StatisticPageComponent },
+      { path: 'reports', component: ReportPageComponent },
     ],
   },
 ];
