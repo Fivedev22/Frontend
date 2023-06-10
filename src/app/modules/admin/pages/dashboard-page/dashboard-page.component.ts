@@ -1,32 +1,42 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Calendar, CalendarOptions, EventClickArg, EventInput } from '@fullcalendar/core';
+import {
+  Calendar,
+  CalendarOptions,
+  EventClickArg,
+  EventInput,
+} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Observable } from 'rxjs';
 import { IReservation } from '../services/interfaces/reservation.interface';
 import { ReservationService } from '../services/reservation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+declare var localStorage: any;
 
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
-  styleUrls: ['./dashboard-page.component.css']
+  styleUrls: ['./dashboard-page.component.css'],
 })
 export class DashboardPageComponent implements AfterViewInit {
   @ViewChild('calendarEl') calendarEl!: ElementRef;
+  @ViewChild('notesContainer') notesContainer!: ElementRef;
 
   private calendar!: Calendar;
   private reservations!: IReservation[];
   private selectedReservation: IReservation | undefined;
+  notes: string[] = [];
+  showNotes = false;
 
-
-  constructor(private reservationService: ReservationService, private snackBar: MatSnackBar) {}
+  constructor(
+    private reservationService: ReservationService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngAfterViewInit() {
     this.initializeCalendar();
-    this.checkCurrentDateReservations(); // Agregar llamada al método para verificar las reservas en la fecha actual
-
+    this.loadNotes();
+    this.checkCurrentDateReservations();
   }
 
   initializeCalendar() {
@@ -36,7 +46,7 @@ export class DashboardPageComponent implements AfterViewInit {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,dayGridWeek,dayGridDay,dateTime'
+        right: 'dayGridMonth,dayGridWeek,dayGridDay,dateTime',
       },
       customButtons: {
         dateTime: {
@@ -44,14 +54,14 @@ export class DashboardPageComponent implements AfterViewInit {
           click: () => {
             this.calendar.today();
             this.renderCalendar();
-          }
-        }
+          },
+        },
       },
-      
       events: (fetchInfo, successCallback, failureCallback) => {
         this.fetchReservations().subscribe(
           (reservations: IReservation[]) => {
-            const events: EventInput[] = this.transformReservationsToEvents(reservations);
+            const events: EventInput[] =
+              this.transformReservationsToEvents(reservations);
             successCallback(events);
           },
           (error) => {
@@ -59,8 +69,8 @@ export class DashboardPageComponent implements AfterViewInit {
           }
         );
       },
-      eventColor: 'red', // Color predeterminado para los eventos
-      eventClick: this.handleEventClick.bind(this)
+      eventColor: 'red',
+      eventClick: this.handleEventClick.bind(this),
     };
 
     this.calendar = new Calendar(this.calendarEl.nativeElement, options);
@@ -82,37 +92,52 @@ export class DashboardPageComponent implements AfterViewInit {
   transformReservationsToEvents(reservations: IReservation[]): EventInput[] {
     const events: EventInput[] = reservations.map((reservation, index) => {
       const checkOutDate = new Date(reservation.check_out_date);
-      checkOutDate.setDate(checkOutDate.getDate() + 1); // Agregar un día a la fecha de check_out
+      checkOutDate.setDate(checkOutDate.getDate() + 1);
       return {
         title: ` N° Rva: ${reservation.booking_number} - Propiedad: ${reservation.property.property_name} - Cliente: ${reservation.client.name} ${reservation.client.last_name}`,
         start: reservation.check_in_date,
-        end: checkOutDate.toISOString().split('T')[0], // Utilizar la fecha ajustada de check_out
+        end: checkOutDate.toISOString().split('T')[0],
         color: this.getColorByIndex(index),
-        id: reservation.id_booking?.toString()
+        id: reservation.id_booking?.toString(),
       };
     });
-  
+
     return events;
   }
-  
 
   getColorByIndex(index: number): string {
-    // Obtener el color en función del índice de la reserva
-    const colors = ['red', 'blue', 'green', 'orange', 'purple','mustard','gray','fuchsia','black']; // Lista de colores disponibles
-    const colorIndex = index % colors.length; // Obtener el índice del color en función del módulo
-    return colors[colorIndex]; // Devolver el color correspondiente
+    const colors = [
+      'red',
+      'blue',
+      'green',
+      'orange',
+      'purple',
+      'mustard',
+      'gray',
+      'black',
+      'navy',
+    ];
+    const colorIndex = index % colors.length;
+    return colors[colorIndex];
   }
 
   getCurrentDateTime(): string {
     const currentDateTime = new Date();
-    return currentDateTime.toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    return currentDateTime.toLocaleString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    });
   }
 
   handleEventClick(eventClickArg: EventClickArg) {
-    const eventId = +eventClickArg.event.id; // Conversión a número utilizando el operador '+'
+    const eventId = +eventClickArg.event.id;
     this.reservationService.findOneReservation(eventId).subscribe(
       (reservation: IReservation) => {
-        // Abrir ventana emergente con los detalles de la reserva
         const popupWindow = window.open('', '_blank', 'width=600,height=400');
         popupWindow?.document.write(`
         <html>
@@ -131,7 +156,9 @@ export class DashboardPageComponent implements AfterViewInit {
           <h2>Detalles de la reserva</h2>
           <p>- Número de reserva: <b>${reservation.booking_number}</b></p>
           <p>- Propiedad: <b>${reservation.property.property_name}</b></p>
-          <p>- Cliente: <b>${reservation.client.name} ${reservation.client.last_name}</b></p>
+          <p>- Cliente: <b>${reservation.client.name} ${
+          reservation.client.last_name
+        }</b></p>
           <p>- Fecha check-in: <b>${reservation.check_in_date}</b></p>
           <p>- Fecha check-out: <b>${reservation.check_out_date}</b></p>
           <p>- Cantidad adultos: <b>${reservation.adults_number}</b></p>
@@ -150,37 +177,37 @@ export class DashboardPageComponent implements AfterViewInit {
       }
     );
   }
-  
+
   showReservationDetails() {
-    // Obtén el elemento HTML donde se mostrarán los detalles de la reserva
-    const reservationDetailsElement = document.getElementById('reservationDetails');
+    const reservationDetailsElement =
+      document.getElementById('reservationDetails');
     if (reservationDetailsElement) {
-      // Construye el HTML con los detalles de la reserva
       const reservationDetailsHtml = `
         <p><strong>Número de reserva:</strong> ${this.selectedReservation?.booking_number}</p>
         <p><strong>Propiedad:</strong> ${this.selectedReservation?.property.property_name}</p>
         <p><strong>Cliente:</strong> ${this.selectedReservation?.client.name} ${this.selectedReservation?.client.last_name}</p>
         <!-- Agrega más detalles según tus necesidades -->
       `;
-      // Asigna el HTML al elemento
       reservationDetailsElement.innerHTML = reservationDetailsHtml;
     }
   }
 
   checkCurrentDateReservations() {
     const currentDate = new Date();
-    const currentDateString = currentDate.toISOString().split('T')[0]; // Obtener la fecha actual en formato 'YYYY-MM-DD'
-    
+    const currentDateString = currentDate.toISOString().split('T')[0];
+
     this.reservationService.findAllReservations().subscribe(
       (reservations: IReservation[]) => {
         const hasReservations = reservations.some((reservation) => {
-          const eventStartDate = new Date(reservation.check_in_date).toISOString().split('T')[0]; // Obtener la fecha de check-in de la reserva en formato 'YYYY-MM-DD'
+          const eventStartDate = new Date(reservation.check_in_date)
+            .toISOString()
+            .split('T')[0];
           return eventStartDate === currentDateString;
         });
-  
+
         if (hasReservations) {
           this.showNotification('¡Hay reservas para hoy!');
-        }  else {
+        } else {
           this.showNotification('No hay reservas para hoy');
         }
       },
@@ -189,16 +216,39 @@ export class DashboardPageComponent implements AfterViewInit {
       }
     );
   }
-  
-  
 
   showNotification(message: string) {
     this.snackBar.open(message, 'Cerrar', {
-      duration: 86400000, // Duración de la notificación en milisegundos (24 horas)
+      duration: 86400000,
       horizontalPosition: 'center',
-      verticalPosition: 'top' // Cambia 'bottom' a 'top'
+      verticalPosition: 'top',
     });
   }
-  
-  
+
+  addNote() {
+    const newNote = prompt('Ingrese una nueva nota');
+    if (newNote && newNote.trim() !== '') {
+      this.notes.push(newNote);
+      this.saveNotes();
+    }
+  }
+
+  deleteNote(index: number) {
+    this.notes.splice(index, 1);
+  }
+
+  toggleNotesContainer() {
+    this.showNotes = !this.showNotes;
+  }
+
+  saveNotes() {
+    localStorage.setItem('notes', JSON.stringify(this.notes));
+  }
+
+  loadNotes() {
+    const savedNotes = localStorage.getItem('notes');
+    if (savedNotes) {
+      this.notes = JSON.parse(savedNotes);
+    }
+  }
 }
