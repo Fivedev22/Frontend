@@ -26,6 +26,7 @@
             <mat-error align="end" *ngIf="hasError('name', 'maxlength')"
               >Maximo <strong>20 caracteres</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('name', 'noNumbers')"><strong>No se permiten números en el nombre</strong></mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -48,6 +49,7 @@
             <mat-error align="end" *ngIf="hasError('last_name', 'maxlength')"
               >Maximo <strong>20 caracteres</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('last_name', 'noNumbers')"><strong>No se permiten números en el apellido</strong></mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -103,7 +105,7 @@
               align="end"
               *ngIf="hasError('phone_number', 'maxlength')"
             >
-              <strong>Maximo 20 caracteres</strong>
+              <strong>Maximo 11 caracteres</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
@@ -119,6 +121,13 @@
                 {{ genderType.gender_type_name }}</mat-option
               >
             </mat-select>
+            <mat-hint align="end">Campo requerido</mat-hint>
+            <mat-error
+              align=" end"
+              *ngIf="hasError('gender_type', 'required')"
+            >
+              <strong>Campo requerido</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -180,7 +189,7 @@
               align="end"
               *ngIf="hasError('document_number', 'maxlength')"
             >
-              <strong>Maximo 20 caracteres</strong>
+              <strong>Maximo 11 caracteres</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>

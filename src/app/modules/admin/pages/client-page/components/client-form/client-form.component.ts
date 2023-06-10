@@ -1,5 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { ProvinceService } from '../../../services/province.service';
@@ -9,7 +14,6 @@ import { IGenderType } from '../../../services/interfaces/gender_type.interface'
 import { ClientService } from '../../../services/client-page.service';
 import { IDocumentType } from '../../../services/interfaces/document_type.interface';
 import { DocumentTypeService } from '../../../services/document_type.service';
-
 @Component({
   selector: 'app-client-form',
   templateUrl: './client-form.component.html',
@@ -122,8 +126,6 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
-  
-
   addClientData(data: any) {
     this.actionTitle = 'Modificar Cliente';
     this.actionButton = 'Actualizar';
@@ -144,7 +146,7 @@ export class ClientFormComponent implements OnInit {
       : this.clientForm.controls['province'].setValue(
           data.province.id_province
         );
-        this.changeStateProvince(); // Agregar esta línea
+    this.changeStateProvince(); // Agregar esta línea
   }
 
   sendClient() {
@@ -202,5 +204,14 @@ export class ClientFormComponent implements OnInit {
     this.documentTypeService.findAll().subscribe((data) => {
       this.documentTypes = data;
     });
+  }
+
+  noNumbersValidator(control: AbstractControl): { [key: string]: any } | null {
+    const name = control.value;
+    const regex = /^[A-Za-z\s]+$/;
+    if (name && !regex.test(name)) {
+      return { noNumbers: true };
+    }
+    return null;
   }
 }
