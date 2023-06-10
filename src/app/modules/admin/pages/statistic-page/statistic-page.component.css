@@ -1,0 +1,30 @@
+.statistic-main {
+  background-color: #ffffff;
+}
+
+.statistic-section-head {
+  display: flex;
+  padding: 0px 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statistic-section-head_buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.statistic-section-body {
+  width: 100%;
+  padding: 40px 10px;
+}
+.statistic-section-body_canvas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.statistic-section-body_canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
