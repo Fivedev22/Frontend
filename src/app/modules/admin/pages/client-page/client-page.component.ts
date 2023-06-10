@@ -177,7 +177,6 @@ export class ClientPageComponent implements OnInit {
 
         const doc = new jsPDF();
         const addPageWithBackgroundColor = () => {
-          // Establece el color de fondo como durazno
           const lightGreenColor = '#C1FFC1';
           doc.setFillColor(lightGreenColor);
           doc.rect(
@@ -188,67 +187,49 @@ export class ClientPageComponent implements OnInit {
             'F'
           );
         };
-
-        // Agrega la primera página con color de fondo
         addPageWithBackgroundColor();
-
-        // Agrega el logo y la información de la empresa
         const logo = new Image();
         logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
         doc.addImage(logo, 'PNG', 10, 10, 30, 30);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(16);
-        doc.text('Apartamentos Anahi', 50, 20);
+        doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
-        doc.text('El Benteveo 990', 50, 30);
+        doc.text('El Benteveo 990', 10, 30);
         doc.text(
-          'Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
-          50,
+          'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
+          10,
           40
         );
-        doc.text('Telefono: 0 (3541) 44-8820', 50, 50);
-        doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
-
-        // Dibuja una línea horizontal debajo de la información de la empresa
+        doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
+        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
         doc.setLineWidth(0.5);
         doc.line(10, 70, 200, 70);
-
-        // Establece la fuente y el tamaño del título
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
-
         const title = `Historial de Cobros - Cliente: ${client.name} ${client.last_name}`;
-        const titleWidth = doc.getTextWidth(title); // Calcula el ancho del título
-
-        const pageWidth = doc.internal.pageSize.getWidth(); // Obtiene el ancho de la página
-        const titleX = (pageWidth - titleWidth) / 2; // Calcula la coordenada X centrada
-
-        doc.text(title, titleX, 80); // Ajusta la coordenada X del texto
-
-        // Establece la fuente y el tamaño del texto de detalles
+        const titleWidth = doc.getTextWidth(title);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleX = (pageWidth - titleWidth) / 2;
+        doc.text(title, titleX, 80);
         doc.setFont('arial', 'bolditalic');
         doc.setFontSize(15);
-
-        // Agrega los detalles de los pagos
         let startY = 100;
         const lineHeight = 10;
-
         payments.forEach((payment, index) => {
           if (index > 0) {
             doc.addPage();
             addPageWithBackgroundColor();
-            startY = 10; // Reinicia la posición vertical en la nueva página
+            startY = 10;
           }
           doc.setFont('arial', 'bolditalic');
           doc.setFontSize(15);
           doc.text(`Cobro ${index + 1}:`, 10, startY);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(14); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(14);
           doc.text('Informacion de cobro:', 20, startY + lineHeight);
-
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
-
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
           doc.text(
             `Nro de cobro: ${payment.payment_number}`,
             20,
@@ -259,18 +240,14 @@ export class ClientPageComponent implements OnInit {
             20,
             startY + lineHeight * 3
           );
-
-          doc.setLineWidth(0.5); // Establece el ancho de línea
-          doc.setDrawColor(0, 0, 0); // Establece el color de línea (negro)
-          doc.line(20, startY + lineHeight * 4, 190, startY + lineHeight * 4); // Dibuja la línea
-
+          doc.setLineWidth(0.5);
+          doc.setDrawColor(0, 0, 0);
+          doc.line(20, startY + lineHeight * 4, 190, startY + lineHeight * 4);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(14); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(14);
           doc.text('Detalles Cobro:', 20, startY + lineHeight * 5);
-
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
-
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
           doc.text(
             `Fecha check-in: ${payment.check_in_date}`,
             20,
@@ -282,54 +259,46 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 7
           );
           doc.text(
-            `Precio Inicial: $ ${payment.booking_starting_price.toLocaleString()}`,
+            `Monto de Reserva: $ ${payment.booking_starting_price.toLocaleString()}`,
             20,
             startY + lineHeight * 8
           );
           doc.text(
-            `Descuento: % ${payment.booking_discount}`,
+            `Monto deposito: $ ${payment.deposit_amount.toLocaleString()}`,
             20,
             startY + lineHeight * 9
           );
           doc.text(
-            `Monto deposito: $ ${payment.deposit_amount.toLocaleString()}`,
+            `Descuento: % ${payment.booking_discount}`,
             20,
             startY + lineHeight * 10
           );
           doc.text(
-            `Monto de reserva: $ ${payment.booking_amount.toLocaleString()}`,
+            `Monto a Cobrar: $ ${payment.booking_amount.toLocaleString()}`,
             20,
             startY + lineHeight * 11
           );
-
-          doc.setLineWidth(0.5); // Establece el ancho de línea
-          doc.setDrawColor(0, 0, 0); // Establece el color de línea (negro)
-          doc.line(20, startY + lineHeight * 12, 190, startY + lineHeight * 12); // Dibuja la línea
-
+          doc.setLineWidth(0.5);
+          doc.setDrawColor(0, 0, 0);
+          doc.line(20, startY + lineHeight * 12, 190, startY + lineHeight * 12);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(14); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(14);
           doc.text('Gastos Extras:', 20, startY + lineHeight * 13);
-
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
-
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
           doc.text(
             `Gastos adicionales: $ ${payment.extra_expenses.toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
-
-          doc.setLineWidth(0.5); // Establece el ancho de línea
-          doc.setDrawColor(0, 0, 0); // Establece el color de línea (negro)
-          doc.line(20, startY + lineHeight * 15, 190, startY + lineHeight * 15); // Dibuja la línea
-
+          doc.setLineWidth(0.5);
+          doc.setDrawColor(0, 0, 0);
+          doc.line(20, startY + lineHeight * 15, 190, startY + lineHeight * 15);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(14); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(14);
           doc.text('Importe Final:', 20, startY + lineHeight * 16);
-
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
-
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
           doc.text(
             `Subtotal: $ ${payment.payment_amount_subtotal.toLocaleString()}`,
             20,
@@ -341,18 +310,12 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 18
           );
 
-          startY += lineHeight * 19; // Espacio entre cada cobro
+          startY += lineHeight * 19;
         });
-
-        // Obtiene los bytes del PDF
         const pdfBytes = doc.output();
-
-        // Crea una URL para el PDF
         const pdfUrl = URL.createObjectURL(
           new Blob([pdfBytes], { type: 'application/pdf' })
         );
-
-        // Crea una nueva ventana y muestra el PDF en un elemento iframe
         const newWindow = window.open();
         if (newWindow != null) {
           newWindow.document.write(
@@ -361,7 +324,7 @@ export class ClientPageComponent implements OnInit {
               '" style="width:100%;height:100%;" frameborder="0"></iframe>'
           );
           newWindow.document.title =
-            'Historial de Cobros - Apartamentos Anahí.pdf'; // Establece el título de la ventana
+            'Historial de Cobros - Apartamentos Anahí.pdf';
         }
       },
       (error) => {
@@ -390,7 +353,6 @@ export class ClientPageComponent implements OnInit {
 
         const doc = new jsPDF();
         const addPageWithBackgroundColor = () => {
-          // Establece el color de fondo como azul cielo
           const lightGreenColor = '#C1FFC1';
           doc.setFillColor(lightGreenColor);
           doc.rect(
@@ -401,11 +363,7 @@ export class ClientPageComponent implements OnInit {
             'F'
           );
         };
-
-        // Agrega la primera página con color de fondo
         addPageWithBackgroundColor();
-
-        // Agrega el logo y la información de la empresa
         const logo = new Image();
         logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
         doc.addImage(logo, 'PNG', 10, 10, 30, 30);
@@ -421,48 +379,33 @@ export class ClientPageComponent implements OnInit {
         );
         doc.text('Telefono: 0 (3541) 44-8820', 50, 50);
         doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
-
-        // Dibuja una línea horizontal debajo de la información de la empresa
         doc.setLineWidth(0.5);
         doc.line(10, 70, 200, 70);
-
-        // Establece la fuente y el tamaño del título
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
-
         const title = `Historial de Reservas - Cliente: ${client.name} ${client.last_name}`;
-        const titleWidth = doc.getTextWidth(title); // Calcula el ancho del título
-
-        const pageWidth = doc.internal.pageSize.getWidth(); // Obtiene el ancho de la página
-
-        const titleX = (pageWidth - titleWidth) / 2; // Calcula la coordenada X centrada
-
-        doc.text(title, titleX, 80); // Ajusta la coordenada X del texto
-
-        // Establece la fuente y el tamaño del texto de detalles
+        const titleWidth = doc.getTextWidth(title);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleX = (pageWidth - titleWidth) / 2;
+        doc.text(title, titleX, 80);
         doc.setFont('arial', 'bolditalic');
         doc.setFontSize(15);
-
-        // Agrega los detalles de los pagos
         let startY = 100;
         const lineHeight = 10;
-
         bookings.forEach((booking, index) => {
           if (index > 0) {
             doc.addPage();
             addPageWithBackgroundColor();
-            startY = 10; // Reinicia la posición vertical en la nueva página
+            startY = 10;
           }
           doc.setFont('arial', 'bolditalic');
           doc.setFontSize(15);
           doc.text(`Reserva ${index + 1}:`, 10, startY);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(15);
           doc.text('Informacion de reserva:', 20, startY + lineHeight);
-
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
-
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
           doc.text(
             `Nro de reserva: ${booking.booking_number}`,
             20,
@@ -478,17 +421,15 @@ export class ClientPageComponent implements OnInit {
             20,
             startY + lineHeight * 4
           );
-
-          doc.setLineWidth(0.5); // Establece el ancho de línea
-          doc.setDrawColor(0, 0, 0); // Establece el color de línea (negro)
-          doc.line(20, startY + lineHeight * 5, 190, startY + lineHeight * 5); // Dibuja la línea
-
+          doc.setLineWidth(0.5);
+          doc.setDrawColor(0, 0, 0);
+          doc.line(20, startY + lineHeight * 5, 190, startY + lineHeight * 5);
           doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15); // Establece el tamaño de fuente para el subtítulo
+          doc.setFontSize(15);
           doc.text('Detalles de la reserva:', 20, startY + lineHeight * 6);
 
-          doc.setFont('helvetica', 'normal'); // Restablece el estilo de fuente a normal
-          doc.setFontSize(12); // Restablece el tamaño de fuente normal
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(12);
 
           doc.text(
             `Fecha check-in: ${booking.check_in_date}`,
@@ -545,19 +486,12 @@ export class ClientPageComponent implements OnInit {
             20,
             startY + lineHeight * 17
           );
-
-          startY += lineHeight * 18; // Espacio entre cada cobro
+          startY += lineHeight * 18;
         });
-
-        // Obtiene los bytes del PDF
         const pdfBytes = doc.output();
-
-        // Crea una URL para el PDF
         const pdfUrl = URL.createObjectURL(
           new Blob([pdfBytes], { type: 'application/pdf' })
         );
-
-        // Crea una nueva ventana y muestra el PDF en un elemento iframe
         const newWindow = window.open();
         if (newWindow != null) {
           newWindow.document.write(
@@ -566,7 +500,7 @@ export class ClientPageComponent implements OnInit {
               '" style="width:100%;height:100%;" frameborder="0"></iframe>'
           );
           newWindow.document.title =
-            'Historial de Reservas - Apartamentos Anahí.pdf'; // Establece el título de la ventana
+            'Historial de Reservas - Apartamentos Anahí.pdf';
         }
       },
       (error) => {

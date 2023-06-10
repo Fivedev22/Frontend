@@ -18,7 +18,7 @@
       <input
         class="client-input-search"
         (keyup)="applyFilter($event)"
-        placeholder="Buscar..."
+        placeholder="Buscar ..."
         #input
       />
       <div class="client-button-search">
@@ -26,7 +26,6 @@
       </div>
     </div>
   </div>
-
   <div class="client-section-body">
     <div class="cpc-tableTitle">Tabla de clientes</div>
     <table
@@ -39,41 +38,36 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
         <td mat-cell *matCellDef="let row">{{ row.name }}</td>
       </ng-container>
-
       <ng-container matColumnDef="last_name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
         <td mat-cell *matCellDef="let row">{{ row.last_name }}</td>
       </ng-container>
-
       <ng-container matColumnDef="document_number">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Nro. de documento
         </th>
         <td mat-cell *matCellDef="let row">{{ row.document_number }}</td>
       </ng-container>
-
       <ng-container matColumnDef="email">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
         <td mat-cell *matCellDef="let row">{{ row.email }}</td>
       </ng-container>
-
       <ng-container matColumnDef="phone_number">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Nro. de télefono
         </th>
         <td mat-cell *matCellDef="let row">{{ row.phone_number }}</td>
       </ng-container>
-
       <ng-container matColumnDef="is_foreign">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Extranjero</th>
         <td mat-cell *matCellDef="let row">{{ row.is_foreign | foreign }}</td>
       </ng-container>
-
       <ng-container matColumnDef="province">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
-        <td mat-cell *matCellDef="let row">{{ row.province | province }}</td>
+        <td mat-cell *matCellDef="let row">
+          {{ row.is_foreign ? "" : (row.province | province) }}
+        </td>
       </ng-container>
-
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
@@ -99,7 +93,6 @@
           </div>
         </td>
       </ng-container>
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-row" *matNoDataRow>
