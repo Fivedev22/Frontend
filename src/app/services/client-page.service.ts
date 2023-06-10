@@ -1,24 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IClient } from './interfaces/client.interface';
-
+import { IClient } from '../interfaces/client.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClientService {
+  CLIENT_URL = 'http://localhost:3000/client/';
 
-  CLIENT_URL = 'http://localhost:3000/client/'
-
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   findAllClients(): Observable<IClient[]> {
     return this.http.get<IClient[]>(this.CLIENT_URL);
   }
 
   findOneClient(id: number): Observable<IClient> {
-    return this.http.get<IClient>(`${this.CLIENT_URL}${+id}`)
+    return this.http.get<IClient>(`${this.CLIENT_URL}${+id}`);
   }
 
   findAllArchived(): Observable<IClient[]> {
@@ -26,7 +24,7 @@ export class ClientService {
   }
 
   findOneArchived(id: number): Observable<IClient> {
-    return this.http.get<IClient>(`${this.CLIENT_URL}archived/${+id}`)
+    return this.http.get<IClient>(`${this.CLIENT_URL}archived/${+id}`);
   }
 
   createClient(client: IClient): Observable<IClient> {
@@ -42,15 +40,17 @@ export class ClientService {
   }
 
   archiveClient(id: number): Observable<IClient> {
-    return this.http.patch<IClient>(`${this.CLIENT_URL}archive/${+id}`, null)
+    return this.http.patch<IClient>(`${this.CLIENT_URL}archive/${+id}`, null);
   }
 
   unarchiveClient(id: number): Observable<IClient> {
-    return this.http.patch<IClient>(`${this.CLIENT_URL}unarchive/${+id}`, null)
+    return this.http.patch<IClient>(`${this.CLIENT_URL}unarchive/${+id}`, null);
   }
 
   searchByDocument(document_number: string): Observable<IClient> {
-    return this.http.get<IClient>(`${this.CLIENT_URL}search/${document_number}`)
+    return this.http.get<IClient>(
+      `${this.CLIENT_URL}search/${document_number}`
+    );
   }
 
   getClientBookings(id: number): Observable<any> {
@@ -60,5 +60,4 @@ export class ClientService {
   getClientPayments(id: number): Observable<any> {
     return this.http.get<any>(`${this.CLIENT_URL}${id}/payments`);
   }
-
 }

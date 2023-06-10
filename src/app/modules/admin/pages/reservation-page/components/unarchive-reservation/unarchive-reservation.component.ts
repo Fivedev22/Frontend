@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IReservation } from '../../../services/interfaces/reservation.interface';
+import { IReservation } from '../../../../../../interfaces/reservation.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ReservationService } from '../../../services/reservation.service';
+import { ReservationService } from '../../../../../../services/reservation.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 

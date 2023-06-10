@@ -7,13 +7,13 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { ProvinceService } from '../../../services/province.service';
-import { GenderTypeService } from '../../../services/gender_type.service';
-import { IProvince } from '../../../services/interfaces/province.interface';
-import { IGenderType } from '../../../services/interfaces/gender_type.interface';
-import { ClientService } from '../../../services/client-page.service';
-import { IDocumentType } from '../../../services/interfaces/document_type.interface';
-import { DocumentTypeService } from '../../../services/document_type.service';
+import { ProvinceService } from '../../../../../../services/province.service';
+import { GenderTypeService } from '../../../../../../services/gender_type.service';
+import { IProvince } from '../../../../../../interfaces/province.interface';
+import { IGenderType } from '../../../../../../interfaces/gender_type.interface';
+import { ClientService } from '../../../../../../services/client-page.service';
+import { IDocumentType } from '../../../../../../interfaces/document_type.interface';
+import { DocumentTypeService } from '../../../../../../services/document_type.service';
 @Component({
   selector: 'app-client-form',
   templateUrl: './client-form.component.html',
@@ -146,7 +146,7 @@ export class ClientFormComponent implements OnInit {
       : this.clientForm.controls['province'].setValue(
           data.province.id_province
         );
-    this.changeStateProvince(); // Agregar esta línea
+    this.changeStateProvince();
   }
 
   sendClient() {

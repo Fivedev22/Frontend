@@ -1,17 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IProvince } from './interfaces/province.interface';
-
+import { IProvince } from '../interfaces/province.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProvinceService {
+  PROVINCE_URL = 'http://localhost:3000/province/';
 
-  PROVINCE_URL = 'http://localhost:3000/province/'
-
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   findAll(): Observable<IProvince[]> {
     return this.http.get<IProvince[]>(this.PROVINCE_URL);
@@ -20,5 +18,4 @@ export class ProvinceService {
   findOne(id: number): Observable<IProvince> {
     return this.http.get<IProvince>(`${this.PROVINCE_URL}${+id}`);
   }
-
 }

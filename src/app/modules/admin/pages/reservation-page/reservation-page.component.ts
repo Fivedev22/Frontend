@@ -3,15 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReservationService } from '../services/reservation.service';
-import { IReservation } from '../services/interfaces/reservation.interface';
+import { ReservationService } from '../../../../services/reservation.service';
+import { IReservation } from '../../../../interfaces/reservation.interface';
 import Swal from 'sweetalert2';
 import { ReservationFormComponent } from './components/reservation-form/reservation-form.component';
 import jsPDF from 'jspdf';
 import { PaymentFormComponent } from '../payment-page/components/payment-form/payment-form.component';
 import { Router } from '@angular/router';
 import { ContractUploadComponent } from './components/contract-upload/contract-upload.component';
-import { PaymentService } from '../services/payment.service';
+import { PaymentService } from '../../../../services/payment.service';
 import { UnarchiveReservationComponent } from './components/unarchive-reservation/unarchive-reservation.component';
 
 @Component({
@@ -143,7 +143,6 @@ export class ReservationPageComponent implements OnInit {
       const doc = new jsPDF();
 
       const addPageWithBackgroundColor = () => {
-        // Establece el color de fondo como azul cielo
         const lightGreenColor = '#C1FFC1';
         doc.setFillColor(lightGreenColor);
         doc.rect(
@@ -155,10 +154,8 @@ export class ReservationPageComponent implements OnInit {
         );
       };
 
-      // Agrega la primera página con color de fondo
       addPageWithBackgroundColor();
 
-      // Agrega el logo y la información de la empresa
       const logo = new Image();
       logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
       doc.addImage(logo, 'PNG', 10, 10, 30, 30);
@@ -174,32 +171,20 @@ export class ReservationPageComponent implements OnInit {
       );
       doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
       doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
-
-      // Dibuja una línea horizontal debajo de la información de la empresa
       doc.setLineWidth(0.5);
       doc.line(10, 70, 200, 70);
-
-      // Establece la fuente y el tamaño del título de la factura
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
-
       const title = 'Comprobante de Reserva';
-      const titleWidth = doc.getTextWidth(title); // Calcula el ancho del título
-
-      const pageWidth = doc.internal.pageSize.getWidth(); // Obtiene el ancho de la página
-      const titleX = (pageWidth - titleWidth) / 2; // Calcula la coordenada X centrada
-      doc.text(title, titleX, 80); // Ajusta la coordenada X del texto
-
-      // Establece la fuente y el tamaño del texto de detalles de reserva
-      doc.setFont('arial', 'bolditalic'); // Cambia la fuente a negrita
-      doc.setFontSize(16); // Reduce el tamaño del texto
-      doc.text('Detalles de reserva', 10, 90); // Agrega el nuevo título
-
-      // Establece la fuente y el tamaño del texto de detalles
+      const titleWidth = doc.getTextWidth(title);
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const titleX = (pageWidth - titleWidth) / 2;
+      doc.text(title, titleX, 80);
+      doc.setFont('arial', 'bolditalic');
+      doc.setFontSize(16);
+      doc.text('Detalles de reserva', 10, 90);
       doc.setFont('arial', 'italic');
       doc.setFontSize(14);
-
-      // Agrega los detalles de la reserva
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
       doc.text(`Reserva Nro: ${data.booking_number}`, 10, 100);
       doc.text(
@@ -225,21 +210,16 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
-
-      // Agrega el subtítulo "Importe Detallado"
-      doc.setFont('arial', 'bolditalic'); // Establece la fuente en negrita
-      doc.setFontSize(15); // Ajusta el tamaño de fuente
-      doc.text('Importe Detallado', 10, 230); // Agrega el subtítulo
-
-      doc.setFont('arial', 'italic'); // Restaura la configuración de fuente y estilo
-      doc.setFontSize(14); // Restaura el tamaño de fuente
-
+      doc.setFont('arial', 'bolditalic');
+      doc.setFontSize(15);
+      doc.text('Importe Detallado', 10, 230);
+      doc.setFont('arial', 'italic');
+      doc.setFontSize(14);
       doc.text(
         `Monto de Reserva: $ ${data.starting_price.toLocaleString()}`,
         10,
         240
-      ); // Muestra el precio inicial debajo del subtítulo
-
+      );
       doc.text(
         `Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`,
         10,
@@ -251,30 +231,20 @@ export class ReservationPageComponent implements OnInit {
         10,
         270
       );
-
-      // Dibuja una línea horizontal debajo de los detalles
       doc.setLineWidth(0.5);
-      const lineY = 280; // Ajusta la coordenada Y para la línea
-      doc.line(10, lineY, 200, lineY); // Ajusta la longitud de la línea
-
-      // Establece la fuente y el tamaño del texto de agradecimiento
-      doc.setFont('Arial', 'italic'); // Utiliza 'italic' para establecer la fuente en cursiva
+      const lineY = 280;
+      doc.line(10, lineY, 200, lineY);
+      doc.setFont('Arial', 'italic');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
       const textWidth = doc.getTextWidth(text);
       const pageWidth2 = doc.internal.pageSize.getWidth();
       const x = (pageWidth2 - textWidth) / 2;
       doc.text(text, x, lineY + 10);
-
-      // Obtiene los bytes del PDF
       const pdfBytes = doc.output();
-
-      // Crea una URL para el PDF
       const pdfUrl = URL.createObjectURL(
         new Blob([pdfBytes], { type: 'application/pdf' })
       );
-
-      // Crea una nueva ventana y muestra el PDF en un elemento iframe
       const newWindow = window.open();
       if (newWindow != null) {
         newWindow.document.write(
@@ -283,7 +253,7 @@ export class ReservationPageComponent implements OnInit {
             '" style="width:100%;height:100%;" frameborder="0"></iframe>'
         );
         newWindow.document.title =
-          'Comprobante de Reserva - Apartamentos Anahí.pdf'; // Establece el título de la ventana
+          'Comprobante de Reserva - Apartamentos Anahí.pdf';
       }
     });
   }
@@ -292,13 +262,12 @@ export class ReservationPageComponent implements OnInit {
     const dialogRef = this.dialog.open(PaymentFormComponent, {
       width: '800px',
       disableClose: true,
-      data: { reservationId: reservationId }, // Pasa el ID de reserva al componente PaymentFormComponent
+      data: { reservationId: reservationId },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'save') {
-        // Actualizar la lista de cobros
-        this.router.navigate(['admin/payments']); // Redirigir a la página de cobros
+        this.router.navigate(['admin/payments']);
       }
     });
   }
@@ -311,7 +280,6 @@ export class ReservationPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
-        // Muestra el mensaje swal
         Swal.fire({
           title: 'Éxito',
           text: 'Contrato de alquiler subido exitosamente',

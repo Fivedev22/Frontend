@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { PropertyService } from '../../../services/property-page.service';
-import { IProperty } from '../../../services/interfaces/property.interface';
+import { PropertyService } from '../../../../../../services/property-page.service';
+import { IProperty } from '../../../../../../interfaces/property.interface';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';

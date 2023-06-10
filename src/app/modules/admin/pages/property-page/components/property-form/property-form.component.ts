@@ -2,15 +2,15 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { IProvince } from '../../../services/interfaces/province.interface';
-import { ProvinceService } from '../../../services/province.service';
-import { PropertyService } from '../../../services/property-page.service';
-import { IPropertyType } from '../../../services/interfaces/property_type.interface';
-import { PropertyTypeService } from '../../../services/property_type-service';
-import { IAvailabilityStatus } from '../../../services/interfaces/availability_status.interface';
-import { AvailabilityStatusService } from '../../../services/availability_status.service';
-import { IActivityStatus } from '../../../services/interfaces/activity_status.interface';
-import { ActivityStatusService } from '../../../services/activity_status.service';
+import { IProvince } from '../../../../../../interfaces/province.interface';
+import { ProvinceService } from '../../../../../../services/province.service';
+import { PropertyService } from '../../../../../../services/property-page.service';
+import { IPropertyType } from '../../../../../../interfaces/property_type.interface';
+import { PropertyTypeService } from '../../../../../../services/property_type-service';
+import { IAvailabilityStatus } from '../../../../../../interfaces/availability_status.interface';
+import { AvailabilityStatusService } from '../../../../../../services/availability_status.service';
+import { IActivityStatus } from '../../../../../../interfaces/activity_status.interface';
+import { ActivityStatusService } from '../../../../../../services/activity_status.service';
 
 @Component({
   selector: 'app-property-form',

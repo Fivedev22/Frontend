@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { IProperty } from './interfaces/property.interface';
+import { IProperty } from '../interfaces/property.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyService {
   PROPERTY_URL = 'http://localhost:3000/property/';
-
 
   constructor(private readonly http: HttpClient) {}
 
@@ -81,25 +80,24 @@ export class PropertyService {
 
   deleteImages(propertyId: number, imageIds: number[]): Observable<any> {
     const body = { imageIds };
-    return this.http.delete<any>(
-      `${this.PROPERTY_URL}images/${propertyId}`,
-      { body }
-    );
+    return this.http.delete<any>(`${this.PROPERTY_URL}images/${propertyId}`, {
+      body,
+    });
   }
-
 
   uploadInventory(id: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(`${this.PROPERTY_URL}inventory/upload/${id}`, formData);
+    return this.http.post(
+      `${this.PROPERTY_URL}inventory/upload/${id}`,
+      formData
+    );
   }
 
   getPropertyInventory(id: number): Observable<any> {
-    const url = `${this.PROPERTY_URL}inventories/${id}`; // Construye la URL para el nuevo endpoint
-    return this.http.get<any>(url).pipe(
-      map(response => response.inventory)
-    );
+    const url = `${this.PROPERTY_URL}inventories/${id}`;
+    return this.http.get<any>(url).pipe(map((response) => response.inventory));
   }
 
   deleteInventory(InventoryId: number): Observable<any> {
@@ -107,7 +105,8 @@ export class PropertyService {
   }
 
   getLastNumber(): Observable<number> {
-    return this.http.get<number>('http://localhost:3000/property/get-last-number/:')
+    return this.http.get<number>(
+      'http://localhost:3000/property/get-last-number/:'
+    );
   }
-
 }

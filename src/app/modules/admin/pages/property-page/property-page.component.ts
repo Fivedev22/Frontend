@@ -5,11 +5,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { PropertyFormComponent } from './components/property-form/property-form.component';
-import { PropertyService } from '../services/property-page.service';
-import { IProperty } from '../services/interfaces/property.interface';
+import { PropertyService } from '../../../../services/property-page.service';
+import { IProperty } from '../../../../interfaces/property.interface';
 import { ImageUploadDialogComponent } from './components/image-upload-dialog/image-upload-dialog.component';
 import { UploadInventoryComponent } from './components/upload-inventory/upload-inventory.component';
-import { ReservationService } from '../services/reservation.service';
+import { ReservationService } from '../../../../services/reservation.service';
 import { UnarchivePropertyComponent } from './components/unarchive-property/unarchive-property.component';
 
 @Component({

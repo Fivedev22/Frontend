@@ -1,18 +1,18 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { IProperty } from '../../../services/interfaces/property.interface';
-import { IClient } from '../../../services/interfaces/client.interface';
+import { IProperty } from '../../../../../../interfaces/property.interface';
+import { IClient } from '../../../../../../interfaces/client.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PaymentService } from '../../../services/payment.service';
-import { ClientService } from '../../../services/client-page.service';
-import { PropertyService } from '../../../services/property-page.service';
-import { IPaymentStatus } from '../../../services/interfaces/payment_status.interface';
-import { IPaymentType } from '../../../services/interfaces/payment_type.interface';
-import { PaymentTypeService } from '../../../services/payment_type.service';
-import { PaymentStatusService } from '../../../services/payment_status.service';
-import { IReservation } from '../../../services/interfaces/reservation.interface';
-import { ReservationService } from '../../../services/reservation.service';
+import { PaymentService } from '../../../../../../services/payment.service';
+import { ClientService } from '../../../../../../services/client-page.service';
+import { PropertyService } from '../../../../../../services/property-page.service';
+import { IPaymentStatus } from '../../../../../../interfaces/payment_status.interface';
+import { IPaymentType } from '../../../../../../interfaces/payment_type.interface';
+import { PaymentTypeService } from '../../../../../../services/payment_type.service';
+import { PaymentStatusService } from '../../../../../../services/payment_status.service';
+import { IReservation } from '../../../../../../interfaces/reservation.interface';
+import { ReservationService } from '../../../../../../services/reservation.service';
 
 @Component({
   selector: 'app-payment-form',

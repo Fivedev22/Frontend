@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PropertyService } from '../../../services/property-page.service';
+import { PropertyService } from '../../../../../../services/property-page.service';
 import Swal from 'sweetalert2';
 interface ImageFile {
   file: File;
@@ -80,7 +80,6 @@ export class ImageUploadDialogComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       this.selectedImages.push(file);
-      console.log(this.selectedImages);
       const reader = new FileReader();
       reader.onload = (e: any) => {
         file.imageUrl = e.target.result;

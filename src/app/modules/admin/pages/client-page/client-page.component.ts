@@ -3,14 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ClientService } from '../services/client-page.service';
-import { IClient } from '../services/interfaces/client.interface';
+import { ClientService } from '../../../../services/client-page.service';
+import { IClient } from '../../../../interfaces/client.interface';
 import Swal from 'sweetalert2';
 import { ClientFormComponent } from './components/client-form/client-form.component';
 import jsPDF from 'jspdf';
 import { UnarchiveClientComponent } from './components/unarchive-client/unarchive-client.component';
-import { PaymentService } from '../services/payment.service';
-import { ReservationService } from '../services/reservation.service';
+import { PaymentService } from '../../../../services/payment.service';
+import { ReservationService } from '../../../../services/reservation.service';
 
 @Component({
   selector: 'app-client-page',

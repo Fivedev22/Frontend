@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { IClient } from '../../../services/interfaces/client.interface';
+import { IClient } from '../../../../../../interfaces/client.interface';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { ClientService } from '../../../services/client-page.service';
+import { ClientService } from '../../../../../../services/client-page.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 

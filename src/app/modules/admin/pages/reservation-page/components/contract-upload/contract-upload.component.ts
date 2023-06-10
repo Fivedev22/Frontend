@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ReservationService } from '../../../services/reservation.service';
+import { ReservationService } from '../../../../../../services/reservation.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,7 +18,7 @@ export class ContractUploadComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getContracts(); // Llama al método getContracts al iniciar el componente
+    this.getContracts();
   }
 
   onFileSelected(files: FileList | null) {
@@ -29,7 +29,6 @@ export class ContractUploadComponent implements OnInit {
   }
 
   uploadContract(file: File) {
-    // Verificar si el archivo es de tipo PDF, Word o Excel
     if (
       file.type !== 'application/pdf' &&
       file.type !== 'application/msword' &&
@@ -45,11 +44,12 @@ export class ContractUploadComponent implements OnInit {
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
-      return; // Detener la ejecución de la función si no es un archivo permitido
+      return;
     }
 
-    this.reservationService.getBookingContracts(this.data.id_booking).subscribe(
-      (contracts) => {
+    this.reservationService
+      .getBookingContracts(this.data.id_booking)
+      .subscribe((contracts) => {
         if (contracts && contracts.length > 0) {
           Swal.fire({
             title: 'Error',
@@ -60,37 +60,24 @@ export class ContractUploadComponent implements OnInit {
         } else {
           this.reservationService
             .uploadContract(this.data.id_booking, file)
-            .subscribe(
-              () => {
-                this.dialogRef.close('success');
-              },
-              (error) => {
-                // Manejar el error apropiadamente
-              }
-            );
+            .subscribe(() => {
+              this.dialogRef.close('success');
+            });
         }
-      },
-      (error) => {
-        // Manejar el error apropiadamente
-      }
-    );
+      });
   }
 
   getContracts() {
-    this.reservationService.getBookingContracts(this.data.id_booking).subscribe(
-      (response) => {
-        console.log(response);
+    this.reservationService
+      .getBookingContracts(this.data.id_booking)
+      .subscribe((response) => {
         this.contracts = response;
-      },
-      (error) => {
-        // Manejar el error apropiadamente
-      }
-    );
+      });
   }
 
   getDownloadUrl(contract: any): string {
-    const baseUrl = 'http://localhost:3000/uploads/'; // Ruta base de la carpeta de contratos en el servidor
-    const filename = contract.filename; // Nombre del archivo del contrato
+    const baseUrl = 'http://localhost:3000/uploads/';
+    const filename = contract.filename;
     return baseUrl + filename;
   }
 
@@ -106,21 +93,14 @@ export class ContractUploadComponent implements OnInit {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Eliminar el contrato
-        this.reservationService.deleteContract(contract.id).subscribe(
-          () => {
-            Swal.fire(
-              'Eliminado',
-              'El contrato de alquiler ha sido eliminado correctamente',
-              'success'
-            );
-            // Manejar la eliminación exitosa del contrato
-            this.getContracts(); // Actualizar la lista de contratos después de eliminar uno
-          },
-          (error) => {
-            // Manejar el error apropiadamente
-          }
-        );
+        this.reservationService.deleteContract(contract.id).subscribe(() => {
+          Swal.fire(
+            'Eliminado',
+            'El contrato de alquiler ha sido eliminado correctamente',
+            'success'
+          );
+          this.getContracts();
+        });
       }
     });
   }

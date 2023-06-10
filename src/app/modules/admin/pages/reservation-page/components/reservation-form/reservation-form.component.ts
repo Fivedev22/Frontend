@@ -5,7 +5,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { IReservationType } from '../../../services/interfaces/reservation_type.interface';
+import { IReservationType } from '../../../../../../interfaces/reservation_type.interface';
 import {
   FormBuilder,
   FormControl,
@@ -13,19 +13,19 @@ import {
   Validators,
 } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { IReservationOrigin } from '../../../services/interfaces/reservation_origin.interface';
-import { IClient } from '../../../services/interfaces/client.interface';
-import { IProperty } from '../../../services/interfaces/property.interface';
+import { IReservationOrigin } from '../../../../../../interfaces/reservation_origin.interface';
+import { IClient } from '../../../../../../interfaces/client.interface';
+import { IProperty } from '../../../../../../interfaces/property.interface';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { ReservationService } from '../../../services/reservation.service';
-import { ClientService } from '../../../services/client-page.service';
-import { PropertyService } from '../../../services/property-page.service';
-import { ReservationTypeService } from '../../../services/reservation_type.service';
-import { ReservationOriginService } from '../../../services/reservation_origin.service';
+import { ReservationService } from '../../../../../../services/reservation.service';
+import { ClientService } from '../../../../../../services/client-page.service';
+import { PropertyService } from '../../../../../../services/property-page.service';
+import { ReservationTypeService } from '../../../../../../services/reservation_type.service';
+import { ReservationOriginService } from '../../../../../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../../client-page/components/client-form/client-form.component';
 import { Observable } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -77,12 +77,10 @@ export class ReservationFormComponent implements OnInit {
   ) {
     this.propertyControl.valueChanges.subscribe((value) => {
       this.filteredProperties = this.filterProperties(value);
-      console.log(value);
     });
 
     this.searchControl.valueChanges.subscribe((value) => {
       this.filteredClients = this.filterClients(value);
-      console.log(value);
     });
   }
 
@@ -101,7 +99,7 @@ export class ReservationFormComponent implements OnInit {
     }
 
     this.reservationForm = this.initForm();
-    this.reservationForm.controls['discount'].setValue(0); // Inicializar el campo 'discount' en cero
+    this.reservationForm.controls['discount'].setValue(0);
     this.reservationForm.controls['booking_amount'].setValue(0);
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
@@ -130,23 +128,19 @@ export class ReservationFormComponent implements OnInit {
       const checkInDate = new Date(this.reservationData.check_in_date);
       const checkOutDate = new Date(this.reservationData.check_out_date);
 
-      // Verificar si los controles han sido modificados
       const checkInControl = this.reservationForm.controls['check_in_date'];
       const checkOutControl = this.reservationForm.controls['check_out_date'];
       const checkInValue = checkInControl.value;
       const checkOutValue = checkOutControl.value;
       const datesModified = checkInControl.dirty || checkOutControl.dirty;
 
-      // Asignar las fechas ajustadas o no ajustadas a los controles del formulario
       if (!datesModified) {
-        // Ajustar las fechas según la zona horaria local
         checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
         checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
 
         checkInControl.setValue(checkInDate);
         checkOutControl.setValue(checkOutDate);
       } else {
-        // Las fechas han sido modificadas, asignar los valores actuales sin ajuste
         checkInControl.setValue(checkInValue);
         checkOutControl.setValue(checkOutValue);
       }
@@ -165,7 +159,6 @@ export class ReservationFormComponent implements OnInit {
             .indexOf(filterValue) === 0
       );
     } else {
-      // Manejar el caso en el que this.properties no sea un arreglo
       return [];
     }
   }
@@ -184,7 +177,6 @@ export class ReservationFormComponent implements OnInit {
           client.last_name.toLowerCase().indexOf(filterValue) !== -1
       );
     } else {
-      // Manejar el caso en el que this.clients no sea un arreglo
       return [];
     }
   }
@@ -192,7 +184,7 @@ export class ReservationFormComponent implements OnInit {
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
     const property = event.option.value;
     this.reservationForm.controls['property'].setValue(property.id_property);
-    this.propertyControl.setValue(property.property_name); // Asignar el valor del nombre al campo de entrada
+    this.propertyControl.setValue(property.property_name);
     this.propertyDetail.setValue(property.property_name);
     this.propertyControl.setValue('');
   }
@@ -200,7 +192,7 @@ export class ReservationFormComponent implements OnInit {
   onClientSelected(event: MatAutocompleteSelectedEvent): void {
     const client = event.option.value;
     this.reservationForm.controls['client'].setValue(client.id_client);
-    this.searchControl.setValue(client.name + ' ' + client.last_name); // Asignar el valor del nombre al campo de entrada
+    this.searchControl.setValue(client.name + ' ' + client.last_name);
     this.clientDetail.setValue(client.name + ' ' + client.last_name);
     this.searchControl.setValue('');
   }
@@ -212,19 +204,15 @@ export class ReservationFormComponent implements OnInit {
   onInputChanged() {
     const value = this.propertyControl.value;
 
-    // Comprueba si el valor ingresado está en la lista de opciones
     const optionExists = this.filteredProperties.some((property) => {
       return property.property_name.toLowerCase().includes(value.toLowerCase());
     });
-
-    // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "propiedad no encontrada"
     this.showNotFoundMessage1 = value && !optionExists;
   }
 
   onInputChangedClient() {
     const value = this.searchControl.value;
 
-    // Comprueba si el valor ingresado está en la lista de opciones
     const optionExists = this.filteredClients.some((client) => {
       const documentNumberMatch = client.document_number
         .toLowerCase()
@@ -239,7 +227,6 @@ export class ReservationFormComponent implements OnInit {
       return documentNumberMatch || firstNameMatch || lastNameMatch;
     });
 
-    // Si el valor ingresado no está en la lista de opciones, muestra el mensaje "cliente no encontrado"
     this.showNotFoundMessage2 = value && !optionExists;
   }
 
@@ -305,9 +292,7 @@ export class ReservationFormComponent implements OnInit {
             this.reservationService
               .getOccupiedDatesForProperty(propertyId)
               .subscribe((occupiedDates) => {
-                console.log('Fechas ocupadas:', occupiedDates);
                 this.occupiedDates = occupiedDates;
-                console.log('Fechas ocupadas:', this.occupiedDates);
               });
           }
         }
@@ -321,7 +306,7 @@ export class ReservationFormComponent implements OnInit {
 
   dateFilter = (date: Date | null) => {
     if (!date) {
-      return true; // permitir fechas vacías
+      return true;
     }
 
     const dateStr = date.toISOString().slice(0, 10);

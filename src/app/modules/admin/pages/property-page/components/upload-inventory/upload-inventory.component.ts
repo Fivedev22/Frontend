@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PropertyService } from '../../../services/property-page.service';
+import { PropertyService } from '../../../../../../services/property-page.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -76,7 +76,6 @@ export class UploadInventoryComponent implements OnInit {
     this.propertyService
       .getPropertyInventory(this.data.id_property)
       .subscribe((response) => {
-        console.log(response);
         this.inventories = response;
       });
   }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PaymentService } from '../services/payment.service';
-import { ReservationService } from '../services/reservation.service';
-import { IPayment } from '../services/interfaces/payment.interface';
-import { IReservation } from '../services/interfaces/reservation.interface';
+import { PaymentService } from '../../../../services/payment.service';
+import { ReservationService } from '../../../../services/reservation.service';
+import { IPayment } from '../../../../interfaces/payment.interface';
+import { IReservation } from '../../../../interfaces/reservation.interface';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -48,7 +48,6 @@ export class ReportPageComponent implements OnInit {
       [propertyId: string]: { income: number; propertyName: string };
     } = {};
 
-    // Calcula los ingresos por propiedad
     for (const payment of this.payments) {
       const propertyId = payment.property.reference_number;
       const propertyName = payment.property.property_name;
@@ -63,7 +62,6 @@ export class ReportPageComponent implements OnInit {
       }
     }
 
-    // Genera los datos para la tabla de Angular Material
     const incomeReportData = Object.entries(incomeByProperty).map(
       ([propertyId, { income, propertyName }]) => ({
         propertyId,
@@ -77,7 +75,6 @@ export class ReportPageComponent implements OnInit {
   generateIncomeByPaymentTypeReport() {
     const incomeByPaymentType: { [paymentType: string]: number } = {};
 
-    // Calcula los ingresos por tipo de pago
     for (const payment of this.payments) {
       const paymentType = payment.payment_type.payment_type_name;
       const amount = payment.payment_amount_total;
@@ -91,7 +88,6 @@ export class ReportPageComponent implements OnInit {
       }
     }
 
-    // Genera los datos para la tabla de Angular Material
     const incomeByPaymentTypeReportData = Object.entries(
       incomeByPaymentType
     ).map(([paymentType, income]) => ({ paymentType, income }));
@@ -102,7 +98,6 @@ export class ReportPageComponent implements OnInit {
   generateClientIncomeReport() {
     const clientIncomes: { [clientName: string]: number } = {};
 
-    // Calcula los ingresos por cliente
     for (const payment of this.payments) {
       const firstName = payment.client.name;
       const lastName = payment.client.last_name;
@@ -119,7 +114,6 @@ export class ReportPageComponent implements OnInit {
       }
     }
 
-    // Genera los datos para la tabla de Angular Material
     const clientIncomeReportData = Object.entries(clientIncomes).map(
       ([clientName, income]) => ({ clientName, income })
     );
@@ -136,7 +130,6 @@ export class ReportPageComponent implements OnInit {
       '1 mes': 0,
     };
 
-    // Calcula los ingresos por duración de reserva
     for (const payment of this.payments) {
       const checkInDate = new Date(payment.booking.check_in_date);
       const checkOutDate = new Date(payment.booking.check_out_date);
@@ -151,7 +144,6 @@ export class ReportPageComponent implements OnInit {
       }
     }
 
-    // Genera los datos para la tabla de Angular Material
     const durationIncomeReportData = Object.entries(durations).map(
       ([duration, income]) => ({ duration, income })
     );

@@ -8,8 +8,8 @@ import {
 import dayGridPlugin from '@fullcalendar/daygrid';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Observable } from 'rxjs';
-import { IReservation } from '../services/interfaces/reservation.interface';
-import { ReservationService } from '../services/reservation.service';
+import { IReservation } from '../../../../interfaces/reservation.interface';
+import { ReservationService } from '../../../../services/reservation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 declare var localStorage: any;
 

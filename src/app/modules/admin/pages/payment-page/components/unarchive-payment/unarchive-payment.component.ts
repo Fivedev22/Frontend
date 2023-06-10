@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IPayment } from '../../../services/interfaces/payment.interface';
+import { IPayment } from '../../../../../../interfaces/payment.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { PaymentService } from '../../../services/payment.service';
+import { PaymentService } from '../../../../../../services/payment.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 
