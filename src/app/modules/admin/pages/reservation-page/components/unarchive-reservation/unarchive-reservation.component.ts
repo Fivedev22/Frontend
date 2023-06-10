@@ -124,4 +124,54 @@ export class UnarchiveReservationComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
+
+  viewDetails(reservationId: number) {
+    this.reservationService.findOneReservationArchived(reservationId).subscribe(
+      (reservation: IReservation) => {
+        const details = `
+          Número de reserva: ${reservation.booking_number}
+          Fecha de creación: ${reservation.createdAt}
+          Tipo de reserva: ${reservation.booking_type.booking_type_name}
+          Procedencia de la reserva: ${reservation.booking_origin.origin_name}
+          Cliente: ${reservation.client.name} ${reservation.client.last_name}
+          Inmueble: ${reservation.property.property_name}
+          Número de adultos: ${reservation.adults_number}
+          Número de niños: ${reservation.kids_number}
+          Número de mascotas: ${reservation.pets_number || 'N/A'}
+          Fecha de check-in: ${reservation.check_in_date}
+          Fecha de check-out: ${reservation.check_out_date}
+          Hora de check-in: ${reservation.check_in_hour}
+          Hora de check-out: ${reservation.check_out_hour}
+          Precio inicial: ${reservation.starting_price}
+          Descuento: ${reservation.discount || 'N/A'}
+          Monto del depósito: ${reservation.deposit_amount}
+          Monto estimado del depósito: ${reservation.estimated_amount_deposit}
+          Monto de la reserva: ${reservation.booking_amount}
+        `;
+  
+        const popupWindow = window.open('', 'Detalles de la reserva', 'width=400,height=600');
+        popupWindow?.document.write(`
+          <html>
+            <head>
+              <title>Detalles de la reserva</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  margin: 20px;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Detalles de la reserva</h2>
+              <pre>${details}</pre>
+            </body>
+          </html>
+        `);
+      },
+      (error: any) => {
+        console.error('Error al obtener los detalles de la reserva archivada:', error);
+      }
+    );
+  }
+  
 }
