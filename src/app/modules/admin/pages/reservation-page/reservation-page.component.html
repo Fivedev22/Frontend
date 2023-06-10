@@ -55,12 +55,16 @@
 
       <ng-container matColumnDef="check_in_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Check-in</th>
-        <td mat-cell *matCellDef="let row">{{ row.check_in_date | date: 'dd/MM/yyyy' }}</td>
+        <td mat-cell *matCellDef="let row">
+          {{ row.check_in_date | date : "dd/MM/yyyy" }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="check_out_date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Check-out</th>
-        <td mat-cell *matCellDef="let row">{{ row.check_out_date | date: 'dd/MM/yyyy' }}</td>
+        <td mat-cell *matCellDef="let row">
+          {{ row.check_out_date | date : "dd/MM/yyyy" }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -91,26 +95,14 @@
             "
             >delete</mat-icon
           >
-          <mat-icon
-          ngClass="icons"
-          (click)="
-          generatePdf(row.id_booking)
-          "
-          >print icon</mat-icon
+          <mat-icon ngClass="icons" (click)="generatePdf(row.id_booking)"
+            >print icon</mat-icon
           >
-          <mat-icon
-          ngClass="icons"
-          (click)="
-          openPaymentForm(row.id_booking)
-          "
-          >payment</mat-icon
+          <mat-icon ngClass="icons" (click)="openPaymentForm(row.id_booking)"
+            >payment</mat-icon
           >
-          <mat-icon
-          ngClass="icons"
-          (click)="
-          openUploadContract(row.id_booking)
-          "
-          >description</mat-icon
+          <mat-icon ngClass="icons" (click)="openUploadContract(row.id_booking)"
+            >description</mat-icon
           >
         </td>
       </ng-container>

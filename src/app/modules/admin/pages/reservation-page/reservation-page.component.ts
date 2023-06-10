@@ -13,16 +13,23 @@ import { Router } from '@angular/router';
 import { ContractUploadComponent } from './contract-upload/contract-upload.component';
 import { PaymentService } from '../services/payment.service';
 
-
 @Component({
   selector: 'app-reservation-page',
   templateUrl: './reservation-page.component.html',
-  styleUrls: ['./reservation-page.component.css']
+  styleUrls: ['./reservation-page.component.css'],
 })
 export class ReservationPageComponent implements OnInit {
   title = 'reservation';
 
-  displayedColumns: string[] = ['booking_number', 'booking_type', 'client', 'property','check_in_date','check_out_date', 'actions'];
+  displayedColumns: string[] = [
+    'booking_number',
+    'booking_type',
+    'client',
+    'property',
+    'check_in_date',
+    'check_out_date',
+    'actions',
+  ];
 
   dataSource!: MatTableDataSource<IReservation>;
 
@@ -33,33 +40,35 @@ export class ReservationPageComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly reservationService: ReservationService,
     private readonly paymentService: PaymentService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.findAllReservations();
   }
 
   findAllReservations() {
-    this.reservationService.findAllReservations().subscribe(data => {
+    this.reservationService.findAllReservations().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    })
+    });
   }
 
   findAllArchived() {
-    this.reservationService.findAllReservationsArchived().subscribe(data => {
+    this.reservationService.findAllReservationsArchived().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    })
+    });
   }
 
   deleteReservation(id: number, booking_number: number, check_in_date: Date) {
     this.paymentService.findAllPayments().subscribe({
       next: (payments) => {
-        const hasPayments = payments.some((payment) => payment.booking.id_booking === id);
+        const hasPayments = payments.some(
+          (payment) => payment.booking.id_booking === id
+        );
         if (hasPayments) {
           Swal.fire({
             title: 'No se puede eliminar la reserva',
@@ -103,12 +112,13 @@ export class ReservationPageComponent implements OnInit {
       },
     });
   }
-  
 
   archiveReservation(id: number, booking_number: number, check_in_date: Date) {
     this.paymentService.findAllPayments().subscribe({
       next: (payments) => {
-        const hasPayments = payments.some((payment) => payment.booking.id_booking === id);
+        const hasPayments = payments.some(
+          (payment) => payment.booking.id_booking === id
+        );
         if (hasPayments) {
           Swal.fire({
             title: 'No se puede archivar la reserva',
@@ -152,9 +162,12 @@ export class ReservationPageComponent implements OnInit {
       },
     });
   }
-  
 
-  unarchiveReservation(id: number, booking_number: number, check_in_date: Date) {
+  unarchiveReservation(
+    id: number,
+    booking_number: number,
+    check_in_date: Date
+  ) {
     Swal.fire({
       title: '¿Desea desarchivar la reserva?',
       text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
@@ -163,30 +176,28 @@ export class ReservationPageComponent implements OnInit {
 
       confirmButtonText: 'Desarchivar',
       cancelButtonText: 'Cancelar',
-
     }).then((result) => {
       if (result.isConfirmed) {
-        this.reservationService.unarchiveReservation(+id)
-          .subscribe({
-            next: (res) => {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Reserva desarchivada correctamente',
-                showConfirmButton: false,
-                timer: 1800
-              }).then(() => {
-                this.findAllArchived();
-              })
-            },
-            error(e) {
-              alert(e)
-            },
-          })
+        this.reservationService.unarchiveReservation(+id).subscribe({
+          next: (res) => {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Reserva desarchivada correctamente',
+              showConfirmButton: false,
+              timer: 1800,
+            }).then(() => {
+              this.findAllArchived();
+            });
+          },
+          error(e) {
+            alert(e);
+          },
+        });
       }
-    })
+    });
   }
- 
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -194,8 +205,10 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openFormCreateReservation() {
-    this.dialog.open(ReservationFormComponent, { width: '800px', disableClose: true }).afterClosed()
-      .subscribe(val => {
+    this.dialog
+      .open(ReservationFormComponent, { width: '800px', disableClose: true })
+      .afterClosed()
+      .subscribe((val) => {
         if (val === 'save') {
           this.findAllReservations();
         }
@@ -203,8 +216,14 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openFormEditReservation(row: IReservation) {
-    this.dialog.open(ReservationFormComponent, { width: '800px', data: row, disableClose: true }).afterClosed()
-      .subscribe(val => {
+    this.dialog
+      .open(ReservationFormComponent, {
+        width: '800px',
+        data: row,
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((val) => {
         if (val === 'update') {
           this.findAllReservations();
         }
@@ -212,19 +231,25 @@ export class ReservationPageComponent implements OnInit {
   }
 
   generatePdf(id: number) {
-    this.reservationService.findOneReservation(id).subscribe(data => {
+    this.reservationService.findOneReservation(id).subscribe((data) => {
       const doc = new jsPDF();
 
       const addPageWithBackgroundColor = () => {
         // Establece el color de fondo como azul cielo
         const lightGreenColor = '#C1FFC1';
         doc.setFillColor(lightGreenColor);
-        doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.getWidth(),
+          doc.internal.pageSize.getHeight(),
+          'F'
+        );
       };
 
       // Agrega la primera página con color de fondo
       addPageWithBackgroundColor();
-  
+
       // Agrega el logo y la información de la empresa
       const logo = new Image();
       logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
@@ -234,14 +259,18 @@ export class ReservationPageComponent implements OnInit {
       doc.text('Apartamentos Anahi', 50, 20);
       doc.setFontSize(12);
       doc.text('El Benteveo 990', 50, 30);
-      doc.text('Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158', 50, 40);
+      doc.text(
+        'Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
+        50,
+        40
+      );
       doc.text('Telefono: 0 (3541) 64-8016', 50, 50);
       doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
-  
+
       // Dibuja una línea horizontal debajo de la información de la empresa
       doc.setLineWidth(0.5);
       doc.line(10, 70, 200, 70);
-  
+
       // Establece la fuente y el tamaño del título de la factura
       // Establece la fuente y el tamaño del título de la factura
       doc.setFont('helvetica', 'bold');
@@ -255,22 +284,33 @@ export class ReservationPageComponent implements OnInit {
 
       doc.text(title, titleX, 80); // Ajusta la coordenada X del texto
 
-  
       // Establece la fuente y el tamaño del texto de detalles de reserva
       doc.setFont('arial', 'bolditalic'); // Cambia la fuente a negrita
       doc.setFontSize(16); // Reduce el tamaño del texto
       doc.text('Detalles de reserva', 10, 90); // Agrega el nuevo título
-  
+
       // Establece la fuente y el tamaño del texto de detalles
       doc.setFont('arial', 'italic');
       doc.setFontSize(14);
-  
+
       // Agrega los detalles de la reserva
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
       doc.text(`Reserva Nro: ${data.booking_number}`, 10, 100);
-      doc.text(`Tipo de Reserva: ${data.booking_type.booking_type_name}`, 10, 120);
-      doc.text(`Procedencia de Reserva: ${data.booking_origin.origin_name}`, 10, 130);
-      doc.text(`Cliente: ${data.client.name} ${data.client.last_name}`, 10, 140);
+      doc.text(
+        `Tipo de Reserva: ${data.booking_type.booking_type_name}`,
+        10,
+        120
+      );
+      doc.text(
+        `Procedencia de Reserva: ${data.booking_origin.origin_name}`,
+        10,
+        130
+      );
+      doc.text(
+        `Cliente: ${data.client.name} ${data.client.last_name}`,
+        10,
+        140
+      );
       doc.text(`Propiedad: ${data.property.property_name}`, 10, 150);
       doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 160);
       doc.text(`Cantidad menores: ${data.kids_number}`, 10, 170);
@@ -279,17 +319,33 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
-      doc.text(`Precio Inicial: $ ${data.starting_price.toLocaleString()}`, 10, 230);
-      doc.text(`Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`, 10, 250);
+      doc.text(
+        `Precio Inicial: $ ${data.starting_price.toLocaleString()}`,
+        10,
+        230
+      );
+      doc.text(
+        `Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`,
+        10,
+        250
+      );
       doc.text(`Descuento: % ${data.discount}`, 10, 240);
-      doc.text(`Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit.toLocaleString()}`, 10, 260);
-      doc.text(`Monto de Reserva: $ ${data.booking_amount.toLocaleString()}`, 10, 270);
-  
+      doc.text(
+        `Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit.toLocaleString()}`,
+        10,
+        260
+      );
+      doc.text(
+        `Monto de Reserva: $ ${data.booking_amount.toLocaleString()}`,
+        10,
+        270
+      );
+
       // Dibuja una línea horizontal debajo de los detalles
       doc.setLineWidth(0.5);
       const lineY = 280; // Ajusta la coordenada Y para la línea
       doc.line(10, lineY, 200, lineY); // Ajusta la longitud de la línea
-  
+
       // Establece la fuente y el tamaño del texto de agradecimiento
       doc.setFont('Arial', 'italic'); // Utiliza 'italic' para establecer la fuente en cursiva
       doc.setFontSize(20);
@@ -298,33 +354,38 @@ export class ReservationPageComponent implements OnInit {
       const pageWidth2 = doc.internal.pageSize.getWidth();
       const x = (pageWidth2 - textWidth) / 2;
       doc.text(text, x, lineY + 10);
-      
-  
+
       // Obtiene los bytes del PDF
       const pdfBytes = doc.output();
-  
+
       // Crea una URL para el PDF
-      const pdfUrl = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
-  
+      const pdfUrl = URL.createObjectURL(
+        new Blob([pdfBytes], { type: 'application/pdf' })
+      );
+
       // Crea una nueva ventana y muestra el PDF en un elemento iframe
       const newWindow = window.open();
       if (newWindow != null) {
-        newWindow.document.write('<iframe src="' + pdfUrl + '" style="width:100%;height:100%;" frameborder="0"></iframe>');
-        newWindow.document.title = 'Comprobante de Reserva - Apartamentos Anahí.pdf'; // Establece el título de la ventana
+        newWindow.document.write(
+          '<iframe src="' +
+            pdfUrl +
+            '" style="width:100%;height:100%;" frameborder="0"></iframe>'
+        );
+        newWindow.document.title =
+          'Comprobante de Reserva - Apartamentos Anahí.pdf'; // Establece el título de la ventana
       }
     });
   }
-
 
   openPaymentForm(reservationId: number) {
     const dialogRef = this.dialog.open(PaymentFormComponent, {
       width: '800px',
       disableClose: true,
-      data: { reservationId: reservationId } // Pasa el ID de reserva al componente PaymentFormComponent
+      data: { reservationId: reservationId }, // Pasa el ID de reserva al componente PaymentFormComponent
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'save') { 
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'save') {
         // Actualizar la lista de cobros
         this.router.navigate(['admin/payments']); // Redirigir a la página de cobros
       }
@@ -336,7 +397,7 @@ export class ReservationPageComponent implements OnInit {
       data: { id_booking },
       width: '1000px',
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
         // Muestra el mensaje swal
@@ -344,12 +405,9 @@ export class ReservationPageComponent implements OnInit {
           title: 'Éxito',
           text: 'Contrato de alquiler subido exitosamente',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
     });
   }
-  
- 
-}  
-
+}

@@ -76,42 +76,51 @@
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Cliente</mat-label>
-          <mat-select formControlName="client" placeholder="Buscar...">
-            <mat-option
-              *ngFor="let client of clients"
-              [value]="client.id_client"
-            >
-              {{ client.name }} {{ client.last_name }}</mat-option
-            >
-          </mat-select>
+          <input matInput placeholder="Buscar por nro de documento..." formControlName="client" [matAutocomplete]="auto1" [formControl]="searchControl" type="search" (input)="onInputChangedClient()">
+          <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onClientSelected($event)">
+            <mat-option *ngFor="let client of filteredClients" [value]="{name: client.name, last_name: client.last_name, id_client: client.id_client}">
+              {{ client.name }} {{ client.last_name }}
+            </mat-option>
+          </mat-autocomplete>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('client', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
-        <button mat-icon-button (click)="openFormCreateClient()">
-          <mat-icon>add</mat-icon>
-        </button>
+        <b *ngIf="showNotFoundMessage2">Cliente no encontrado</b>
       </mat-grid-tile>
 
       <mat-grid-tile>
         <mat-form-field appearance="outline">
+          <mat-label>Cliente Seleccionado</mat-label>
+          <input matInput type="text" [formControl]="clientDetail" readonly>
+        </mat-form-field>
+      </mat-grid-tile>
+    
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
           <mat-label>Propiedad</mat-label>
-          <mat-select formControlName="property" placeholder="Seleccione...">
-            <mat-option
-              *ngFor="let property of properties"
-              [value]="property.id_property"
-            >
-              {{ property.property_name }}</mat-option
-            >
-          </mat-select>
+          <input matInput type="search" [formControl]="propertyControl" formControlName="property" placeholder="Buscar por nombre..." [matAutocomplete]="auto" (input)="onInputChanged()">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPropertySelected($event)">
+            <mat-option *ngFor="let property of filteredProperties" [value]="{property_name: property.property_name, id_property: property.id_property}">
+              {{ property.property_name }}
+            </mat-option>
+          </mat-autocomplete>
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('property', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
         </mat-form-field>
+          <b *ngIf="showNotFoundMessage1">Propiedad no encontrada</b>
       </mat-grid-tile>
 
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Propiedad Seleccionada</mat-label>
+          <input matInput type="text" [formControl]="propertyDetail" readonly>
+        </mat-form-field>
+      </mat-grid-tile>
+          
       <mat-grid-tile>
         <mat-form-field appearance="outline">
           <mat-label>Cantidad de Adultos</mat-label>
@@ -221,9 +230,9 @@
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
             align=" end"
-            *ngIf="hasError('check_out_date', 'required')"
+            *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
           >
-            <strong>Campo requerido</strong>
+            <strong>La fecha de check-out debe ser POSTERIOR a la fecha de check-in</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
@@ -236,8 +245,8 @@
             matInput
             placeholder=""
             type="time"
-            min="09:00"
-            max="18:00"
+            min="14:00"
+            max="20:00"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error align=" end" *ngIf="hasError('check_in_hour', 'required')">
@@ -254,8 +263,8 @@
             matInput
             placeholder=""
             type="time"
-            min="09:00"
-            max="18:00"
+            min="08:00"
+            max="10:00"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
@@ -274,9 +283,10 @@
             formControlName="starting_price"
             matInput
             placeholder="Ingrese monto"
-            type="number"
-            numberFormat="1.2-2"
-          />
+            type="text"
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
+            />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
             align=" end"
@@ -285,7 +295,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
           <mat-error align="end" *ngIf="hasError('starting_price', 'min')"
-            ><strong>Mínimo 10.000 como monto inicial</strong>
+            ><strong>Mínimo $ 100 como monto inicial</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
@@ -297,13 +307,15 @@
             formControlName="discount"
             matInput
             placeholder="Ingrese descuento"
-            type="number"
+            type="text"
+            currencyMask [options]="{ prefix: '% ', thousands: '.', decimal: ',', align: 'left'}"
           />
           <mat-error align="end" *ngIf="hasError('discount', 'min')"
             ><strong>Mínimo 0 como valor</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
+
 
       <mat-grid-tile>
         <mat-form-field appearance="outline">
@@ -312,7 +324,9 @@
             formControlName="deposit_amount"
             matInput
             placeholder="Ingrese monto de seña"
-            type="number"
+            type="text"
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
@@ -322,7 +336,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
           <mat-error align="end" *ngIf="hasError('deposit_amount', 'min')"
-            ><strong>Mínimo 10.000 como monto de seña</strong>
+            ><strong>Mínimo $ 100 como monto de seña</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
@@ -334,8 +348,10 @@
             formControlName="estimated_amount_deposit"
             matInput
             placeholder="Monto estimado de seña"
-            type="number"
+            type="text"
             readonly
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
         </mat-form-field>
       </mat-grid-tile>
@@ -347,9 +363,10 @@
             formControlName="booking_amount"
             matInput
             placeholder=""
-            type="number"
+            type="text"
             readonly
-            thousandSeparator="."
+            currencyMask
+            [options]="{ prefix: '$ ', thousands: '.', decimal: ',', align: 'left'}"
           />
           <mat-hint align="end">Campo requerido</mat-hint>
           <mat-error
@@ -359,7 +376,7 @@
             <strong>Campo requerido</strong>
           </mat-error>
           <mat-error align="end" *ngIf="hasError('booking_amount', 'min')"
-            ><strong>Mínimo 10.000 como monto de reserva</strong>
+            ><strong>Mínimo 0 como monto de reserva</strong>
           </mat-error>
         </mat-form-field>
       </mat-grid-tile>
