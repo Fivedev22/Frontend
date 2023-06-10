@@ -20,7 +20,7 @@ import { PropertyFormComponent } from './pages/property-page/components/property
 import { AvailabilityStatusPipe } from './pages/pipes/availability_status.pipe';
 import { ActivityStatusPipe } from './pages/pipes/activity_status.pipe';
 import { PropertyTypePipe } from './pages/pipes/property_type.pipe';
-import { PaymentFormComponent } from './pages/payment-page/payment-form/payment-form.component';
+import { PaymentFormComponent } from './pages/payment-page/components/payment-form/payment-form.component';
 import { ReservationFormComponent } from './pages/reservation-page/reservation-form/reservation-form.component';
 import { PaymentStatusPipe } from './pages/pipes/payment_status.pipe';
 import { PaymentTypePipe } from './pages/pipes/payment_type.pipe';

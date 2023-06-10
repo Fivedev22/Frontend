@@ -8,7 +8,7 @@ import { IReservation } from '../services/interfaces/reservation.interface';
 import Swal from 'sweetalert2';
 import { ReservationFormComponent } from './reservation-form/reservation-form.component';
 import jsPDF from 'jspdf';
-import { PaymentFormComponent } from '../payment-page/payment-form/payment-form.component';
+import { PaymentFormComponent } from '../payment-page/components/payment-form/payment-form.component';
 import { Router } from '@angular/router';
 import { ContractUploadComponent } from './contract-upload/contract-upload.component';
 import { PaymentService } from '../services/payment.service';

@@ -1,30 +1,31 @@
-<h1 style="padding: 10px">Cobros</h1>
-<div class="container-table">
-  <div class="container-table-head">
-    <button mat-raised-button color="link" (click)="openReservations()">
-      Ver Reservas
-    </button>
-    <app-button
-      label="Archivados"
-      background="#FFFFFF"
-      (event)="openArchivedPayments()"
-    >
-    </app-button>
-    <mat-form-field appearance="outline">
-      <mat-label>Buscar cobro</mat-label>
+<section class="payment-main">
+  <div class="content-title-dialog">
+    <span class="dialog-title">Cobro archivados</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="payment-section-head">
+    <div class="payment-section-head_search">
       <input
-        matInput
+        class="payment-input-search"
         (keyup)="applyFilter($event)"
         placeholder="Buscar..."
         #input
       />
-      <div matSuffix mat-icon-button>
+      <div class="payment-button-search">
         <mat-icon>search</mat-icon>
       </div>
-    </mat-form-field>
+    </div>
   </div>
-  <div class="mat-elevation-z1">
-    <table mat-table [dataSource]="dataSource" matSort>
+
+  <div class="payment-section-body">
+    <div class="cpc-tableTitle">Tabla de cobros archivadas</div>
+    <table
+      mat-table
+      class="payment-section-table"
+      [dataSource]="dataSource"
+      matSort
+    >
       <ng-container matColumnDef="payment_number">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nro de Cobro</th>
         <td mat-cell *matCellDef="let row">{{ row.payment_number }}</td>
@@ -67,45 +68,40 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
-          <button
-            mat-icon-button
-            color="basic"
-            (click)="openFormEditPayment(row)"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="basic"
-            (click)="
-              archivePayment(
-                row.id_payment,
-                row.payment_number,
-                row.payment_amount_total
-              )
-            "
-          >
-            <mat-icon>archive</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="basic"
-            (click)="generatePdfPayment(row.id_payment)"
-          >
-            <mat-icon>print icon</mat-icon>
-          </button>
+          <div class="content-icons">
+            <mat-icon
+              ngClass="icons"
+              (click)="
+                deletePayment(
+                  row.id_payment,
+                  row.payment_number,
+                  row.payment_amount_total
+                )
+              "
+              >delete</mat-icon
+            >
+            <mat-icon
+              ngClass="icons"
+              (click)="
+                unarchivePayment(
+                  row.id_payment,
+                  row.payment_number,
+                  row.payment_amount_total
+                )
+              "
+              >archive</mat-icon
+            >
+          </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No hay datos que coincidan con el filtro: "{{ input.value }}"
+        <td class="mat-cell">
+          No hay datos que coincidan con el filtro: {{ input.value }}
         </td>
       </tr>
     </table>
-
-    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
   </div>
-</div>
+</section>
