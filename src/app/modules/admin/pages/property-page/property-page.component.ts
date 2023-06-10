@@ -10,6 +10,7 @@ import { IProperty } from '../services/interfaces/property.interface';
 import { ImageUploadDialogComponent } from './components/image-upload-dialog/image-upload-dialog.component';
 import { UploadInventoryComponent } from './components/upload-inventory/upload-inventory.component';
 import { ReservationService } from '../services/reservation.service';
+import { UnarchivePropertyComponent } from './components/unarchive-property/unarchive-property.component';
 
 @Component({
   selector: 'app-property-page',
@@ -52,56 +53,6 @@ export class PropertyPageComponent implements OnInit {
     });
   }
 
-  deleteProperty(id: number, reference_number: number, property_name: string) {
-    this.reservationService.findAllReservations().subscribe({
-      next: (reservations) => {
-        const hasReservations = reservations.some(
-          (reservation) => reservation.property.id_property === id
-        );
-        if (hasReservations) {
-          Swal.fire({
-            title: 'No se puede eliminar la propiedad',
-            text: `${reference_number} ${property_name} tiene reservas asociadas.`,
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#F25D5D',
-          });
-        } else {
-          Swal.fire({
-            title: '¿Desea eliminar la propiedad?',
-            text: `${reference_number} ${property_name}`,
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: 'Eliminar',
-            cancelButtonText: 'Cancelar',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.propertyService.removeProperty(id).subscribe({
-                next: (res) => {
-                  Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Propiedad eliminada correctamente',
-                    showConfirmButton: false,
-                    timer: 1800,
-                  }).then(() => {
-                    this.findAllProperties();
-                  });
-                },
-                error(e) {
-                  alert(e);
-                },
-              });
-            }
-          });
-        }
-      },
-      error(e) {
-        alert(e);
-      },
-    });
-  }
-
   archiveProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({
       next: (reservations) => {
@@ -110,15 +61,15 @@ export class PropertyPageComponent implements OnInit {
         );
         if (hasReservations) {
           Swal.fire({
-            title: 'No se puede archivar la propiedad',
-            text: `La propiedad con Nro de Referencia: ${reference_number} tiene reservas asociadas.`,
+            title: 'No se puede archivar el inmueble',
+            text: `El inmueble con nro de referencia: ${reference_number} tiene reservas asociadas.`,
             icon: 'error',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#F25D5D',
           });
         } else {
           Swal.fire({
-            title: '¿Desea archivar la propiedad?',
+            title: '¿Desea archivar el inmueble?',
             text: `Nro de Referencia: ${reference_number} - Nombre/Numeración: ${property_name}`,
             icon: 'error',
             showCancelButton: true,
@@ -131,7 +82,7 @@ export class PropertyPageComponent implements OnInit {
                   Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Propiedad archivada correctamente',
+                    title: 'Inmueble archivado correctamente',
                     showConfirmButton: false,
                     timer: 1800,
                   }).then(() => {
@@ -152,41 +103,6 @@ export class PropertyPageComponent implements OnInit {
     });
   }
 
-  unarchiveProperty(
-    id: number,
-    reference_number: number,
-    property_name: string
-  ) {
-    Swal.fire({
-      title: '¿Desea desarchivar la propiedad?',
-      text: `Nro de Referencia: ${reference_number} - Nombre/Numeración: ${property_name}`,
-      icon: 'error',
-      showCancelButton: true,
-
-      confirmButtonText: 'Desarchivar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.propertyService.unarchiveProperty(+id).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Propiedad desarchivada correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllProperties();
-            });
-          },
-          error(e) {
-            alert(e);
-          },
-        });
-      }
-    });
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -195,11 +111,7 @@ export class PropertyPageComponent implements OnInit {
 
   openFormCreateProperty() {
     this.dialog
-      .open(PropertyFormComponent, {
-        width: '800px',
-        height: '800px',
-        disableClose: true,
-      })
+      .open(PropertyFormComponent, { width: '800px', disableClose: true })
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -212,7 +124,6 @@ export class PropertyPageComponent implements OnInit {
     this.dialog
       .open(PropertyFormComponent, {
         width: '800px',
-        height: '800px',
         data: row,
         disableClose: true,
       })
@@ -258,5 +169,17 @@ export class PropertyPageComponent implements OnInit {
         });
       }
     });
+  }
+
+  openArchivedProperties() {
+    this.dialog
+      .open(UnarchivePropertyComponent, {
+        width: '800px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        this.findAllProperties();
+      });
   }
 }

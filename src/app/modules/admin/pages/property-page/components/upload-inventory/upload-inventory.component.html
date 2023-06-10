@@ -1,21 +1,3 @@
-<!-- <input type="file" #fileInput />
-<button (click)="onFileSelected(fileInput.files)">Subir Inventario</button>
-
-<ul>
-  <li *ngFor="let inventory of inventories" class="no-bullet">
-    <a [href]="getDownloadUrl(inventory)" target="_blank" class="custom-link">
-      {{ inventory.filename }}
-    </a>
-    <button (click)="deleteInventory(inventory)">Eliminar</button>
-  </li>
-</ul>
-
-        (change)=""
-      (click)="uploadImages()"
-      [disabled]="isUploadButtonDisabled"
-
--->
-
 <div class="wrapper-dialog">
   <div class="content-title-dialog">
     <span class="dialog-title">Inventario de Propiedad</span>
@@ -65,7 +47,7 @@
       mat-stroked-button
       color="basic"
       [disabled]="isUploadButtonDisabled"
-      (click)="uploadInventory(selectedFile)"
+      (click)="selectedFile && uploadInventory(selectedFile)"
     >
       Subir
     </button>

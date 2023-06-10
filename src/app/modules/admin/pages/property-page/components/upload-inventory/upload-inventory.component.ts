@@ -22,36 +22,40 @@ export class UploadInventoryComponent implements OnInit {
     this.getInventory();
   }
 
-  uploadInventory(file: File | null) {
-    if (file) {
-      this.propertyService
-        .getPropertyInventory(this.data.id_property)
-        .subscribe((inventories) => {
-          if (inventories && inventories.length > 0) {
-            Swal.fire({
-              title: 'Error',
-              text: 'Ya existe un inventario para esta propiedad',
-              icon: 'error',
-              confirmButtonText: 'Aceptar',
-            });
-          } else {
-            this.propertyService
-              .uploadInventory(this.data.id_property, file)
-              .subscribe(() => {
-                this.dialogRef.close('success');
-              });
-          }
-        });
-    } else {
+  uploadInventory(file: File) {
+    const extension = file.name?.split('.').pop()?.toLowerCase();
+    if (
+      !extension ||
+      !['pdf', 'xls', 'xlsx', 'doc', 'docx'].includes(extension)
+    ) {
       Swal.fire({
         title: 'Error',
-        text: 'No se ha seleccionado ningún archivo',
+        text: 'Solo se permiten archivos PDF, Excel y Word',
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
+      return;
     }
-  }
 
+    this.propertyService
+      .getPropertyInventory(this.data.id_property)
+      .subscribe((inventories) => {
+        if (inventories && inventories.length > 0) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Ya existe un inventario para esta propiedad',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+        } else {
+          this.propertyService
+            .uploadInventory(this.data.id_property, file)
+            .subscribe(() => {
+              this.dialogRef.close('success');
+            });
+        }
+      });
+  }
   onFilesInputChange(event: any) {
     const file = event.target.files[0];
     if (file) {

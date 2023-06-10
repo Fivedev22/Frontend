@@ -39,6 +39,8 @@ import { ContractUploadComponent } from './pages/reservation-page/contract-uploa
 import { UploadInventoryComponent } from './pages/property-page/components/upload-inventory/upload-inventory.component';
 import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
 import { UnarchiveClientComponent } from './pages/client-page/components/unarchive-client/unarchive-client.component';
+import { UnarchivePropertyComponent } from './pages/property-page/components/unarchive-property/unarchive-property.component';
+import { UnarchivePaymentComponent } from './pages/payment-page/components/unarchive-payment/unarchive-payment.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { UnarchiveClientComponent } from './pages/client-page/components/unarchi
     UploadInventoryComponent,
     StatisticPageComponent,
     UnarchiveClientComponent,
+    UnarchivePropertyComponent,
+    UnarchivePaymentComponent,
   ],
   imports: [
     CommonModule,

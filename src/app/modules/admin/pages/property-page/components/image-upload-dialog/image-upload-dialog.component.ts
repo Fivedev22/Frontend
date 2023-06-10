@@ -44,18 +44,35 @@ export class ImageUploadDialogComponent implements OnInit {
   }
   uploadImages() {
     const idProperty: number = this.data.id_property;
+    if (this.selectedImages.length === 0) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Debes seleccionar al menos una imagen',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+
+    for (const image of this.selectedImages) {
+      const extension = image.name?.split('.').pop()?.toLowerCase();
+      if (!extension || !['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Solo se permiten archivos de imagen (JPG, JPEG, PNG, GIF)',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+        return;
+      }
+    }
 
     this.propertyService
       .uploadImages(idProperty, this.selectedImages)
-      .subscribe(
-        () => {
-          this.getPropertyImages();
-          this.dialogRef.close('success');
-        },
-        (error) => {
-          console.error('Error al cargar imágenes:', error);
-        }
-      );
+      .subscribe(() => {
+        this.getPropertyImages();
+        this.dialogRef.close('success');
+      });
   }
 
   onFilesInputChange(event: any) {

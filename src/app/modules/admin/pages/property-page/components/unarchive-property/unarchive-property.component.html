@@ -1,19 +1,10 @@
 <section class="property-main">
-  <app-head title="Espacio inmuebles"></app-head>
+  <div class="content-title-dialog">
+    <span class="dialog-title">Inmuebles archivados</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
   <div class="property-section-head">
-    <div class="property-section-head_buttons">
-      <app-button
-        label="Nuevo"
-        background="#FFFFFF"
-        (event)="openFormCreateProperty()"
-      ></app-button>
-      <app-button
-        label="Archivados"
-        background="#FFFFFF"
-        (event)="openArchivedProperties()"
-      >
-      </app-button>
-    </div>
     <div class="property-section-head_search">
       <input
         class="property-input-search"
@@ -26,8 +17,9 @@
       </div>
     </div>
   </div>
+
   <div class="property-section-body">
-    <div class="cpc-tableTitle">Tabla de inmuebles</div>
+    <div class="cpc-tableTitle">Tabla de inmuebles archivados</div>
     <table
       mat-table
       class="property-section-table"
@@ -50,7 +42,7 @@
 
       <ng-container matColumnDef="property_type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Tipo de Inmueble
+          Tipo de inmueble
         </th>
         <td mat-cell *matCellDef="let row">
           {{ row.property_type | property_type }}
@@ -62,49 +54,31 @@
         <td mat-cell *matCellDef="let row">{{ row.province | province }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="availability_status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Disponibilidad
-        </th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.availability_status | availability_status }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="activity_status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actividad</th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.activity_status | activity_status }}
-        </td>
-      </ng-container>
-
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
           <div class="content-icons">
-            <mat-icon ngClass="icons" (click)="openFormEditProperty(row)"
-              >edit</mat-icon
+            <mat-icon
+              ngClass="icons"
+              (click)="
+                deleteProperty(
+                  row.id_property,
+                  row.reference_number,
+                  row.property_name
+                )
+              "
+              >delete</mat-icon
             >
             <mat-icon
               ngClass="icons"
               (click)="
-                archiveProperty(
+                unarchiveProperty(
                   row.id_property,
                   row.reference_number,
                   row.property_name
                 )
               "
               >archive</mat-icon
-            >
-            <mat-icon
-              ngClass="icons"
-              (click)="openImageUploadDialog(row.id_property)"
-              >image</mat-icon
-            >
-            <mat-icon
-              ngClass="icons"
-              (click)="openUploadInventory(row.id_property)"
-              >inventory</mat-icon
             >
           </div>
         </td>
@@ -113,8 +87,8 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No hay datos que coincidan con el filtro: "{{ input.value }}"
+        <td class="mat-cell">
+          No hay datos que coincidan con el filtro: {{ input.value }}
         </td>
       </tr>
     </table>
