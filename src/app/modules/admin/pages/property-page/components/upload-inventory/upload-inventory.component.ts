@@ -10,7 +10,8 @@ import Swal from 'sweetalert2';
 })
 export class UploadInventoryComponent implements OnInit {
   inventories: any[] = [];
-
+  selectedFile: File | null = null;
+  isUploadButtonDisabled: boolean = true;
   constructor(
     private dialogRef: MatDialogRef<UploadInventoryComponent>,
     private propertyService: PropertyService,
@@ -18,60 +19,67 @@ export class UploadInventoryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getInventory(); // Llama al método getContracts al iniciar el componente
+    this.getInventory();
   }
 
-  onFileSelected(files: FileList | null) {
-    if (files && files.length > 0) {
-      const selectedFile = files[0];
-      this.uploadInventory(selectedFile);
+  uploadInventory(file: File | null) {
+    if (file) {
+      this.propertyService
+        .getPropertyInventory(this.data.id_property)
+        .subscribe((inventories) => {
+          if (inventories && inventories.length > 0) {
+            Swal.fire({
+              title: 'Error',
+              text: 'Ya existe un inventario para esta propiedad',
+              icon: 'error',
+              confirmButtonText: 'Aceptar',
+            });
+          } else {
+            this.propertyService
+              .uploadInventory(this.data.id_property, file)
+              .subscribe(() => {
+                this.dialogRef.close('success');
+              });
+          }
+        });
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: 'No se ha seleccionado ningún archivo',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
     }
   }
 
-  uploadInventory(file: File) {
-    this.propertyService.getPropertyInventory(this.data.id_property).subscribe(
-      (inventories) => {
-        if (inventories && inventories.length > 0) {
-          Swal.fire({
-            title: 'Error',
-            text: 'Ya existe un inventario para esta propiedad',
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-          });
-        } else {
-          this.propertyService
-            .uploadInventory(this.data.id_property, file)
-            .subscribe(
-              () => {
-                this.dialogRef.close('success');
-              },
-              (error) => {
-                // Manejar el error apropiadamente
-              }
-            );
-        }
-      },
-      (error) => {
-        // Manejar el error apropiadamente
-      }
-    );
+  onFilesInputChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.isUploadButtonDisabled = false;
+    } else {
+      this.selectedFile = null;
+      this.isUploadButtonDisabled = true;
+    }
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+    this.isUploadButtonDisabled = true;
   }
 
   getInventory() {
-    this.propertyService.getPropertyInventory(this.data.id_property).subscribe(
-      (response) => {
+    this.propertyService
+      .getPropertyInventory(this.data.id_property)
+      .subscribe((response) => {
         console.log(response);
         this.inventories = response;
-      },
-      (error) => {
-        // Manejar el error apropiadamente
-      }
-    );
+      });
   }
 
   getDownloadUrl(inventory: any): string {
-    const baseUrl = 'http://localhost:3000/uploads/'; // Ruta base de la carpeta de contratos en el servidor
-    const filename = inventory.filename; // Nombre del archivo del contrato
+    const baseUrl = 'http://localhost:3000/uploads/';
+    const filename = inventory.filename;
     return baseUrl + filename;
   }
 
@@ -87,19 +95,10 @@ export class UploadInventoryComponent implements OnInit {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.propertyService.deleteInventory(inventory.id).subscribe(
-          () => {
-            Swal.fire(
-              'Eliminado',
-              'El inventario ha sido eliminado',
-              'success'
-            );
-            this.getInventory();
-          },
-          (error) => {
-            // Manejar el error apropiadamente
-          }
-        );
+        this.propertyService.deleteInventory(inventory.id).subscribe(() => {
+          Swal.fire('Eliminado', 'El inventario ha sido eliminado', 'success');
+          this.getInventory();
+        });
       }
     });
   }

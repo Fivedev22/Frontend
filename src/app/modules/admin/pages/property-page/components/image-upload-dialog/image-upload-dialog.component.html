@@ -1,34 +1,57 @@
-<button mat-icon-button mat-dialog-close>
-  <mat-icon>close</mat-icon>
-</button>
-<h2>Carga de imágenes para propiedad</h2>
-<input type="file" (change)="onFileInputChange($event)" multiple>
-<button (click)="uploadImages()">Subir imágenes</button>
-
-
-<h3>Lista de imágenes</h3>
-
-<div class="carousel-container">
-  <ngx-slick-carousel class="carousel slider" [config]="carouselConfig">
-    <div *ngFor="let image of images">
-      <img [src]="getImageUrl(image.filename)" alt="Image" class="carousel-image" />
-      <button (click)="deleteImage(image.id)" class="delete-icon" >
-        <i class="material-icons">delete</i>
-      </button>           
+<div class="wrapper-dialog">
+  <div class="content-title-dialog">
+    <span class="dialog-title">Imagenes de Propiedad</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content-form-dialog">
+    <label for="images" class="drop-container">
+      <span class="drop-title">Subir imagenes aqui</span>
+      <input
+        id="images"
+        type="file"
+        (change)="onFilesInputChange($event)"
+        accept="image/*"
+        multiple
+        class="input-file"
+      />
+    </label>
+    <p class="inventory_title">Para subir</p>
+    <div class="image-container">
+      <div *ngIf="!selectedImages">No hay elementos para subir.</div>
+      <div
+        class="image-content"
+        *ngFor="let file of selectedImages; let i = index"
+      >
+        <img [src]="file?.imageUrl" alt="image" class="image" />
+        <button (click)="removeFile(i)" class="delete-icon">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
     </div>
-      <p>{{ noImagesMessage }}</p>
-  </ngx-slick-carousel>
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <p class="inventory_title">Subidas</p>
+    <div class="image-container">
+      <div class="image-content" *ngFor="let image of images">
+        <img [src]="getImageUrl(image.filename)" alt="Image" class="image" />
+        <button (click)="deleteImage(image.id)" class="delete-icon">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content-footer-dialog">
+    <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+    <button
+      mat-stroked-button
+      color="basic"
+      (click)="uploadImages()"
+      [disabled]="isUploadButtonDisabled"
+    >
+      Subir
+    </button>
+  </div>
 </div>
-
-<div mat-dialog-actions align="end">
-  <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
-</div>
-
-
-
-
-
-
-
-
-

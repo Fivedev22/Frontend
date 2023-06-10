@@ -1,20 +1,73 @@
-<h1>Inventario de Propiedad</h1>
-<button mat-icon-button mat-dialog-close>
-  <mat-icon>close</mat-icon>
-</button>
-<input type="file" #fileInput>
+<!-- <input type="file" #fileInput />
 <button (click)="onFileSelected(fileInput.files)">Subir Inventario</button>
 
 <ul>
-    <li *ngFor="let inventory of inventories" class="no-bullet">
-      <a [href]="getDownloadUrl(inventory)" target="_blank" class="custom-link">
-        {{ inventory.filename }}
-      </a>
-      <button (click)="deleteInventory(inventory)">Eliminar</button>
-    </li>
-  </ul>
+  <li *ngFor="let inventory of inventories" class="no-bullet">
+    <a [href]="getDownloadUrl(inventory)" target="_blank" class="custom-link">
+      {{ inventory.filename }}
+    </a>
+    <button (click)="deleteInventory(inventory)">Eliminar</button>
+  </li>
+</ul>
 
-  <div mat-dialog-actions align="end">
-    <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+        (change)=""
+      (click)="uploadImages()"
+      [disabled]="isUploadButtonDisabled"
+
+-->
+
+<div class="wrapper-dialog">
+  <div class="content-title-dialog">
+    <span class="dialog-title">Inventario de Propiedad</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
   </div>
-  
+  <mat-divider></mat-divider>
+  <div class="content-form-dialog">
+    <label for="files" class="drop-container">
+      <span class="drop-title">Subir archivos aqui</span>
+      <input
+        id="files"
+        type="file"
+        accept="pdf"
+        class="input-file"
+        (change)="onFilesInputChange($event)"
+      />
+    </label>
+    <p class="inventory_title">Para subir</p>
+    <div class="inventory-container">
+      <div *ngIf="selectedFile" class="inventory-content">
+        <a target="_blank" class="link">{{ selectedFile.name }}</a>
+        <button class="delete-icon" (click)="removeFile()">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+      <div *ngIf="!selectedFile">No hay elementos para subir.</div>
+    </div>
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <p class="inventory_title">Subidos</p>
+    <div class="inventory-container">
+      <div class="inventory-content" *ngFor="let inventory of inventories">
+        <a [href]="getDownloadUrl(inventory)" target="_blank" class="link">
+          {{ inventory.filename }}
+        </a>
+        <button class="delete-icon" (click)="deleteInventory(inventory)">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content-footer-dialog">
+    <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+    <button
+      mat-stroked-button
+      color="basic"
+      [disabled]="isUploadButtonDisabled"
+      (click)="uploadInventory(selectedFile)"
+    >
+      Subir
+    </button>
+  </div>
+</div>
