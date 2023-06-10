@@ -21,7 +21,7 @@ import { AvailabilityStatusPipe } from './pages/pipes/availability_status.pipe';
 import { ActivityStatusPipe } from './pages/pipes/activity_status.pipe';
 import { PropertyTypePipe } from './pages/pipes/property_type.pipe';
 import { PaymentFormComponent } from './pages/payment-page/components/payment-form/payment-form.component';
-import { ReservationFormComponent } from './pages/reservation-page/reservation-form/reservation-form.component';
+import { ReservationFormComponent } from './pages/reservation-page/components/reservation-form/reservation-form.component';
 import { PaymentStatusPipe } from './pages/pipes/payment_status.pipe';
 import { PaymentTypePipe } from './pages/pipes/payment_type.pipe';
 import { ReservationOriginPipe } from './pages/pipes/reservation_origin.pipe';
@@ -35,12 +35,13 @@ import { ComponentsModule } from 'src/app/global/components/components.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ImageUploadDialogComponent } from './pages/property-page/components/image-upload-dialog/image-upload-dialog.component';
-import { ContractUploadComponent } from './pages/reservation-page/contract-upload/contract-upload.component';
+import { ContractUploadComponent } from './pages/reservation-page/components/contract-upload/contract-upload.component';
 import { UploadInventoryComponent } from './pages/property-page/components/upload-inventory/upload-inventory.component';
 import { StatisticPageComponent } from './pages/statistic-page/statistic-page.component';
 import { UnarchiveClientComponent } from './pages/client-page/components/unarchive-client/unarchive-client.component';
 import { UnarchivePropertyComponent } from './pages/property-page/components/unarchive-property/unarchive-property.component';
 import { UnarchivePaymentComponent } from './pages/payment-page/components/unarchive-payment/unarchive-payment.component';
+import { UnarchiveReservationComponent } from './pages/reservation-page/components/unarchive-reservation/unarchive-reservation.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { UnarchivePaymentComponent } from './pages/payment-page/components/unarc
     UnarchiveClientComponent,
     UnarchivePropertyComponent,
     UnarchivePaymentComponent,
+    UnarchiveReservationComponent,
   ],
   imports: [
     CommonModule,

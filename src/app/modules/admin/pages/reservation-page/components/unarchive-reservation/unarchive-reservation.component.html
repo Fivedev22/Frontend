@@ -1,19 +1,10 @@
 <section class="reservation-main">
-  <app-head title="Espacio reservas"></app-head>
+  <div class="content-title-dialog">
+    <span class="dialog-title">Reservas archivadas</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
   <div class="reservation-section-head">
-    <div class="reservation-section-head_buttons">
-      <app-button
-        label="Nuevo"
-        background="#898989"
-        (event)="openFormCreateReservation()"
-      ></app-button>
-      <app-button
-        label="Archivados"
-        background="#FFFFFF"
-        (event)="openArchivedReservations()"
-      >
-      </app-button>
-    </div>
     <div class="reservation-section-head_search">
       <input
         class="reservation-input-search"
@@ -28,22 +19,18 @@
   </div>
 
   <div class="reservation-section-body">
-    <div class="cpc-tableTitle">Tabla de reservas</div>
-    <table mat-table [dataSource]="dataSource" matSort>
+    <div class="cpc-tableTitle">Tabla de reservas archivadas</div>
+    <table
+      mat-table
+      class="reservation-section-table"
+      [dataSource]="dataSource"
+      matSort
+    >
       <ng-container matColumnDef="booking_number">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Nro de Reserva
         </th>
         <td mat-cell *matCellDef="let row">{{ row.booking_number }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="booking_type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Tipo de Reserva
-        </th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.booking_type | reservation_type }}
-        </td>
       </ng-container>
 
       <ng-container matColumnDef="client">
@@ -76,40 +63,40 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
-          <mat-icon ngClass="icons" (click)="openFormEditReservation(row)"
-            >edit</mat-icon
-          >
-          <mat-icon
-            ngClass="icons"
-            (click)="
-              archiveReservation(
-                row.id_booking,
-                row.booking_number,
-                row.check_in_date
-              )
-            "
-            >archive</mat-icon
-          >
-          <mat-icon ngClass="icons" (click)="generatePdf(row.id_booking)"
-            >print icon</mat-icon
-          >
-          <mat-icon ngClass="icons" (click)="openPaymentForm(row.id_booking)"
-            >payment</mat-icon
-          >
-          <mat-icon ngClass="icons" (click)="openUploadContract(row.id_booking)"
-            >description</mat-icon
-          >
+          <div class="content-icons">
+            <mat-icon
+              ngClass="icons"
+              (click)="
+                deleteReservation(
+                  row.id_booking,
+                  row.booking_number,
+                  row.check_in_date
+                )
+              "
+              >delete</mat-icon
+            >
+            <mat-icon
+              ngClass="icons"
+              (click)="
+                unarchiveReservation(
+                  row.id_booking,
+                  row.booking_number,
+                  row.check_in_date
+                )
+              "
+              >archive</mat-icon
+            >
+          </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">
-          No hay datos que coincidan con el filtro: "{{ input.value }}"
+        <td class="mat-cell">
+          No hay datos que coincidan con el filtro: {{ input.value }}
         </td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
   </div>
 </section>

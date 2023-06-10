@@ -6,12 +6,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ReservationService } from '../services/reservation.service';
 import { IReservation } from '../services/interfaces/reservation.interface';
 import Swal from 'sweetalert2';
-import { ReservationFormComponent } from './reservation-form/reservation-form.component';
+import { ReservationFormComponent } from './components/reservation-form/reservation-form.component';
 import jsPDF from 'jspdf';
 import { PaymentFormComponent } from '../payment-page/components/payment-form/payment-form.component';
 import { Router } from '@angular/router';
-import { ContractUploadComponent } from './contract-upload/contract-upload.component';
+import { ContractUploadComponent } from './components/contract-upload/contract-upload.component';
 import { PaymentService } from '../services/payment.service';
+import { UnarchiveReservationComponent } from './components/unarchive-reservation/unarchive-reservation.component';
 
 @Component({
   selector: 'app-reservation-page',
@@ -52,64 +53,6 @@ export class ReservationPageComponent implements OnInit {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
-  }
-
-  findAllArchived() {
-    this.reservationService.findAllReservationsArchived().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
-
-  deleteReservation(id: number, booking_number: number, check_in_date: Date) {
-    this.paymentService.findAllPayments().subscribe({
-      next: (payments) => {
-        const hasPayments = payments.some(
-          (payment) => payment.booking.id_booking === id
-        );
-        if (hasPayments) {
-          Swal.fire({
-            title: 'No se puede eliminar la reserva',
-            text: `La reserva N°: ${booking_number} tiene un cobro asociado.`,
-            icon: 'error',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#F25D5D',
-          });
-        } else {
-          Swal.fire({
-            title: '¿Desea eliminar la reserva?',
-            text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: 'Eliminar',
-            cancelButtonText: 'Cancelar',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.reservationService.removeReservation(id).subscribe({
-                next: (res) => {
-                  Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Reserva eliminada correctamente',
-                    showConfirmButton: false,
-                    timer: 1800,
-                  }).then(() => {
-                    this.findAllReservations();
-                  });
-                },
-                error(e) {
-                  alert(e);
-                },
-              });
-            }
-          });
-        }
-      },
-      error(e) {
-        alert(e);
-      },
     });
   }
 
@@ -160,41 +103,6 @@ export class ReservationPageComponent implements OnInit {
       error(e) {
         alert(e);
       },
-    });
-  }
-
-  unarchiveReservation(
-    id: number,
-    booking_number: number,
-    check_in_date: Date
-  ) {
-    Swal.fire({
-      title: '¿Desea desarchivar la reserva?',
-      text: `Reserva N°: ${booking_number} - Check-in: ${check_in_date}`,
-      icon: 'error',
-      showCancelButton: true,
-
-      confirmButtonText: 'Desarchivar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.reservationService.unarchiveReservation(+id).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Reserva desarchivada correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllArchived();
-            });
-          },
-          error(e) {
-            alert(e);
-          },
-        });
-      }
     });
   }
 
@@ -256,22 +164,21 @@ export class ReservationPageComponent implements OnInit {
       doc.addImage(logo, 'PNG', 10, 10, 30, 30);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
-      doc.text('Apartamentos Anahi', 50, 20);
+      doc.text('Apartamentos Anahi', 10, 20);
       doc.setFontSize(12);
-      doc.text('El Benteveo 990', 50, 30);
+      doc.text('El Benteveo 990', 10, 30);
       doc.text(
-        'Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
-        50,
+        'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
+        10,
         40
       );
-      doc.text('Telefono: 0 (3541) 64-8016', 50, 50);
-      doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
+      doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
+      doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
 
       // Dibuja una línea horizontal debajo de la información de la empresa
       doc.setLineWidth(0.5);
       doc.line(10, 70, 200, 70);
 
-      // Establece la fuente y el tamaño del título de la factura
       // Establece la fuente y el tamaño del título de la factura
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
@@ -281,7 +188,6 @@ export class ReservationPageComponent implements OnInit {
 
       const pageWidth = doc.internal.pageSize.getWidth(); // Obtiene el ancho de la página
       const titleX = (pageWidth - titleWidth) / 2; // Calcula la coordenada X centrada
-
       doc.text(title, titleX, 80); // Ajusta la coordenada X del texto
 
       // Establece la fuente y el tamaño del texto de detalles de reserva
@@ -319,24 +225,29 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
+
+      // Agrega el subtítulo "Importe Detallado"
+      doc.setFont('arial', 'bolditalic'); // Establece la fuente en negrita
+      doc.setFontSize(15); // Ajusta el tamaño de fuente
+      doc.text('Importe Detallado', 10, 230); // Agrega el subtítulo
+
+      doc.setFont('arial', 'italic'); // Restaura la configuración de fuente y estilo
+      doc.setFontSize(14); // Restaura el tamaño de fuente
+
       doc.text(
-        `Precio Inicial: $ ${data.starting_price.toLocaleString()}`,
+        `Monto de Reserva: $ ${data.starting_price.toLocaleString()}`,
         10,
-        230
-      );
+        240
+      ); // Muestra el precio inicial debajo del subtítulo
+
       doc.text(
         `Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`,
         10,
         250
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 240);
+      doc.text(`Descuento: % ${data.discount}`, 10, 260);
       doc.text(
-        `Cantidad Deposito Estimado: $ ${data.estimated_amount_deposit.toLocaleString()}`,
-        10,
-        260
-      );
-      doc.text(
-        `Monto de Reserva: $ ${data.booking_amount.toLocaleString()}`,
+        `Monto a Cobrar: $ ${data.booking_amount.toLocaleString()}`,
         10,
         270
       );
@@ -409,5 +320,17 @@ export class ReservationPageComponent implements OnInit {
         });
       }
     });
+  }
+
+  openArchivedReservations() {
+    this.dialog
+      .open(UnarchiveReservationComponent, {
+        width: '800px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        this.findAllReservations();
+      });
   }
 }
