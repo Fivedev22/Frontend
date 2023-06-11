@@ -109,7 +109,7 @@ export class StatisticPageComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
-      this.paymentsService.findAllPayments().subscribe((payments) => {
+      this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
         const allMonths = Array.from({ length: 12 }, (_, i) => {
           const date = new Date();
           date.setMonth(i);
@@ -400,7 +400,7 @@ export class StatisticPageComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
-      this.paymentsService.findAllPayments().subscribe((payments) => {
+      this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
         const paymentTypeCounts = payments.reduce((acc, payment) => {
           const paymentType = payment.payment_type.payment_type_name;
           acc[paymentType] = (acc[paymentType] || 0) + 1;
