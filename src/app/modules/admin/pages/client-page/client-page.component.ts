@@ -467,7 +467,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 13
           );
           doc.text(
-            `Precio Inicial: $ ${booking.starting_price.toLocaleString()}`,
+            `Monto de reserva: $ ${booking.starting_price.toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
@@ -482,7 +482,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 16
           );
           doc.text(
-            `Monto de reserva: $ ${booking.booking_amount.toLocaleString()}`,
+            `Monto a cobrar: $ ${booking.booking_amount.toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );

@@ -215,6 +215,10 @@
           <mat-error align="end" *ngIf="hasError('pets_number', 'min')"
             ><strong>Minimo O como valor</strong>
           </mat-error>
+          <mat-hint align="end">Campo requerido</mat-hint>
+          <mat-error align=" end" *ngIf="hasError('pets_number', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>
         </mat-form-field>
       </mat-grid-tile>
 
@@ -230,16 +234,13 @@
             [matDatepickerFilter]="dateFilter"
           />
           <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker touchUi #picker color="accent"></mat-datepicker>
           <mat-hint align="end">Campo requerido</mat-hint>
-          <mat-error align=" end" *ngIf="hasError('check_in_date', 'required')">
+          <mat-error align="end" *ngIf="hasError('check_in_date', 'required')">
             <strong>Campo requerido</strong>
           </mat-error>
-        </mat-form-field>
+        </mat-form-field>        
       </mat-grid-tile>
 
       <mat-grid-tile>

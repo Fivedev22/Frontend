@@ -100,7 +100,6 @@ export class ReservationFormComponent implements OnInit {
 
     this.reservationForm = this.initForm();
     this.reservationForm.controls['discount'].setValue(0);
-    this.reservationForm.controls['pets_number'].setValue(0);
     this.reservationForm.controls['booking_amount'].setValue(0);
     this.findAllReservationTypes();
     this.findAllReservationOrigin();
@@ -243,7 +242,7 @@ export class ReservationFormComponent implements OnInit {
             Validators.pattern('^[0-9]+$'),
           ],
         ],
-        pets_number: ['', [Validators.min(0), Validators.pattern('^[0-9]+$')]],
+        pets_number: ['', [Validators.required,Validators.min(0), Validators.pattern('^[0-9]+$')]],
         check_in_date: ['', [Validators.required]],
         check_out_date: ['', [Validators.required]],
         check_in_hour: ['', [Validators.required]],

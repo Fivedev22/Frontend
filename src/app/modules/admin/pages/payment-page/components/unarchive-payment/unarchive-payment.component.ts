@@ -130,4 +130,52 @@ export class UnarchivePaymentComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
+
+  viewDetails(paymentId: number) {
+    this.paymentService.findOneArchived(paymentId).subscribe(
+      (payment: IPayment) => {
+        const details = `
+          Número de cobro: ${payment.payment_number}
+          Fecha de creación: ${payment.createdAt}
+          Reserva: ${payment.booking.booking_number}
+          Cliente: ${payment.client.name} ${payment.client.last_name}
+          Inmueble: ${payment.property.property_name}
+          Fecha de check-in: ${payment.check_in_date}
+          Fecha de check-out: ${payment.check_out_date}
+          Precio inicial de la reserva: ${payment.booking_starting_price}
+          Descuento de la reserva: ${payment.booking_discount || 'N/A'}
+          Monto del depósito: ${payment.deposit_amount}
+          Monto total de la reserva: ${payment.booking_amount}
+          Gastos adicionales: ${payment.extra_expenses || 'N/A'}
+          Subtotal del cobro: ${payment.payment_amount_subtotal}
+          Total del cobro: ${payment.payment_amount_total}
+          Tipo de pago: ${payment.payment_type.payment_type_name}
+          Estado del pago: ${payment.payment_status.payment_status_name}
+        `;
+  
+        const popupWindow = window.open('', 'Detalles del cobro', 'width=400,height=600');
+        popupWindow?.document.write(`
+          <html>
+            <head>
+              <title>Detalles del cobro</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  margin: 20px;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Detalles del cobro</h2>
+              <pre>${details}</pre>
+            </body>
+          </html>
+        `);
+      },
+      (error: any) => {
+        console.error('Error al obtener los detalles del cobro archivado:', error);
+      }
+    );
+  }
+  
 }
