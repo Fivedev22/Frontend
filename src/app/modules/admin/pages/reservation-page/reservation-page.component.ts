@@ -114,7 +114,7 @@ export class ReservationPageComponent implements OnInit {
 
   openFormCreateReservation() {
     this.dialog
-      .open(ReservationFormComponent, { width: '800px', disableClose: true })
+      .open(ReservationFormComponent, { width: '800px',height: '600px', disableClose: true })
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -126,7 +126,7 @@ export class ReservationPageComponent implements OnInit {
   openFormEditReservation(row: IReservation) {
     this.dialog
       .open(ReservationFormComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         data: row,
         disableClose: true,
       })
@@ -260,7 +260,7 @@ export class ReservationPageComponent implements OnInit {
 
   openPaymentForm(reservationId: number) {
     const dialogRef = this.dialog.open(PaymentFormComponent, {
-      width: '800px',
+      width: '800px', height: '600px',
       disableClose: true,
       data: { reservationId: reservationId },
     });
@@ -275,7 +275,7 @@ export class ReservationPageComponent implements OnInit {
   openUploadContract(id_booking: number) {
     const dialogRef = this.dialog.open(ContractUploadComponent, {
       data: { id_booking },
-      width: '1000px',
+      width: '1000px', height: '600px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -293,7 +293,7 @@ export class ReservationPageComponent implements OnInit {
   openArchivedReservations() {
     this.dialog
       .open(UnarchiveReservationComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         disableClose: true,
       })
       .afterClosed()

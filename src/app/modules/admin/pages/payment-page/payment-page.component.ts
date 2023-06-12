@@ -116,7 +116,7 @@ export class PaymentPageComponent {
   openFormEditPayment(row: IPayment) {
     this.dialog
       .open(PaymentFormComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         data: row,
         disableClose: true,
       })
@@ -257,7 +257,7 @@ export class PaymentPageComponent {
   openArchivedPayments() {
     this.dialog
       .open(UnarchivePaymentComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         disableClose: true,
       })
       .afterClosed()

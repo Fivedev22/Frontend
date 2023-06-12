@@ -111,7 +111,7 @@ export class PropertyPageComponent implements OnInit {
 
   openFormCreateProperty() {
     this.dialog
-      .open(PropertyFormComponent, { width: '800px', disableClose: true })
+      .open(PropertyFormComponent, { width: '800px', height: '600px', disableClose: true })
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -123,7 +123,7 @@ export class PropertyPageComponent implements OnInit {
   openFormEditProperty(row: IProperty) {
     this.dialog
       .open(PropertyFormComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         data: row,
         disableClose: true,
       })
@@ -138,7 +138,7 @@ export class PropertyPageComponent implements OnInit {
   openImageUploadDialog(id_property: number) {
     const dialogRef = this.dialog.open(ImageUploadDialogComponent, {
       data: { id_property },
-      width: '800px',
+      width: '800px', height: '600px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -156,7 +156,7 @@ export class PropertyPageComponent implements OnInit {
   openUploadInventory(id_property: number) {
     const dialogRef = this.dialog.open(UploadInventoryComponent, {
       data: { id_property },
-      width: '600px',
+      width: '600px', height: '600px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -174,7 +174,7 @@ export class PropertyPageComponent implements OnInit {
   openArchivedProperties() {
     this.dialog
       .open(UnarchivePropertyComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         disableClose: true,
       })
       .afterClosed()

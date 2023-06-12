@@ -136,7 +136,10 @@ export class ClientPageComponent implements OnInit {
 
   openFormCreateClient() {
     this.dialog
-      .open(ClientFormComponent, { width: '800px', disableClose: true })
+    
+      .open(ClientFormComponent, {width: '800px', height: '600px',disableClose: true
+      })
+      
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -148,7 +151,7 @@ export class ClientPageComponent implements OnInit {
   openFormEditClient(row: IClient) {
     this.dialog
       .open(ClientFormComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         data: row,
         disableClose: true,
       })
@@ -515,7 +518,7 @@ export class ClientPageComponent implements OnInit {
   openArchivedClients() {
     this.dialog
       .open(UnarchiveClientComponent, {
-        width: '800px',
+        width: '800px', height: '600px',
         disableClose: true,
       })
       .afterClosed()
