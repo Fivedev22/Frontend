@@ -59,8 +59,10 @@ export class PaymentPageComponent {
   ) {
     // Verificar si el ID del cobro está presente en los pagos realizados
     this.paymentService.findAllPaymentsPaid().subscribe((payments) => {
-      const paymentExists = payments.some((payment) => payment.id_payment === id);
-  
+      const paymentExists = payments.some(
+        (payment) => payment.id_payment === id
+      );
+
       if (paymentExists) {
         // Mostrar mensaje de error indicando que no se puede archivar el cobro
         Swal.fire({
@@ -101,7 +103,6 @@ export class PaymentPageComponent {
       }
     });
   }
-  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -116,7 +117,8 @@ export class PaymentPageComponent {
   openFormEditPayment(row: IPayment) {
     this.dialog
       .open(PaymentFormComponent, {
-        width: '800px', height: '600px',
+        width: '800px',
+        height: '600px',
         data: row,
         disableClose: true,
       })
@@ -257,7 +259,7 @@ export class PaymentPageComponent {
   openArchivedPayments() {
     this.dialog
       .open(UnarchivePaymentComponent, {
-        width: '800px', height: '600px',
+        width: '1000px',
         disableClose: true,
       })
       .afterClosed()
