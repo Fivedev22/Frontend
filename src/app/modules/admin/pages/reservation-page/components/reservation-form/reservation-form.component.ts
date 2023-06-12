@@ -165,16 +165,19 @@ export class ReservationFormComponent implements OnInit {
 
   filterClients(value: string): IClient[] {
     const filterValue = value.toString().toLowerCase();
-  
+
     if (Array.isArray(this.clients)) {
-      return this.clients.filter((client) =>
-        client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
+      return this.clients.filter(
+        (client) =>
+          client.document_number
+            .toString()
+            .toLowerCase()
+            .indexOf(filterValue) !== -1
       );
     } else {
       return [];
     }
   }
-  
 
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
     const property = event.option.value;
@@ -207,14 +210,13 @@ export class ReservationFormComponent implements OnInit {
 
   onInputChangedClient() {
     const value = this.searchControl.value;
-  
+
     const optionExists = this.filteredClients.some((client) =>
       client.document_number.toLowerCase().includes(value.toLowerCase())
     );
-  
+
     this.showNotFoundMessage2 = value && !optionExists;
   }
-  
 
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
@@ -242,7 +244,14 @@ export class ReservationFormComponent implements OnInit {
             Validators.pattern('^[0-9]+$'),
           ],
         ],
-        pets_number: ['', [Validators.required,Validators.min(0), Validators.pattern('^[0-9]+$')]],
+        pets_number: [
+          '',
+          [
+            Validators.required,
+            Validators.min(0),
+            Validators.pattern('^[0-9]+$'),
+          ],
+        ],
         check_in_date: ['', [Validators.required]],
         check_out_date: ['', [Validators.required]],
         check_in_hour: ['', [Validators.required]],
@@ -387,21 +396,23 @@ export class ReservationFormComponent implements OnInit {
   }
 
   createReservation() {
-    if (this.reservationForm.valid) {
-      this.reservationService
-        .createReservation(this.reservationForm.value)
-        .subscribe({
-          next: (res) => {
-            this.createAlert.fire().then(() => {
-              this.reservationForm.reset();
-              this.dialogRef.close('save');
-            });
-          },
-          error: (e) => {
-            this.errorAlert.fire();
-          },
-        });
-    }
+    console.log(this.reservationForm.value);
+    // if (this.reservationForm.valid) {
+    //   this.reservationService
+    //     .createReservation(this.reservationForm.value)
+    //     .subscribe({
+    //       next: (res) => {
+    //         console.log(res);
+    //         this.createAlert.fire().then(() => {
+    //           this.reservationForm.reset();
+    //           this.dialogRef.close('save');
+    //         });
+    //       },
+    //       error: (e) => {
+    //         this.errorAlert.fire();
+    //       },
+    //     });
+    // }
   }
 
   updateReservation() {
@@ -440,6 +451,7 @@ export class ReservationFormComponent implements OnInit {
   findAllClients() {
     this.clientService.findAllClients().subscribe((data) => {
       this.clients = data;
+      console.log(this.clients);
     });
   }
 

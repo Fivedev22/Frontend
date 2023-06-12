@@ -1,5 +1,59 @@
-<!-- contract-upload.component.html -->
-<button mat-icon-button mat-dialog-close>
+<div class="wrapper-dialog">
+  <div class="content-title-dialog">
+    <span class="dialog-title">Inventario de Propiedad</span>
+    <mat-icon ngClass="dialog-close" mat-dialog-close>close</mat-icon>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content-form-dialog">
+    <label for="files" class="drop-container">
+      <span class="drop-title">Subir archivo aqui</span>
+      <input
+        id="files"
+        type="file"
+        accept="pdf"
+        class="input-file"
+        (change)="onFilesInputChange($event)"
+      />
+    </label>
+    <p class="contract_title">Para subir</p>
+    <div class="contract-container">
+      <div *ngIf="selectedFile" class="contract-content">
+        <a target="_blank" class="link">{{ selectedFile.name }}</a>
+        <button class="delete-icon" (click)="removeFile()">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+      <div *ngIf="!selectedFile">No hay elementos para subir.</div>
+    </div>
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <p class="contract_title">Subidos</p>
+    <div class="contract-container">
+      <div class="contract-content" *ngFor="let contract of contracts">
+        <a [href]="getDownloadUrl(contract)" target="_blank" class="link">
+          {{ contract.filename }}
+        </a>
+        <button class="delete-icon" (click)="deleteContract(contract)">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content-footer-dialog">
+    <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
+    <button
+      mat-stroked-button
+      color="basic"
+      [disabled]="isUploadButtonDisabled"
+      (click)="selectedFile && uploadContract(selectedFile)"
+    >
+      Subir
+    </button>
+  </div>
+</div>
+<!-- <button mat-icon-button mat-dialog-close>
   <mat-icon>close</mat-icon>
 </button>
 
@@ -20,4 +74,4 @@
 
 <div mat-dialog-actions align="end">
   <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
-</div>
+</div> -->

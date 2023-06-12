@@ -10,7 +10,8 @@ import Swal from 'sweetalert2';
 })
 export class ContractUploadComponent implements OnInit {
   contracts: any[] = [];
-
+  selectedFile: File | null = null;
+  isUploadButtonDisabled: boolean = true;
   constructor(
     private dialogRef: MatDialogRef<ContractUploadComponent>,
     private reservationService: ReservationService,
@@ -21,12 +22,12 @@ export class ContractUploadComponent implements OnInit {
     this.getContracts();
   }
 
-  onFileSelected(files: FileList | null) {
-    if (files && files.length > 0) {
-      const selectedFile = files[0];
-      this.uploadContract(selectedFile);
-    }
-  }
+  // onFileSelected(files: FileList | null) {
+  //   if (files && files.length > 0) {
+  //     const selectedFile = files[0];
+  //     this.uploadContract(selectedFile);
+  //   }
+  // }
 
   uploadContract(file: File) {
     if (
@@ -66,6 +67,20 @@ export class ContractUploadComponent implements OnInit {
         }
       });
   }
+  onFilesInputChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.isUploadButtonDisabled = false;
+    } else {
+      this.selectedFile = null;
+      this.isUploadButtonDisabled = true;
+    }
+  }
+  removeFile() {
+    this.selectedFile = null;
+    this.isUploadButtonDisabled = true;
+  }
 
   getContracts() {
     this.reservationService
@@ -103,10 +118,5 @@ export class ContractUploadComponent implements OnInit {
         });
       }
     });
-  }
-
-  viewFile(contract: any) {
-    const url = this.getDownloadUrl(contract);
-    window.open(url, '_blank');
   }
 }

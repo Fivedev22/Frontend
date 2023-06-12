@@ -114,7 +114,11 @@ export class ReservationPageComponent implements OnInit {
 
   openFormCreateReservation() {
     this.dialog
-      .open(ReservationFormComponent, { width: '800px',height: '600px', disableClose: true })
+      .open(ReservationFormComponent, {
+        width: '800px',
+        height: '600px',
+        disableClose: true,
+      })
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -126,7 +130,8 @@ export class ReservationPageComponent implements OnInit {
   openFormEditReservation(row: IReservation) {
     this.dialog
       .open(ReservationFormComponent, {
-        width: '800px', height: '600px',
+        width: '800px',
+        height: '600px',
         data: row,
         disableClose: true,
       })
@@ -143,7 +148,7 @@ export class ReservationPageComponent implements OnInit {
       const doc = new jsPDF();
 
       const addPageWithBackgroundColor = () => {
-        const lightGreenColor = '#C1FFC1';
+        const lightGreenColor = '#FFF';
         doc.setFillColor(lightGreenColor);
         doc.rect(
           0,
@@ -159,7 +164,7 @@ export class ReservationPageComponent implements OnInit {
       const logo = new Image();
       logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
       doc.addImage(logo, 'PNG', 10, 10, 30, 30);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('helvetica', 'normal');
       doc.setFontSize(16);
       doc.text('Apartamentos Anahi', 10, 20);
       doc.setFontSize(12);
@@ -180,11 +185,11 @@ export class ReservationPageComponent implements OnInit {
       const pageWidth = doc.internal.pageSize.getWidth();
       const titleX = (pageWidth - titleWidth) / 2;
       doc.text(title, titleX, 80);
-      doc.setFont('arial', 'bolditalic');
-      doc.setFontSize(16);
-      doc.text('Detalles de reserva', 10, 90);
-      doc.setFont('arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
+      doc.text('Detalles de reserva', 10, 90);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
       doc.text(`Reserva Nro: ${data.booking_number}`, 10, 100);
       doc.text(
@@ -210,11 +215,11 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
       doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
       doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
-      doc.setFont('arial', 'bolditalic');
-      doc.setFontSize(15);
-      doc.text('Importe Detallado', 10, 230);
-      doc.setFont('arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
+      doc.text('Importe Detallado', 10, 230);
+      doc.setFont('arial', 'normal');
+      doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${data.starting_price.toLocaleString()}`,
         10,
@@ -234,7 +239,7 @@ export class ReservationPageComponent implements OnInit {
       doc.setLineWidth(0.5);
       const lineY = 280;
       doc.line(10, lineY, 200, lineY);
-      doc.setFont('Arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
       const textWidth = doc.getTextWidth(text);
@@ -260,7 +265,8 @@ export class ReservationPageComponent implements OnInit {
 
   openPaymentForm(reservationId: number) {
     const dialogRef = this.dialog.open(PaymentFormComponent, {
-      width: '800px', height: '600px',
+      width: '800px',
+      height: '600px',
       disableClose: true,
       data: { reservationId: reservationId },
     });
@@ -275,7 +281,7 @@ export class ReservationPageComponent implements OnInit {
   openUploadContract(id_booking: number) {
     const dialogRef = this.dialog.open(ContractUploadComponent, {
       data: { id_booking },
-      width: '1000px', height: '600px',
+      width: '600px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -293,7 +299,7 @@ export class ReservationPageComponent implements OnInit {
   openArchivedReservations() {
     this.dialog
       .open(UnarchiveReservationComponent, {
-        width: '800px', height: '600px',
+        width: '1000px',
         disableClose: true,
       })
       .afterClosed()
