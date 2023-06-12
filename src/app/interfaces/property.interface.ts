@@ -1,3 +1,5 @@
+import { IActivityStatus } from "./activity_status.interface";
+import { IAvailabilityStatus } from "./availability_status.interface";
 import { IPropertyType } from "./property_type.interface";
 import { IProvince } from "./province.interface";
 
@@ -26,7 +28,7 @@ export interface IProperty {
     parking: boolean;
     disabled_access: boolean;
     kids_beds: boolean;
-    availability_status: number;
-    activity_status: number;
+    availability_status: IAvailabilityStatus;
+    activity_status: IActivityStatus;
     is_active?: boolean;
 }

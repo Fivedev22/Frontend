@@ -123,4 +123,61 @@ export class UnarchivePropertyComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
+
+  viewDetails(clientId: number) {
+    this.propertyService.findOneArchived(clientId).subscribe(
+      (property: IProperty) => {
+        const details = `
+          Número de referencia: ${property.reference_number}
+          Nombre del inmueble: ${property.property_name}
+          Tipo de inmueble: ${property.property_type.property_type_name}
+          Metros cuadrados: ${property.square_meter}
+          Dirección: ${property.street} ${property.street_number}
+          Piso/Edificio: ${property.building_floor}
+          Provincia: ${property.province.province_name}
+          Ciudad: ${property.town}
+          Distrito: ${property.district}
+          Alquiler diario: ${property.daily_rent ? 'Sí' : 'No'}
+          Alquiler mensual: ${property.monthly_rent ? 'Sí' : 'No'}
+          Alquiler anual: ${property.annual_rent ? 'Sí' : 'No'}
+          Número de habitaciones: ${property.rooms_number}
+          Número de baños: ${property.bathrooms_number}
+          Internet: ${property.internet ? 'Sí' : 'No'}
+          Piscina: ${property.pool ? 'Sí' : 'No'}
+          Cocina: ${property.kitchen ? 'Sí' : 'No'}
+          Equipamiento de lavandería: ${property.laundry_equipment ? 'Sí' : 'No'}
+          Patio: ${property.yard ? 'Sí' : 'No'}
+          Estacionamiento: ${property.parking ? 'Sí' : 'No'}
+          Acceso para discapacitados: ${property.disabled_access ? 'Sí' : 'No'}
+          Camas para niños: ${property.kids_beds ? 'Sí' : 'No'}
+          Estado de disponibilidad: ${property.availability_status.availability_status_name}
+          Estado de actividad: ${property.activity_status.activity_status_name}
+        `;
+  
+        const popupWindow = window.open('', 'Detalles del inmueble', 'width=400,height=600');
+        popupWindow?.document.write(`
+          <html>
+            <head>
+              <title>Detalles del inmueble</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  margin: 20px;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Detalles del inmueble</h2>
+              <pre>${details}</pre>
+            </body>
+          </html>
+        `);
+      },
+      (error: any) => {
+        console.error('Error al obtener los detalles del inmueble archivado:', error);
+      }
+    );
+  }
+  
+  
 }

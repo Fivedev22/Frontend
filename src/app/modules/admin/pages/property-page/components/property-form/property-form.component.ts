@@ -79,7 +79,7 @@ export class PropertyFormComponent implements OnInit {
 
   initForm(): FormGroup {
     return this.formBuilder.group({
-      reference_number: [''],
+      reference_number: ['',],
       property_name: [
         '',
         [

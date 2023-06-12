@@ -57,35 +57,51 @@ export class PaymentPageComponent {
     payment_number: number,
     payment_amount_total: number
   ) {
-    Swal.fire({
-      title: '¿Desea archivar/cancelar el cobro?',
-      text: `Cobro N°: ${payment_number} - Monto Total: $ ${payment_amount_total.toLocaleString()}`,
-      icon: 'error',
-      showCancelButton: true,
-
-      confirmButtonText: 'Archivar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.paymentService.archivePayment(+id).subscribe({
-          next: (res) => {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Cobro archivado/cancelado correctamente',
-              showConfirmButton: false,
-              timer: 1800,
-            }).then(() => {
-              this.findAllPayments();
+    // Verificar si el ID del cobro está presente en los pagos realizados
+    this.paymentService.findAllPaymentsPaid().subscribe((payments) => {
+      const paymentExists = payments.some((payment) => payment.id_payment === id);
+  
+      if (paymentExists) {
+        // Mostrar mensaje de error indicando que no se puede archivar el cobro
+        Swal.fire({
+          title: 'No se puede archivar',
+          text: 'El cobro seleccionado ya ha sido pagado y no se puede archivar.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+        });
+      } else {
+        // Mostrar el mensaje de confirmación para archivar el cobro
+        Swal.fire({
+          title: '¿Desea archivar/cancelar el cobro?',
+          text: `Cobro N°: ${payment_number} - Monto Total: $ ${payment_amount_total.toLocaleString()}`,
+          icon: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'Archivar',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.paymentService.archivePayment(+id).subscribe({
+              next: (res) => {
+                Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: 'Cobro archivado/cancelado correctamente',
+                  showConfirmButton: false,
+                  timer: 1800,
+                }).then(() => {
+                  this.findAllPayments();
+                });
+              },
+              error(e) {
+                alert(e);
+              },
             });
-          },
-          error(e) {
-            alert(e);
-          },
+          }
         });
       }
     });
   }
+  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

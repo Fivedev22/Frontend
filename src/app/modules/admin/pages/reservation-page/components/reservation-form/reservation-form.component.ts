@@ -165,21 +165,16 @@ export class ReservationFormComponent implements OnInit {
 
   filterClients(value: string): IClient[] {
     const filterValue = value.toString().toLowerCase();
-
+  
     if (Array.isArray(this.clients)) {
-      return this.clients.filter(
-        (client) =>
-          client.document_number
-            .toString()
-            .toLowerCase()
-            .indexOf(filterValue) !== -1 ||
-          client.name.toLowerCase().indexOf(filterValue) !== -1 ||
-          client.last_name.toLowerCase().indexOf(filterValue) !== -1
+      return this.clients.filter((client) =>
+        client.document_number.toString().toLowerCase().indexOf(filterValue) !== -1
       );
     } else {
       return [];
     }
   }
+  
 
   onPropertySelected(event: MatAutocompleteSelectedEvent): void {
     const property = event.option.value;
@@ -212,23 +207,14 @@ export class ReservationFormComponent implements OnInit {
 
   onInputChangedClient() {
     const value = this.searchControl.value;
-
-    const optionExists = this.filteredClients.some((client) => {
-      const documentNumberMatch = client.document_number
-        .toLowerCase()
-        .includes(value.toLowerCase());
-      const firstNameMatch = client.name
-        .toLowerCase()
-        .includes(value.toLowerCase());
-      const lastNameMatch = client.last_name
-        .toLowerCase()
-        .includes(value.toLowerCase());
-
-      return documentNumberMatch || firstNameMatch || lastNameMatch;
-    });
-
+  
+    const optionExists = this.filteredClients.some((client) =>
+      client.document_number.toLowerCase().includes(value.toLowerCase())
+    );
+  
     this.showNotFoundMessage2 = value && !optionExists;
   }
+  
 
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
@@ -256,7 +242,7 @@ export class ReservationFormComponent implements OnInit {
             Validators.pattern('^[0-9]+$'),
           ],
         ],
-        pets_number: ['', [Validators.min(0), Validators.pattern('^[0-9]+$')]],
+        pets_number: ['', [Validators.required,Validators.min(0), Validators.pattern('^[0-9]+$')]],
         check_in_date: ['', [Validators.required]],
         check_out_date: ['', [Validators.required]],
         check_in_hour: ['', [Validators.required]],
