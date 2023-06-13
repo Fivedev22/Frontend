@@ -148,22 +148,17 @@ export class ReservationPageComponent implements OnInit {
       const doc = new jsPDF();
 
       const addPageWithBackgroundColor = () => {
-        const lightGreenColor = '#FFF';
-        doc.setFillColor(lightGreenColor);
+        const lightColor = '#FFFFFF';
+        doc.setFillColor(lightColor);
         doc.rect(
           0,
           0,
           doc.internal.pageSize.getWidth(),
-          doc.internal.pageSize.getHeight(),
-          'F'
+          doc.internal.pageSize.getHeight()
         );
       };
 
       addPageWithBackgroundColor();
-
-      const logo = new Image();
-      logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
-      doc.addImage(logo, 'PNG', 10, 10, 30, 30);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(16);
       doc.text('Apartamentos Anahi', 10, 20);
@@ -218,7 +213,7 @@ export class ReservationPageComponent implements OnInit {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.text('Importe Detallado', 10, 230);
-      doc.setFont('arial', 'normal');
+      doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${data.starting_price.toLocaleString()}`,
@@ -297,20 +292,22 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openArchivedReservations() {
-  this.reservationService.findAllReservationsArchived().subscribe((archivedReservations) => {
-    if (archivedReservations && archivedReservations.length > 0) {
-      this.dialog
-        .open(UnarchiveReservationComponent, {
-          width: '1000px',
-          disableClose: true,
-        })
-        .afterClosed()
-        .subscribe((result) => {
-          this.findAllReservations();
-        });
-    } else {
-      Swal.fire('No hay reservaciones archivadas/canceladas', '', 'info');
-    }
-  });
-}
+    this.reservationService
+      .findAllReservationsArchived()
+      .subscribe((archivedReservations) => {
+        if (archivedReservations && archivedReservations.length > 0) {
+          this.dialog
+            .open(UnarchiveReservationComponent, {
+              width: '1000px',
+              disableClose: true,
+            })
+            .afterClosed()
+            .subscribe((result) => {
+              this.findAllReservations();
+            });
+        } else {
+          Swal.fire('No hay reservaciones archivadas/canceladas', '', 'info');
+        }
+      });
+  }
 }

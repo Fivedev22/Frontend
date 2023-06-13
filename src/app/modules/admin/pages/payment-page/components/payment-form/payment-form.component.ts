@@ -102,7 +102,7 @@ export class PaymentFormComponent implements OnInit {
 
   addReservationData(reservation: IReservation) {
     this.paymentForm.patchValue({
-      booking: reservation.booking_number,
+      booking: reservation.id_booking,
       client: reservation.client.id_client,
       property: reservation.property.id_property,
       check_in_date: reservation.check_in_date,
@@ -191,6 +191,7 @@ export class PaymentFormComponent implements OnInit {
   }
 
   createPayment() {
+    console.log(this.paymentForm.value);
     if (this.paymentForm.valid) {
       this.paymentService.createPayment(this.paymentForm.value).subscribe({
         next: (res) => {

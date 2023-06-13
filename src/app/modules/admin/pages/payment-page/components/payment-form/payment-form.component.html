@@ -53,11 +53,7 @@
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Cliente</mat-label>
-            <mat-select
-              formControlName="client"
-              placeholder="Seleccione..."
-              [disabled]="true"
-            >
+            <mat-select formControlName="client" placeholder="Seleccione...">
               <mat-option
                 *ngFor="let client of clients"
                 [value]="client.id_client"
@@ -75,11 +71,7 @@
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Propiedad</mat-label>
-            <mat-select
-              formControlName="property"
-              placeholder="Seleccione..."
-              [disabled]="true"
-            >
+            <mat-select formControlName="property" placeholder="Seleccione...">
               <mat-option
                 *ngFor="let property of properties"
                 [value]="property.id_property"

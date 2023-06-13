@@ -57,14 +57,12 @@ export class PaymentPageComponent {
     payment_number: number,
     payment_amount_total: number
   ) {
-    // Verificar si el ID del cobro está presente en los pagos realizados
     this.paymentService.findAllPaymentsPaid().subscribe((payments) => {
       const paymentExists = payments.some(
         (payment) => payment.id_payment === id
       );
 
       if (paymentExists) {
-        // Mostrar mensaje de error indicando que no se puede archivar el cobro
         Swal.fire({
           title: 'No se puede archivar',
           text: 'El cobro seleccionado ya ha sido pagado y no se puede archivar.',
@@ -72,7 +70,6 @@ export class PaymentPageComponent {
           confirmButtonText: 'Aceptar',
         });
       } else {
-        // Mostrar el mensaje de confirmación para archivar el cobro
         Swal.fire({
           title: '¿Desea archivar/cancelar el cobro?',
           text: `Cobro N°: ${payment_number} - Monto Total: $ ${payment_amount_total.toLocaleString()}`,
@@ -134,8 +131,8 @@ export class PaymentPageComponent {
     this.paymentService.findOnePayment(id).subscribe((data) => {
       const doc = new jsPDF();
       const addPageWithBackgroundColor = () => {
-        const lightGreenColor = '#C1FFC1';
-        doc.setFillColor(lightGreenColor);
+        const lightColor = '#FFFFFF';
+        doc.setFillColor(lightColor);
         doc.rect(
           0,
           0,
@@ -145,10 +142,7 @@ export class PaymentPageComponent {
         );
       };
       addPageWithBackgroundColor();
-      const logo = new Image();
-      logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
-      doc.addImage(logo, 'PNG', 10, 10, 30, 30);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('helvetica', 'normal');
       doc.setFontSize(16);
       doc.text('Apartamentos Anahi', 10, 20);
       doc.setFontSize(12);
@@ -169,11 +163,11 @@ export class PaymentPageComponent {
       const pageWidth = doc.internal.pageSize.getWidth();
       const titleX = (pageWidth - titleWidth) / 2;
       doc.text(title, titleX, 80);
-      doc.setFont('arial', 'bolditalic');
-      doc.setFontSize(16);
-      doc.text('Detalles del pago', 10, 90);
-      doc.setFont('arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
+      doc.text('Detalles del pago', 10, 90);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
       doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
       doc.text(`Nro de cobro: ${data.payment_number}`, 10, 110);
       doc.text(
@@ -181,11 +175,11 @@ export class PaymentPageComponent {
         10,
         120
       );
-      doc.setFontSize(16);
-      doc.setFont('arial', 'bolditalic');
-      doc.text('Estadia', 10, 130);
-      doc.setFont('arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
+      doc.text('Estadia', 10, 130);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
       doc.text(`Nro de reserva: ${data.booking.booking_number}`, 10, 140);
       doc.text(
         `Nombre de la propiedad: ${data.property.property_name}`,
@@ -194,11 +188,11 @@ export class PaymentPageComponent {
       );
       doc.text(`Fecha de check in: ${data.booking.check_in_date}`, 10, 160);
       doc.text(`Fecha de check out: ${data.booking.check_out_date}`, 10, 170);
-      doc.setFontSize(16);
-      doc.setFont('arial', 'bolditalic');
-      doc.text('Importe Detallado', 10, 180);
-      doc.setFont('arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
+      doc.text('Importe Detallado', 10, 180);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${data.booking.starting_price.toLocaleString()}`,
         10,
@@ -233,7 +227,7 @@ export class PaymentPageComponent {
       doc.setLineWidth(0.5);
       const lineY = 260;
       doc.line(10, lineY, 200, lineY);
-      doc.setFont('Arial', 'italic');
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por visitarnos!';
       const textWidth = doc.getTextWidth(text);
