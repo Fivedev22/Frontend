@@ -43,3 +43,14 @@ mat-form-field {
   background-color: green;
   border-color: green;
 }
+.input-container {
+  position: relative;
+}
+
+.icon-button {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  color: #898989;
+}

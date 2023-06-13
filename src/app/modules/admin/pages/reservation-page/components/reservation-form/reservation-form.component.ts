@@ -28,7 +28,8 @@ import { ReservationTypeService } from '../../../../../../services/reservation_t
 import { ReservationOriginService } from '../../../../../../services/reservation_origin.service';
 import { ClientFormComponent } from '../../../client-page/components/client-form/client-form.component';
 import { Observable } from 'rxjs';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { TableCxrComponent } from 'src/app/global/components/table-cxr/table-cxr.component';
+import { TablePxrComponent } from 'src/app/global/components/table-pxr/table-pxr.component';
 
 @Component({
   selector: 'app-reservation-form',
@@ -74,15 +75,7 @@ export class ReservationFormComponent implements OnInit {
     private reservationOriginService: ReservationOriginService,
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
-  ) {
-    this.propertyControl.valueChanges.subscribe((value) => {
-      this.filteredProperties = this.filterProperties(value);
-    });
-
-    this.searchControl.valueChanges.subscribe((value) => {
-      this.filteredClients = this.filterClients(value);
-    });
-  }
+  ) {}
 
   minDate = new Date(2023, 0, 1);
   maxDate = new Date(2100, 0, 1);
@@ -147,76 +140,9 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
-  filterProperties(value: string): IProperty[] {
-    const filterValue = value.toString().toLowerCase();
-
-    if (Array.isArray(this.properties)) {
-      return this.properties.filter(
-        (property) =>
-          property.property_name
-            .toString()
-            .toLowerCase()
-            .indexOf(filterValue) === 0
-      );
-    } else {
-      return [];
-    }
-  }
-
-  filterClients(value: string): IClient[] {
-    const filterValue = value.toString().toLowerCase();
-
-    if (Array.isArray(this.clients)) {
-      return this.clients.filter(
-        (client) =>
-          client.document_number
-            .toString()
-            .toLowerCase()
-            .indexOf(filterValue) !== -1
-      );
-    } else {
-      return [];
-    }
-  }
-
-  onPropertySelected(event: MatAutocompleteSelectedEvent): void {
-    const property = event.option.value;
-    this.reservationForm.controls['property'].setValue(property.id_property);
-    this.propertyControl.setValue(property.property_name);
-    this.propertyDetail.setValue(property.property_name);
-    this.propertyControl.setValue('');
-  }
-
-  onClientSelected(event: MatAutocompleteSelectedEvent): void {
-    const client = event.option.value;
-    this.reservationForm.controls['client'].setValue(client.id_client);
-    this.searchControl.setValue(client.name + ' ' + client.last_name);
-    this.clientDetail.setValue(client.name + ' ' + client.last_name);
-    this.searchControl.setValue('');
-  }
-
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);
   };
-
-  onInputChanged() {
-    const value = this.propertyControl.value;
-
-    const optionExists = this.filteredProperties.some((property) => {
-      return property.property_name.toLowerCase().includes(value.toLowerCase());
-    });
-    this.showNotFoundMessage1 = value && !optionExists;
-  }
-
-  onInputChangedClient() {
-    const value = this.searchControl.value;
-
-    const optionExists = this.filteredClients.some((client) =>
-      client.document_number.toLowerCase().includes(value.toLowerCase())
-    );
-
-    this.showNotFoundMessage2 = value && !optionExists;
-  }
 
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
@@ -316,6 +242,7 @@ export class ReservationFormComponent implements OnInit {
   };
 
   addReservationData(data: any) {
+    console.log(data);
     this.actionTitle = 'Modificar Reserva';
     this.actionButton = 'Actualizar';
     this.reservationForm.controls['booking_number'].setValue(
@@ -328,22 +255,13 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['booking_origin'].setValue(
       data.booking_origin.id
     );
-    const selectedClient = {
-      name: data.client.name,
-      last_name: data.client.last_name,
-      id_client: data.client.id_client,
-    };
-    this.clientDetail.setValue(
-      selectedClient.name + ' ' + selectedClient.last_name
-    );
-    this.reservationForm.controls['client'].setValue(selectedClient.id_client);
-    const selectedProperty = {
-      property_name: data.property.property_name,
-      id_property: data.property.id_property,
-    };
-    this.propertyDetail.setValue(selectedProperty.property_name);
+
+    this.clientDetail.setValue(data.client.name + ' ' + data.client.last_name);
+    this.reservationForm.controls['client'].setValue(data.client.id_client);
+
+    this.propertyDetail.setValue(data.property.property_name);
     this.reservationForm.controls['property'].setValue(
-      selectedProperty.id_property
+      data.property.id_property
     );
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);
     this.reservationForm.controls['kids_number'].setValue(data.kids_number);
@@ -370,7 +288,6 @@ export class ReservationFormComponent implements OnInit {
       data.booking_amount
     );
   }
-
   calcularPrecioReserva() {
     const montoInicial = Number(
       this.reservationForm.controls['starting_price'].value
@@ -396,23 +313,22 @@ export class ReservationFormComponent implements OnInit {
   }
 
   createReservation() {
-    console.log(this.reservationForm.value);
-    // if (this.reservationForm.valid) {
-    //   this.reservationService
-    //     .createReservation(this.reservationForm.value)
-    //     .subscribe({
-    //       next: (res) => {
-    //         console.log(res);
-    //         this.createAlert.fire().then(() => {
-    //           this.reservationForm.reset();
-    //           this.dialogRef.close('save');
-    //         });
-    //       },
-    //       error: (e) => {
-    //         this.errorAlert.fire();
-    //       },
-    //     });
-    // }
+    if (this.reservationForm.valid) {
+      this.reservationService
+        .createReservation(this.reservationForm.value)
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            this.createAlert.fire().then(() => {
+              this.reservationForm.reset();
+              this.dialogRef.close('save');
+            });
+          },
+          error: (e) => {
+            this.errorAlert.fire();
+          },
+        });
+    }
   }
 
   updateReservation() {
@@ -451,7 +367,6 @@ export class ReservationFormComponent implements OnInit {
   findAllClients() {
     this.clientService.findAllClients().subscribe((data) => {
       this.clients = data;
-      console.log(this.clients);
     });
   }
 
@@ -468,6 +383,42 @@ export class ReservationFormComponent implements OnInit {
       .subscribe((val) => {
         if (val === 'save') {
           this.reservationService.findAllReservations();
+        }
+      });
+  }
+
+  openClientSearch() {
+    this.dialog
+      .open(TableCxrComponent, {
+        width: '800px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((selectedClient) => {
+        if (selectedClient) {
+          this.clientDetail.setValue(
+            selectedClient.name + ' ' + selectedClient.last_name
+          );
+          this.reservationForm.controls['client'].setValue(
+            selectedClient.id_client
+          );
+        }
+      });
+  }
+  openPropertySearch() {
+    this.dialog
+      .open(TablePxrComponent, {
+        width: '800px',
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe((selectedProperty) => {
+        console.log(selectedProperty);
+        if (selectedProperty) {
+          this.propertyDetail.setValue(selectedProperty.property_name);
+          this.reservationForm.controls['property'].setValue(
+            selectedProperty.id_property
+          );
         }
       });
   }

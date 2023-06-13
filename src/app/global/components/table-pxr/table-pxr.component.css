@@ -1,0 +1,129 @@
+.property-main {
+  height: 100%;
+  padding: 20px;
+}
+.content-title-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+.dialog-title {
+  font-size: 25px;
+}
+
+.dialog-close {
+  cursor: pointer;
+}
+
+.property-section-head {
+  display: flex;
+  padding-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.property-section-head_search {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.property-input-search {
+  height: 50px;
+  width: 100%;
+  font-size: 15px;
+  padding: 0px 20px;
+  color: #000000;
+  background: #fafbfc;
+  border: 2px solid #dfe1e6;
+  border-radius: 5px;
+  outline: none;
+}
+
+.property-button-search {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #898989;
+}
+
+.property-section-body {
+  padding: 30px 10px;
+}
+
+.property-section-table {
+  table-layout: auto;
+  width: 100%;
+}
+
+tr {
+  display: flex;
+  align-items: center;
+  height: 42px !important;
+}
+
+th {
+  text-align: left;
+  padding: 8px;
+  flex: 1;
+  font-size: 15px;
+  color: #898989;
+}
+
+td {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+th:last-child,
+td:last-child {
+  flex: 0 0 auto;
+  width: 200px;
+}
+
+.content-icons {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.icons {
+  background-color: #898989;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+  flex: property;
+}
+.cpc-tableTitle {
+  font-size: 16px;
+  color: #898989;
+}
+
+.mat-row {
+  width: 100%;
+}
+
+.mat-cell {
+  width: 100% !important;
+}

@@ -75,87 +75,46 @@
           </mat-form-field>
         </mat-grid-tile>
 
-        <mat-grid-tile>
+        <mat-grid-tile colspan="2">
           <mat-form-field appearance="outline">
-            <mat-label>Cliente</mat-label>
-            <input
-              matInput
-              placeholder="Buscar por nro de documento..."
-              formControlName="client"
-              [matAutocomplete]="auto1"
-              [formControl]="searchControl"
-              type="search"
-              (input)="onInputChangedClient()"
-            />
-            <mat-autocomplete
-              #auto1="matAutocomplete"
-              (optionSelected)="onClientSelected($event)"
-            >
-              <mat-option
-                *ngFor="let client of filteredClients"
-                [value]="client.id_client"
+            <mat-label>Cliente Seleccionada</mat-label>
+            <div class="input-container">
+              <input
+                matInput
+                type="text"
+                [formControl]="clientDetail"
+                readonly
+              />
+              <button
+                mat-icon-button
+                class="icon-button"
+                (click)="openClientSearch()"
               >
-                {{ client.name }} {{ client.last_name }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('client', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-          <b *ngIf="showNotFoundMessage2">Cliente no encontrado</b>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Cliente Seleccionado</mat-label>
-            <input matInput type="text" [formControl]="clientDetail" readonly />
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
           </mat-form-field>
         </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Propiedad</mat-label>
-            <input
-              matInput
-              type="search"
-              [formControl]="propertyControl"
-              formControlName="property"
-              placeholder="Buscar por nombre..."
-              [matAutocomplete]="auto"
-              (input)="onInputChanged()"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              (optionSelected)="onPropertySelected($event)"
-            >
-              <mat-option
-                *ngFor="let property of filteredProperties"
-                [value]="property.id_property"
-              >
-                {{ property.property_name }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('property', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-          <b *ngIf="showNotFoundMessage1">Propiedad no encontrada</b>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
+        <mat-grid-tile colspan="2">
           <mat-form-field appearance="outline">
             <mat-label>Propiedad Seleccionada</mat-label>
-            <input
-              matInput
-              type="text"
-              [formControl]="propertyDetail"
-              readonly
-            />
+            <div class="input-container">
+              <input
+                matInput
+                type="text"
+                [formControl]="propertyDetail"
+                readonly
+              />
+              <button
+                mat-icon-button
+                class="icon-button"
+                (click)="openPropertySearch()"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
           </mat-form-field>
         </mat-grid-tile>
-
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Cantidad de Adultos</mat-label>
