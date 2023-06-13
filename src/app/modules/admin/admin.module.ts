@@ -43,6 +43,7 @@ import { UnarchivePropertyComponent } from './pages/property-page/components/una
 import { UnarchivePaymentComponent } from './pages/payment-page/components/unarchive-payment/unarchive-payment.component';
 import { UnarchiveReservationComponent } from './pages/reservation-page/components/unarchive-reservation/unarchive-reservation.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
+import { PhoneMaskDirective } from './pages/client-page/components/client-form/phone-mask-directive';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { ReportPageComponent } from './pages/report-page/report-page.component';
     UnarchivePropertyComponent,
     UnarchivePaymentComponent,
     UnarchiveReservationComponent,
+    PhoneMaskDirective,
   ],
   imports: [
     CommonModule,

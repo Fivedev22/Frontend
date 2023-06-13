@@ -266,7 +266,7 @@ export class StatisticPageComponent implements AfterViewInit {
       this.clientService.findAllClients().subscribe((clients) => {
         const genderCounts = clients.reduce((acc, client) => {
           const gender =
-            client.gender_type.gender_type_name || 'No especificado';
+            client.gender_type.gender_type_name;
           acc[gender] = (acc[gender] || 0) + 1;
           return acc;
         }, {} as any);

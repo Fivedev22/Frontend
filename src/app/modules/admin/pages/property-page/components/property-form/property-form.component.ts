@@ -61,8 +61,11 @@ export class PropertyFormComponent implements OnInit {
         }
       });
     }
-
     this.propertyForm = this.initForm();
+    this.propertyForm.patchValue({
+      availability_status: 1,
+      activity_status: 1
+    });
     this.findAllProvinces();
     this.findAllPropertyTypes();
     this.findAllAvailabilityStatuses();
