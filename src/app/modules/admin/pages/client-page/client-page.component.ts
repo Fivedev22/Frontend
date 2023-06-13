@@ -520,14 +520,20 @@ export class ClientPageComponent implements OnInit {
   }
 
   openArchivedClients() {
-    this.dialog
-      .open(UnarchiveClientComponent, {
-        width: '800px',
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        this.findAllClients();
-      });
+    this.clientService.findAllArchived().subscribe((archivedClients) => {
+      if (archivedClients && archivedClients.length > 0) {
+        this.dialog
+          .open(UnarchiveClientComponent, {
+            width: '800px',
+            disableClose: true,
+          })
+          .afterClosed()
+          .subscribe((result) => {
+            this.findAllClients();
+          });
+      } else {
+        Swal.fire('No hay clientes archivados', '', 'info');
+      }
+    });
   }
 }

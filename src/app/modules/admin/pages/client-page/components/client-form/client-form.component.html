@@ -26,7 +26,7 @@
             <mat-error align="end" *ngIf="hasError('name', 'maxlength')"
               >Maximo <strong>20 caracteres</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('name', 'noNumbers')"><strong>No se permiten números en el nombre</strong></mat-error>
+            <mat-error align="end" *ngIf="hasError('name', 'noNumbers')"><strong>No se permiten números o caracteres en el nombre</strong></mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -49,7 +49,7 @@
             <mat-error align="end" *ngIf="hasError('last_name', 'maxlength')"
               >Maximo <strong>20 caracteres</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('last_name', 'noNumbers')"><strong>No se permiten números en el apellido</strong></mat-error>
+            <mat-error align="end" *ngIf="hasError('last_name', 'noNumbers')"><strong>No se permiten números o caracteres en el apellido</strong></mat-error>
           </mat-form-field>
         </mat-grid-tile>
 

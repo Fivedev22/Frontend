@@ -257,14 +257,20 @@ export class PaymentPageComponent {
   }
 
   openArchivedPayments() {
-    this.dialog
-      .open(UnarchivePaymentComponent, {
-        width: '1000px',
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        this.findAllPayments();
-      });
+    this.paymentService.findAllArchived().subscribe((archivedPayments) => {
+      if (archivedPayments && archivedPayments.length > 0) {
+        this.dialog
+          .open(UnarchivePaymentComponent, {
+            width: '1000px',
+            disableClose: true,
+          })
+          .afterClosed()
+          .subscribe((result) => {
+            this.findAllPayments();
+          });
+      } else {
+        Swal.fire('No hay cobros archivados/cancelados', '', 'info');
+      }
+    });
   }
 }
