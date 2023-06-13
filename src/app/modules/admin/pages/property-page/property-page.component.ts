@@ -177,14 +177,22 @@ export class PropertyPageComponent implements OnInit {
   }
 
   openArchivedProperties() {
-    this.dialog
-      .open(UnarchivePropertyComponent, {
-        width: '1000px',
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        this.findAllProperties();
-      });
+    this.propertyService.findAllArchived().subscribe((archivedProperties) => {
+      if (archivedProperties && archivedProperties.length > 0) {
+        this.dialog
+          .open(UnarchivePropertyComponent, {
+            width: '1000px',
+            disableClose: true,
+          })
+          .afterClosed()
+          .subscribe((result) => {
+            this.findAllProperties();
+          });
+      } else {
+        Swal.fire('No hay inmuebles archivados', '', 'info');
+      }
+    });
   }
+  
+  
 }

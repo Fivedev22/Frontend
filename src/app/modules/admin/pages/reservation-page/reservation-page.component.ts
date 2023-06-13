@@ -297,14 +297,20 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openArchivedReservations() {
-    this.dialog
-      .open(UnarchiveReservationComponent, {
-        width: '1000px',
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        this.findAllReservations();
-      });
-  }
+  this.reservationService.findAllReservationsArchived().subscribe((archivedReservations) => {
+    if (archivedReservations && archivedReservations.length > 0) {
+      this.dialog
+        .open(UnarchiveReservationComponent, {
+          width: '1000px',
+          disableClose: true,
+        })
+        .afterClosed()
+        .subscribe((result) => {
+          this.findAllReservations();
+        });
+    } else {
+      Swal.fire('No hay reservaciones archivadas/canceladas', '', 'info');
+    }
+  });
+}
 }
