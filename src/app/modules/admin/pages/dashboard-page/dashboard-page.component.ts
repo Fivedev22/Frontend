@@ -11,7 +11,8 @@ import { Observable } from 'rxjs';
 import { IReservation } from '../../../../interfaces/reservation.interface';
 import { ReservationService } from '../../../../services/reservation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-declare var localStorage: any;
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotePageComponent } from './note-page/note-page.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -23,19 +24,25 @@ export class DashboardPageComponent implements AfterViewInit {
   @ViewChild('notesContainer') notesContainer!: ElementRef;
 
   private calendar!: Calendar;
+  private dialogRef: MatDialogRef<NotePageComponent> | undefined;
   private reservations!: IReservation[];
   private selectedReservation: IReservation | undefined;
   notes: string[] = [];
   showNotes = false;
+  notificationShown: boolean = false;
+
 
   constructor(
     private reservationService: ReservationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngAfterViewInit() {
+    window.addEventListener('beforeunload', () => {
+      localStorage.removeItem('notificationShown');
+    });
     this.initializeCalendar();
-    this.loadNotes();
     this.checkCurrentDateReservations();
   }
 
@@ -218,37 +225,28 @@ export class DashboardPageComponent implements AfterViewInit {
   }
 
   showNotification(message: string) {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 86400000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
+    const notificationShown = localStorage.getItem('notificationShown');
+    if (!notificationShown) {
+      this.snackBar.open(message, 'Cerrar', {
+        duration: 86400000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+      localStorage.setItem('notificationShown', 'true');
+    }
+  }
+  
+
+  
+  openNotePage() {
+    this.dialogRef = this.dialog.open(NotePageComponent, {
+      width: '500px',
+      height: '500px',
+    });
+  
+    this.dialogRef.afterClosed().subscribe(() => {
     });
   }
-
-  addNote() {
-    const newNote = prompt('Ingrese una nueva nota');
-    if (newNote && newNote.trim() !== '') {
-      this.notes.push(newNote);
-      this.saveNotes();
-    }
-  }
-
-  deleteNote(index: number) {
-    this.notes.splice(index, 1);
-  }
-
-  toggleNotesContainer() {
-    this.showNotes = !this.showNotes;
-  }
-
-  saveNotes() {
-    localStorage.setItem('notes', JSON.stringify(this.notes));
-  }
-
-  loadNotes() {
-    const savedNotes = localStorage.getItem('notes');
-    if (savedNotes) {
-      this.notes = JSON.parse(savedNotes);
-    }
-  }
+  
+  
 }

@@ -37,7 +37,7 @@ export class SidebarComponent {
       id: 5,
       url: 'properties',
       icon: 'home',
-      name: 'Apartamentos',
+      name: 'Inmuebles',
     },
     {
       id: 6,

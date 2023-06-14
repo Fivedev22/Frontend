@@ -1,14 +1,6 @@
 <div #calendarEl id="calendar"></div>
-<div class="notes-container" *ngIf="showNotes">
-    <ul>
-      <li *ngFor="let note of notes; let i = index">
-        {{ note }}
-        <button class="delete-note-button" (click)="deleteNote(i)">Eliminar</button>
-      </li>
-    </ul>
-  </div>
-  
-  <button class="hide-show-note-button" (click)="toggleNotesContainer()">Mostrar/ocultar notas</button> <button class="add-note-button" (click)="addNote()">Agregar nota</button>
+<button class="custom-button" (click)="openNotePage()">Notas</button>
+
 
   
   

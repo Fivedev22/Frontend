@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Directive({
   selector: '[phoneMask]'
@@ -9,34 +10,35 @@ export class PhoneMaskDirective {
   @HostListener('input', ['$event'])
   onInput(event: any) {
     let phoneNumber = event.target.value;
-    
-    if (phoneNumber.length === 0) {
-      this.el.nativeElement.value = '';
-      return;
-    }
 
     let formattedNumber = '';
     const hasLeadingZero = phoneNumber.charAt(0) === '0';
 
-    if (phoneNumber.length >= 11) {
+    if (phoneNumber.length >= 10) {
       let areaCode = '';
       let numberPart = '';
 
       if (hasLeadingZero) {
-        areaCode = phoneNumber.slice(1, 3);
-        numberPart = phoneNumber.slice(3);
+        areaCode = phoneNumber.slice(1, 4);
+        numberPart = phoneNumber.slice(4);
       } else {
-        areaCode = phoneNumber.slice(0, 2);
-        numberPart = phoneNumber.slice(2);
+        areaCode = phoneNumber.slice(0, 3);
+        numberPart = phoneNumber.slice(3);
       }
 
-      formattedNumber = `(0${areaCode}) ${numberPart.slice(0, 4)}-${numberPart.slice(4, 8)}`;
+      formattedNumber = `(${areaCode}) ${numberPart.slice(0, 4)}-${numberPart.slice(4, 8)}`;
     } else {
-      if (phoneNumber.charAt(0) !== '0' && phoneNumber.length > 1) {
-        phoneNumber = `0${phoneNumber}`;
-      }
-      
       formattedNumber = phoneNumber;
+    }
+
+    if (phoneNumber.length > 10) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Número de teléfono inválido',
+        text: 'El número de teléfono no debe tener más de 10 dígitos.',
+        confirmButtonText: 'OK'
+      });
+      formattedNumber = ''; // Limpiar el número ingresado
     }
 
     this.el.nativeElement.value = formattedNumber;
