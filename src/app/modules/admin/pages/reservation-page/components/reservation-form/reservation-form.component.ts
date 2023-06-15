@@ -7,9 +7,11 @@ import {
 } from '@angular/core';
 import { IReservationType } from '../../../../../../interfaces/reservation_type.interface';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
@@ -55,6 +57,9 @@ export class ReservationFormComponent implements OnInit {
   propertyDetail = new FormControl();
   clientDetail = new FormControl();
   montoConDescuento!: number;
+  minDate!: Date;
+  
+
 
   actionTitle: string = 'Registrar Reserva';
   actionButton: string = 'Registrar';
@@ -74,10 +79,14 @@ export class ReservationFormComponent implements OnInit {
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
 
-    public dialogRef: MatDialogRef<ReservationFormComponent>
-  ) {}
+    
 
-  minDate = new Date(2023, 0, 1);
+    public dialogRef: MatDialogRef<ReservationFormComponent>
+  ) {
+    this.minDate = new Date();
+    this.minDate.setHours(0, 0, 0, 0);
+  }
+
   maxDate = new Date(2100, 0, 1);
 
   ngOnInit(): void {
@@ -112,6 +121,11 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.get('deposit_amount')?.valueChanges.subscribe(() => {
       this.calcularPrecioReserva();
     });
+
+    this.reservationForm.get('booking_amount')?.valueChanges.subscribe(() => {
+      this.calcularMontoDepositoEstimado();
+    });
+    
 
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
@@ -178,20 +192,46 @@ export class ReservationFormComponent implements OnInit {
             Validators.pattern('^[0-9]+$'),
           ],
         ],
-        check_in_date: ['', [Validators.required]],
-        check_out_date: ['', [Validators.required]],
+        check_in_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
+        check_out_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
         check_in_hour: ['', [Validators.required]],
         check_out_hour: ['', [Validators.required]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
-        deposit_amount: ['', [Validators.required, Validators.min(100)]],
-        estimated_amount_deposit: [100],
-        booking_amount: ['', [Validators.required, Validators.min(0)]],
+        deposit_amount: ['', [Validators.required]],
+        estimated_amount_deposit: [''],
+        booking_amount: ['', [Validators.min(0)]],
       },
-      { validator: this.checkInCheckOutValidator }
+      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount] }
     );
-  }
+  }  
 
+  validateDepositAmount(formGroup: FormGroup) {
+    const depositAmount = formGroup.get('deposit_amount')?.value;
+    const estimatedAmountDeposit = formGroup.get('estimated_amount_deposit')?.value;
+  
+    if (depositAmount && estimatedAmountDeposit && depositAmount < estimatedAmountDeposit) {
+      formGroup.get('deposit_amount')?.setErrors({ 'invalidAmount': true });
+    } else {
+      formGroup.get('deposit_amount')?.setErrors(null);
+    }
+  }
+  
+
+  validateCheckInOutDate(control: AbstractControl) {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(control.value);
+  
+    if (selectedDate < currentDate) {
+      return { pastDate: true };
+    }
+  
+    return null;
+  }
+  
+
+  
   checkInCheckOutValidator(reservationForm: FormGroup) {
     const checkInDate = reservationForm.get('check_in_date')?.value;
     const checkOutDate = reservationForm.get('check_out_date')?.value;
@@ -306,6 +346,15 @@ export class ReservationFormComponent implements OnInit {
     }
     this.reservationForm.patchValue({ booking_amount: precioReserva });
   }
+
+  calcularMontoDepositoEstimado() {
+    const precioReserva = Number(
+      this.reservationForm.controls['starting_price'].value
+    );
+    const montoDepositoEstimado = precioReserva * 0.3;
+    this.reservationForm.patchValue({ estimated_amount_deposit: montoDepositoEstimado });
+  }
+  
 
   sendReservation() {
     if (!this.reservationData) this.createReservation();

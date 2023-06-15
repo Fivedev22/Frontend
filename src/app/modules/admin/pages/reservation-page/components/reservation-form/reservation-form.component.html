@@ -205,6 +205,9 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('check_in_date', 'pastDate')">
+              <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -214,6 +217,8 @@
             <input
               formControlName="check_out_date"
               matInput
+              [min]="minDate"
+              [max]="maxDate"
               [matDatepicker]="picker2"
               [matDatepickerFilter]="dateFilter"
             />
@@ -229,9 +234,12 @@
               *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
             >
               <strong
-                >La fecha de check-out debe ser POSTERIOR a la fecha de
+                >Debe ser POSTERIOR a la fecha de
                 check-in</strong
               >
+            </mat-error>
+            <mat-error align="end" *ngIf="hasError('check_out_date', 'pastDate')">
+              <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
@@ -352,8 +360,8 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('deposit_amount', 'min')"
-              ><strong>Mínimo $ 100 como monto de seña</strong>
+            <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
+              <strong>El monto de la seña debe ser mayor o igual al monto estimado</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
@@ -395,13 +403,6 @@
                 align: 'left'
               }"
             />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('booking_amount', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
             <mat-error align="end" *ngIf="hasError('booking_amount', 'min')"
               ><strong>Mínimo 0 como monto de reserva</strong>
             </mat-error>

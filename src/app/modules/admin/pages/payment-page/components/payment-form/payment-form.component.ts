@@ -112,7 +112,7 @@ export class PaymentFormComponent implements OnInit {
       deposit_amount: reservation.deposit_amount,
       booking_amount: reservation.booking_amount,
       extra_expenses: 0,
-      payment_status: 1,
+      payment_status: 2,
     });
   }
 
