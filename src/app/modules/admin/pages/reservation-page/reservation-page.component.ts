@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { ContractUploadComponent } from './components/contract-upload/contract-upload.component';
 import { PaymentService } from '../../../../services/payment.service';
 import { UnarchiveReservationComponent } from './components/unarchive-reservation/unarchive-reservation.component';
+import { IPayment } from 'src/app/interfaces/payment.interface';
 
 @Component({
   selector: 'app-reservation-page',
@@ -216,18 +217,18 @@ export class ReservationPageComponent implements OnInit {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
-        `Monto de Reserva: $ ${data.starting_price.toLocaleString()}`,
+        `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
         10,
         240
       );
       doc.text(
-        `Cantidad Deposito : $ ${data.deposit_amount.toLocaleString()}`,
+        `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
         10,
         250
       );
       doc.text(`Descuento: % ${data.discount}`, 10, 260);
       doc.text(
-        `Monto a Cobrar: $ ${data.booking_amount.toLocaleString()}`,
+        `Monto a Cobrar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
         270
       );
@@ -259,16 +260,23 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openPaymentForm(reservationId: number) {
-    const dialogRef = this.dialog.open(PaymentFormComponent, {
-      width: '800px',
-      height: '600px',
-      disableClose: true,
-      data: { reservationId: reservationId },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === 'save') {
-        this.router.navigate(['admin/payments']);
+    this.paymentService.findAllPayments().subscribe((payments: IPayment[]) => {
+      const hasPreviousPayment = payments.some(payment => payment.booking.id_booking === reservationId);
+  
+      if (hasPreviousPayment) {
+        Swal.fire('Cobro previo', 'Esta reserva ya tiene un cobro registrado.', 'info');
+      } else {
+        const dialogRef = this.dialog.open(PaymentFormComponent, {
+          width: '800px',
+          disableClose: true,
+          data: { reservationId: reservationId },
+        });
+  
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result === 'save') {
+            this.router.navigate(['admin/payments']);
+          }
+        });
       }
     });
   }

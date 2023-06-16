@@ -137,9 +137,6 @@ export class UnarchivePropertyComponent {
           Provincia: ${property.province.province_name}
           Ciudad: ${property.town}
           Distrito: ${property.district}
-          Alquiler diario: ${property.daily_rent ? 'Sí' : 'No'}
-          Alquiler mensual: ${property.monthly_rent ? 'Sí' : 'No'}
-          Alquiler anual: ${property.annual_rent ? 'Sí' : 'No'}
           Número de habitaciones: ${property.rooms_number}
           Número de baños: ${property.bathrooms_number}
           Internet: ${property.internet ? 'Sí' : 'No'}

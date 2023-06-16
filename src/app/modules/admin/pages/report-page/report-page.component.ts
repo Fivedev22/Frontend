@@ -45,7 +45,7 @@ export class ReportPageComponent implements OnInit {
 
   generateIncomeReport() {
     const incomeByProperty: {
-      [propertyId: string]: { income: number; propertyName: string };
+      [propertyId: string]: { income: string; propertyName: string };
     } = {};
 
     for (const payment of this.payments) {
@@ -77,7 +77,7 @@ export class ReportPageComponent implements OnInit {
 
     for (const payment of this.payments) {
       const paymentType = payment.payment_type.payment_type_name;
-      const amount = payment.payment_amount_total;
+      const amount = parseFloat(payment.payment_amount_total);
 
       if (paymentType) {
         if (incomeByPaymentType[paymentType]) {
@@ -101,7 +101,7 @@ export class ReportPageComponent implements OnInit {
     for (const payment of this.payments) {
       const firstName = payment.client.name;
       const lastName = payment.client.last_name;
-      const amount = payment.payment_amount_total;
+    const amount = parseFloat(payment.payment_amount_total);
 
       if (firstName && lastName) {
         const clientName = `${firstName} ${lastName}`;
@@ -136,7 +136,7 @@ export class ReportPageComponent implements OnInit {
 
       if (checkInDate && checkOutDate) {
         const duration = this.calculateDuration(checkInDate, checkOutDate);
-        const amount = payment.payment_amount_total;
+        const amount = parseFloat(payment.payment_amount_total);
 
         if (duration && durations.hasOwnProperty(duration)) {
           durations[duration] += amount;

@@ -11,6 +11,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -187,9 +188,9 @@ export class ReservationFormComponent implements OnInit {
         pets_number: [
           '',
           [
+            Validators.pattern('^[0-9]+$'),
             Validators.required,
             Validators.min(0),
-            Validators.pattern('^[0-9]+$'),
           ],
         ],
         check_in_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
@@ -202,9 +203,21 @@ export class ReservationFormComponent implements OnInit {
         estimated_amount_deposit: [''],
         booking_amount: ['', [Validators.min(0)]],
       },
-      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount] }
+      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount,  this.starting_priceValidator] }
     );
   }  
+
+  starting_priceValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
+    const startingPrice = formGroup.get('starting_price')?.value;
+    const depositAmount = formGroup.get('deposit_amount')?.value;
+  
+    if (startingPrice !== '' && depositAmount !== '' && depositAmount > startingPrice) {
+      return { depositGreaterThanStartingPrice: true };
+    }
+  
+    return null;
+  }
+  
 
   validateDepositAmount(formGroup: FormGroup) {
     const depositAmount = formGroup.get('deposit_amount')?.value;

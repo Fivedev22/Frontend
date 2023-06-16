@@ -230,69 +230,6 @@
 
         <mat-grid-tile>
           <mat-form-field appearance="outline">
-            <mat-label>Alquiler Diario</mat-label>
-            <mat-select
-              formControlName="daily_rent"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let boolean of booleanOptions"
-                [value]="boolean.id"
-                >{{ boolean.name }}
-              </mat-option>
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('daily_rent', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Alquiler Mensual</mat-label>
-            <mat-select
-              formControlName="monthly_rent"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let boolean of booleanOptions"
-                [value]="boolean.id"
-                >{{ boolean.name }}
-              </mat-option>
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('monthly_rent', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Alquiler Anual</mat-label>
-            <mat-select
-              formControlName="annual_rent"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let boolean of booleanOptions"
-                [value]="boolean.id"
-                >{{ boolean.name }}
-              </mat-option>
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('annual_rent', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
             <mat-label>Cantidad de Habitaciones</mat-label>
             <input
               formControlName="rooms_number"

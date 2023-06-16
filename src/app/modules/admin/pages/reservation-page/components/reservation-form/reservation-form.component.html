@@ -122,7 +122,7 @@
               formControlName="adults_number"
               matInput
               placeholder="Ingrese cantidad"
-              type="number"
+              type="text"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error align="end" *ngIf="hasError('adults_number', 'required')"
@@ -131,8 +131,8 @@
             <mat-error align="end" *ngIf="hasError('adults_number', 'min')"
               ><strong>Minimo 1 adulto</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('adults_number', 'pattern')"
-              ><strong>El dato ingresado es invalido</strong>
+            <mat-error align="end" *ngIf="hasError('adults_number', 'pattern')">
+              <strong>Solo se permiten números</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
@@ -144,14 +144,14 @@
               formControlName="kids_number"
               matInput
               placeholder="Ingrese cantidad"
-              type="number"
+              type="text"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error align=" end" *ngIf="hasError('kids_number', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
             <mat-error align="end" *ngIf="hasError('kids_number', 'pattern')"
-              ><strong>El dato ingresado es invalido</strong>
+              ><strong>Solo se permiten números</strong>
             </mat-error>
             <mat-error align="end" *ngIf="hasError('kids_number', 'min')">
               Minimo <strong>O como valor</strong>
@@ -166,10 +166,10 @@
               formControlName="pets_number"
               matInput
               placeholder="Ingrese cantidad"
-              type="number"
+              type="text"
             />
             <mat-error align="end" *ngIf="hasError('pets_number', 'pattern')"
-              ><strong>El dato ingresado es invalido</strong>
+              ><strong>Solo se permiten números</strong>
             </mat-error>
             <mat-error align="end" *ngIf="hasError('pets_number', 'min')"
               ><strong>Minimo O como valor</strong>
@@ -207,7 +207,7 @@
             </mat-error>
             <mat-error align="end" *ngIf="hasError('check_in_date', 'pastDate')">
               <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
-            </mat-error>
+            </mat-error>          
           </mat-form-field>
         </mat-grid-tile>
 
@@ -361,7 +361,10 @@
               <strong>Campo requerido</strong>
             </mat-error>
             <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
-              <strong>El monto de la seña debe ser mayor o igual al monto estimado</strong>
+              <strong>El monto debe ser mayor o igual al monto estimado</strong>
+            </mat-error>
+            <mat-error align="end" *ngIf="hasError('deposit_amount', 'depositGreaterThanStartingPrice')">
+              <strong>El monto no puede ser mayor al monto de reserva</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>

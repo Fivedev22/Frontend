@@ -18,10 +18,10 @@ export interface IReservation {
     check_out_date: Date;
     check_in_hour: string;
     check_out_hour: string;
-    starting_price: number;
-    discount?: number;
-    deposit_amount: number;
-    estimated_amount_deposit: number;
-    booking_amount: number;
+    starting_price: string;
+    discount?: string;
+    deposit_amount: string;
+    estimated_amount_deposit: string;
+    booking_amount: string;
     is_active?: boolean;
 }

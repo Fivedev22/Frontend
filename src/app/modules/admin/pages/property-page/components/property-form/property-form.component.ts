@@ -139,9 +139,6 @@ export class PropertyFormComponent implements OnInit {
           Validators.pattern('^[a-zA-ZáéíóúñÁÉÍÓÚÑ ]+$'),
         ],
       ],
-      daily_rent: ['', [Validators.required]],
-      monthly_rent: ['', [Validators.required]],
-      annual_rent: ['', [Validators.required]],
       rooms_number: [
         '',
         [
@@ -187,9 +184,6 @@ export class PropertyFormComponent implements OnInit {
     this.propertyForm.controls['province'].setValue(data.province.id_province);
     this.propertyForm.controls['town'].setValue(data.town);
     this.propertyForm.controls['district'].setValue(data.district);
-    this.propertyForm.controls['daily_rent'].setValue(data.daily_rent);
-    this.propertyForm.controls['monthly_rent'].setValue(data.monthly_rent);
-    this.propertyForm.controls['annual_rent'].setValue(data.annual_rent);
     this.propertyForm.controls['rooms_number'].setValue(data.rooms_number);
     this.propertyForm.controls['bathrooms_number'].setValue(
       data.bathrooms_number

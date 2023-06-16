@@ -15,9 +15,6 @@ export interface IProperty {
     province: IProvince;
     town: string;
     district: string;
-    daily_rent: boolean;
-    monthly_rent: boolean;
-    annual_rent: boolean;
     rooms_number: number;
     bathrooms_number: number;
     internet: boolean;

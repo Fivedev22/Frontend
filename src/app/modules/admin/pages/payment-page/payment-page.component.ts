@@ -194,33 +194,34 @@ export class PaymentPageComponent {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
-        `Monto de Reserva: $ ${data.booking.starting_price.toLocaleString()}`,
+        `Monto de Reserva: $ ${parseFloat(data.booking.starting_price).toLocaleString()}`,
         10,
         190
       );
       doc.text(
-        `Cantidad deposito : $ ${data.booking.deposit_amount.toLocaleString()}`,
+        `Cantidad deposito : $ ${parseFloat(data.booking.deposit_amount).toLocaleString()}`,
         10,
         210
       );
       doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
       doc.text(
-        `Monto a Cobrar: $ ${data.booking.booking_amount.toLocaleString()}`,
+        `Monto a Cobrar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
         10,
         220
       );
+      const formattedExpenses = parseFloat(data.extra_expenses ?? "0").toLocaleString();
       doc.text(
-        `Gastos adicionales: $ ${data.extra_expenses?.toLocaleString()}`,
+        `Gastos adicionales: $ ${formattedExpenses}`,
         10,
         230
       );
       doc.text(
-        `Subtotal: $ ${data.payment_amount_subtotal.toLocaleString()}`,
+        `Subtotal: $ ${parseFloat(data.payment_amount_subtotal).toLocaleString()}`,
         10,
         240
       );
       doc.text(
-        `Total: $ ${data.payment_amount_total.toLocaleString()}`,
+        `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
         10,
         250
       );

@@ -266,12 +266,12 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 7
           );
           doc.text(
-            `Monto de Reserva: $ ${payment.booking_starting_price.toLocaleString()}`,
+            `Monto de Reserva: $ ${parseFloat(payment.booking_starting_price).toLocaleString()}`,
             20,
             startY + lineHeight * 8
           );
           doc.text(
-            `Monto deposito: $ ${payment.deposit_amount.toLocaleString()}`,
+            `Monto deposito: $ ${parseFloat(payment.deposit_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 9
           );
@@ -281,7 +281,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 10
           );
           doc.text(
-            `Monto a Cobrar: $ ${payment.booking_amount.toLocaleString()}`,
+            `Monto a Cobrar: $ ${parseFloat(payment.booking_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 11
           );
@@ -294,7 +294,7 @@ export class ClientPageComponent implements OnInit {
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
-            `Gastos adicionales: $ ${payment.extra_expenses.toLocaleString()}`,
+            `Gastos adicionales: $ ${parseFloat(payment.extra_expenses).toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
@@ -307,12 +307,12 @@ export class ClientPageComponent implements OnInit {
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
-            `Subtotal: $ ${payment.payment_amount_subtotal.toLocaleString()}`,
+            `Subtotal: $ ${parseFloat(payment.payment_amount_subtotal).toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );
           doc.text(
-            `Total: $ ${payment.payment_amount_total.toLocaleString()}`,
+            `Total: $ ${parseFloat(payment.payment_amount_total).toLocaleString()}`,
             20,
             startY + lineHeight * 18
           );
@@ -373,19 +373,18 @@ export class ClientPageComponent implements OnInit {
         addPageWithBackgroundColor();
         const logo = new Image();
         logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
-        doc.addImage(logo, 'PNG', 10, 10, 30, 30);
-        doc.setFont('helvetica', 'bold');
+        doc.addImage(logo, 'PNG', 10, 10, 30, 30);doc.setFont('helvetica', 'bold');
         doc.setFontSize(16);
-        doc.text('Apartamentos Anahi', 50, 20);
+        doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
-        doc.text('El Benteveo 990', 50, 30);
+        doc.text('El Benteveo 990', 10, 30);
         doc.text(
-          'Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
-          50,
+          'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
+          10,
           40
         );
-        doc.text('Telefono: 0 (3541) 44-8820', 50, 50);
-        doc.text('Email: anahiapartamentos@gmail.com', 50, 60);
+        doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
+        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);        
         doc.setLineWidth(0.5);
         doc.line(10, 70, 200, 70);
         doc.setFont('helvetica', 'bold');
@@ -474,7 +473,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 13
           );
           doc.text(
-            `Monto de reserva: $ ${booking.starting_price.toLocaleString()}`,
+            `Monto de reserva: $ ${parseFloat(booking.starting_price).toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
@@ -484,12 +483,12 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 15
           );
           doc.text(
-            `Monto deposito: $ ${booking.deposit_amount.toLocaleString()}`,
+            `Monto deposito: $ ${parseFloat(booking.deposit_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 16
           );
           doc.text(
-            `Monto a cobrar: $ ${booking.booking_amount.toLocaleString()}`,
+            `Monto a cobrar: $ ${parseFloat(booking.booking_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );
