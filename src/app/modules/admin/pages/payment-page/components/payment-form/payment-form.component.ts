@@ -113,8 +113,10 @@ export class PaymentFormComponent implements OnInit {
       booking_amount: reservation.booking_amount,
       extra_expenses: 0,
       payment_status: 2,
-    });
+    });    
   }
+
+  
 
   initForm(): FormGroup {
     var dateDay = new Date().toLocaleDateString();

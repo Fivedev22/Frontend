@@ -33,6 +33,7 @@ import { ClientFormComponent } from '../../../client-page/components/client-form
 import { Observable } from 'rxjs';
 import { TableCxrComponent } from 'src/app/global/components/table-cxr/table-cxr.component';
 import { TablePxrComponent } from 'src/app/global/components/table-pxr/table-pxr.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reservation-form',
@@ -203,21 +204,9 @@ export class ReservationFormComponent implements OnInit {
         estimated_amount_deposit: [''],
         booking_amount: ['', [Validators.min(0)]],
       },
-      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount,  this.starting_priceValidator] }
+      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount] }
     );
   }  
-
-  starting_priceValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
-    const startingPrice = formGroup.get('starting_price')?.value;
-    const depositAmount = formGroup.get('deposit_amount')?.value;
-  
-    if (startingPrice !== '' && depositAmount !== '' && depositAmount > startingPrice) {
-      return { depositGreaterThanStartingPrice: true };
-    }
-  
-    return null;
-  }
-  
 
   validateDepositAmount(formGroup: FormGroup) {
     const depositAmount = formGroup.get('deposit_amount')?.value;
@@ -464,9 +453,16 @@ export class ReservationFormComponent implements OnInit {
           this.reservationForm.controls['client'].setValue(
             selectedClient.id_client
           );
+        } else {
+          Swal.fire({
+            title: 'Información',
+            text: 'Debes seleccionar un cliente.',
+            icon: 'info',
+          });
         }
       });
   }
+  
   openPropertySearch() {
     this.dialog
       .open(TablePxrComponent, {
@@ -481,6 +477,12 @@ export class ReservationFormComponent implements OnInit {
           this.reservationForm.controls['property'].setValue(
             selectedProperty.id_property
           );
+        } else {
+          Swal.fire({
+            title: 'Información',
+            text: 'Debes seleccionar un inmueble.',
+            icon: 'info',
+          });
         }
       });
   }
