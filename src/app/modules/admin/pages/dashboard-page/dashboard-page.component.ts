@@ -12,7 +12,7 @@ import { IReservation } from '../../../../interfaces/reservation.interface';
 import { ReservationService } from '../../../../services/reservation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { NotePageComponent } from './note-page/note-page.component';
+import { NotePageComponent } from '../../components/note-page/note-page.component';
 
 // bootstrap
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
