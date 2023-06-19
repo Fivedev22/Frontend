@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Note } from 'src/app/interfaces/note.inteface';
 import { NoteService } from 'src/app/services/note.service';
 import Swal from 'sweetalert2';
@@ -10,47 +11,48 @@ import Swal from 'sweetalert2';
 })
 export class NotePageComponent implements OnInit {
   notes: Note[] = [];
-  showNotes = true;
+  noteForm!: FormGroup;
 
-  constructor(private noteService: NoteService) {}
+  constructor(
+    private noteService: NoteService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
+    this.noteForm = this.initForm();
     this.loadNotes();
   }
 
   addNote() {
-    const newNote = prompt('Ingrese una nueva nota');
-    if (newNote && newNote.trim() !== '') {
-      const note: Partial<Note> = {
-        nota: newNote.trim(),
-      };
-      this.noteService.create(note as Note).subscribe((createdNote) => {
-        this.notes.push(createdNote);
-        Swal.fire({
-          icon: 'success',
-          text: 'Nota agregada exitosamente',
-          timer: 2000,
-          showConfirmButton: false,
-        });
+    if (this.noteForm.valid) {
+      console.log(this.noteForm.value);
+      this.noteService.create(this.noteForm.value).subscribe({
+        next: (res) => {
+          Swal.fire({
+            icon: 'success',
+            text: 'Nota agregada',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            this.loadNotes();
+            this.noteForm.reset();
+          });
+        },
       });
     }
   }
 
-  deleteNote(index: number) {
-    const noteId = this.notes[index].id;
+  deleteNote(noteId: number) {
     this.noteService.delete(noteId).subscribe(() => {
-      this.notes.splice(index, 1);
       Swal.fire({
         icon: 'success',
         text: 'Nota eliminada exitosamente',
         timer: 2000,
         showConfirmButton: false,
+      }).then(() => {
+        this.loadNotes();
       });
     });
-  }
-
-  toggleNotesContainer() {
-    this.showNotes = !this.showNotes;
   }
 
   loadNotes() {
@@ -81,4 +83,13 @@ export class NotePageComponent implements OnInit {
       });
     }
   }
+
+  initForm(): FormGroup {
+    return this.formBuilder.group({
+      nota: ['', Validators.required],
+    });
+  }
+  public hasError = (controlName: string, errorName: string) => {
+    return this.noteForm.controls[controlName].hasError(errorName);
+  };
 }

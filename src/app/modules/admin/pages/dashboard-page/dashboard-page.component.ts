@@ -242,9 +242,7 @@ export class DashboardPageComponent implements AfterViewInit {
   openNotePage() {
     this.dialogRef = this.dialog.open(NotePageComponent, {
       width: '800px',
-      height: '800px',
+      height: '600px',
     });
-
-    this.dialogRef.afterClosed().subscribe(() => {});
   }
 }
