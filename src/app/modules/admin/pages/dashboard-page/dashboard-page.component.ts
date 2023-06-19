@@ -14,6 +14,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotePageComponent } from './note-page/note-page.component';
 
+// bootstrap
+import bootstrap5Plugin from '@fullcalendar/bootstrap5';
+
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -48,7 +51,8 @@ export class DashboardPageComponent implements AfterViewInit {
 
   initializeCalendar() {
     const options: CalendarOptions = {
-      plugins: [dayGridPlugin],
+      plugins: [dayGridPlugin, bootstrap5Plugin ],
+      themeSystem: 'bootstrap5',
       locale: esLocale,
       headerToolbar: {
         left: 'prev,next today',
