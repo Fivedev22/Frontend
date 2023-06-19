@@ -34,7 +34,6 @@ export class DashboardPageComponent implements AfterViewInit {
   showNotes = false;
   notificationShown: boolean = false;
 
-
   constructor(
     private reservationService: ReservationService,
     private snackBar: MatSnackBar,
@@ -51,7 +50,7 @@ export class DashboardPageComponent implements AfterViewInit {
 
   initializeCalendar() {
     const options: CalendarOptions = {
-      plugins: [dayGridPlugin, bootstrap5Plugin ],
+      plugins: [dayGridPlugin, bootstrap5Plugin],
       themeSystem: 'bootstrap5',
       locale: esLocale,
       headerToolbar: {
@@ -232,25 +231,20 @@ export class DashboardPageComponent implements AfterViewInit {
     const notificationShown = localStorage.getItem('notificationShown');
     if (!notificationShown) {
       this.snackBar.open(message, 'Cerrar', {
-        duration: 86400000,
+        duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top',
       });
       localStorage.setItem('notificationShown', 'true');
     }
   }
-  
 
-  
   openNotePage() {
     this.dialogRef = this.dialog.open(NotePageComponent, {
-      width: '500px',
-      height: '500px',
+      width: '800px',
+      height: '800px',
     });
-  
-    this.dialogRef.afterClosed().subscribe(() => {
-    });
+
+    this.dialogRef.afterClosed().subscribe(() => {});
   }
-  
-  
 }
