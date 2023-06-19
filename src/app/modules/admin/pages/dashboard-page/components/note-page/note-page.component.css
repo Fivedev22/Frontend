@@ -1,0 +1,35 @@
+.wrapper-dialog {
+  height: 100%;
+  max-width: 100%;
+  margin: 16px;
+}
+
+.content-title-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+
+.content-footer-dialog {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 0px;
+  gap: 20px;
+}
+
+.dialog-title {
+  font-size: 25px;
+}
+
+.dialog-close {
+  cursor: pointer;
+}
+
+.content-body-dialog {
+  width: 100%;
+  padding: 20px 0px;
+}
