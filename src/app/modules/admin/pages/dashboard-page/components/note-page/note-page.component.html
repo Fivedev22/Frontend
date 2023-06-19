@@ -1,6 +1,10 @@
 <!-- <div class="card-container" *ngIf="showNotes">
   <h2></h2>
 
+<div class="card-container" *ngIf="showNotes">
+  <h2>Notas/Recordatorios</h2>
+
+
   <div *ngFor="let note of notes; let i = index">
     <mat-card class="mat-elevation-z4">
       <mat-card-content>
@@ -11,6 +15,7 @@
     </mat-card>
   </div>
 </div>
+
 
 -->
 <div class="wrapper-dialog">
@@ -26,3 +31,9 @@
   </div>
   <div class="content-footer-dialog"></div>
 </div>
+
+<button mat-raised-button (click)="addNote()">Agregar Nota</button>
+
+<button mat-raised-button (click)="toggleNotesContainer()">
+  Mostrar/ocultar notas
+</button>
