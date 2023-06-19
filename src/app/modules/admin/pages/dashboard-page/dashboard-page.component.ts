@@ -53,7 +53,7 @@ export class DashboardPageComponent implements AfterViewInit {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,dayGridWeek,dayGridDay,dateTime',
+        right: 'dayGridMonth,dayGridWeek,dayGridDay',
       },
       customButtons: {
         dateTime: {

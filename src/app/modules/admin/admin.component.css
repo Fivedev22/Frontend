@@ -12,6 +12,7 @@
 
 .main-content {
   width: 100%;
+  height: calc(100% - 61px);
   padding: 30px;
   border-radius: 15px 0px 0px 0px;
   border: 1px solid #dadada;
