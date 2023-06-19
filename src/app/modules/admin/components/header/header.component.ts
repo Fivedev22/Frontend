@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, Renderer2 } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  Renderer2,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,18 +15,16 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
-  username!: any
+  username!: any;
 
-  constructor(private router: Router, private renderer: Renderer2) { }
+  constructor(private router: Router, private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    this.username = localStorage.getItem('name')
-
-
+    this.username = localStorage.getItem('name');
   }
 
   logOut() {
-    localStorage.removeItem("anahi.accesstoken");
+    localStorage.removeItem('anahi.accesstoken');
     this.router.navigate(['/auth']);
   }
 
@@ -29,6 +33,6 @@ export class HeaderComponent implements OnInit {
   }
   goToWebPage() {
     const externalUrl = 'https://anahiapartamentosweb.vercel.app/';
-    window.location.href = externalUrl;
+    window.open(externalUrl, '_blank');
   }
 }
