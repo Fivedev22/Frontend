@@ -57,20 +57,20 @@
 }
 
 .active {
-  background-color: #c2e7ff;
+  background-color: #0D6EFD;
   color: #fff;
   border-radius: 15px 0px 15px 0px;
 }
 
 .active:hover {
-  background: #c2e7ff;
+  background: #0D6EFD;
   border-radius: 15px 0px 15px 0px;
 }
 
 .active .items-container_name {
-  color: #000000;
+  color: #fff;
 }
 
 .active .items-container_icon {
-  color: #000000;
+  color: #fff;
 }
