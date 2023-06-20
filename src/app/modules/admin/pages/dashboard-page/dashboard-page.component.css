@@ -7,8 +7,8 @@
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-  width: 3rem;
-  height: 3rem;
+  width: 3.5rem;
+  height: 3.5rem;
   /* Estilos 3D */
   border: none;
   border-radius: 999px;
@@ -24,9 +24,5 @@
 }
 
 
-/* CUSTOM BUTTONS */
-.fc-button-group button{
-  background-color: yellow !important;
-}
 
 
