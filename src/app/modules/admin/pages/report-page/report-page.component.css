@@ -1,0 +1,64 @@
+.report-main {
+  height: 100%;
+  background-color: #ffffff;
+}
+
+.report-section-head {
+  display: flex;
+  padding: 0px 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-section-body {
+  padding: 20px 10px;
+}
+
+.report-section-table {
+  table-layout: auto;
+  width: 100%;
+}
+
+tr {
+  display: flex;
+  align-items: center;
+  height: 42px !important;
+}
+
+th {
+  text-align: left;
+  padding: 8px;
+  flex: 1;
+  font-size: 15px;
+  color: #898989;
+}
+
+td {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+  flex: 1;
+}
+
+.cpc-tableTitle {
+  font-size: 16px;
+  color: #898989;
+}
+
+.mat-row {
+  width: 100%;
+}
+
+.mat-cell {
+  width: 100% !important;
+}
+
+.report-title {
+  font-size: 20px;
+  padding: 20px 0px;
+}
