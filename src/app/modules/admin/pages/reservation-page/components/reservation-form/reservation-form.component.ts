@@ -196,8 +196,8 @@ export class ReservationFormComponent implements OnInit {
         ],
         check_in_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
         check_out_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
-        check_in_hour: ['', [Validators.required]],
-        check_out_hour: ['', [Validators.required]],
+        check_in_hour: ['', [Validators.required, Validators.pattern('^1[4-9]|20:00$')]],
+        check_out_hour: ['', [Validators.required,Validators.pattern('^0[8-9]|10:00$')]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -207,6 +207,7 @@ export class ReservationFormComponent implements OnInit {
       { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount] }
     );
   }  
+
 
   validateDepositAmount(formGroup: FormGroup) {
     const depositAmount = formGroup.get('deposit_amount')?.value;
@@ -346,6 +347,7 @@ export class ReservationFormComponent implements OnInit {
     if (precioReserva < 0) {
       precioReserva = 0;
     }
+
     this.reservationForm.patchValue({ booking_amount: precioReserva });
   }
 

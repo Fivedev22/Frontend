@@ -51,7 +51,7 @@ export class ReportPageComponent implements OnInit {
     for (const payment of this.payments) {
       const propertyId = payment.property.reference_number;
       const propertyName = payment.property.property_name;
-      const amount = payment.payment_amount_total;
+      const amount = payment.booking_amount;
 
       if (propertyId) {
         if (incomeByProperty[propertyId]) {

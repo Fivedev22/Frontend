@@ -121,6 +121,13 @@
                 <mat-icon>search</mat-icon>
               </button>
             </div>
+            <mat-hint align="end">Campo requerido</mat-hint>
+            <mat-error
+              align=" end"
+              *ngIf="hasError('property', 'required')"
+            >
+              <strong>Campo requerido</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -270,6 +277,9 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
+              <strong>Debe ser entre las 14:00 y las 20:00</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -290,6 +300,9 @@
               *ngIf="hasError('check_out_hour', 'required')"
             >
               <strong>Campo requerido</strong>
+            </mat-error>
+            <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
+              <strong>Debe ser entre las 08:00 y las 10:00</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
@@ -362,15 +375,14 @@
               }"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('deposit_amount', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
             <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
               <strong>El monto debe ser mayor o igual al monto estimado</strong>
             </mat-error>
+            <mat-error
+            align=" end"
+            *ngIf="hasError('deposit_amount', 'required')">
+            <strong>Campo requerido</strong>
+          </mat-error>   
           </mat-form-field>
         </mat-grid-tile>
 
@@ -390,6 +402,7 @@
                 decimal: ',',
                 align: 'left'
               }"
+              [value]=""
             />
           </mat-form-field>
         </mat-grid-tile>

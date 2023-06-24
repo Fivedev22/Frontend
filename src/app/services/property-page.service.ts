@@ -109,4 +109,8 @@ export class PropertyService {
       'http://localhost:3000/property/get-last-number/:'
     );
   }
+
+  updateActivityStatus(): Observable<any> {
+    return this.http.post<any>(`${this.PROPERTY_URL}update-activity-status`, null);
+  }
 }

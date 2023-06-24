@@ -11,8 +11,6 @@ import { ImageUploadDialogComponent } from './components/image-upload-dialog/ima
 import { UploadInventoryComponent } from './components/upload-inventory/upload-inventory.component';
 import { ReservationService } from '../../../../services/reservation.service';
 import { UnarchivePropertyComponent } from './components/unarchive-property/unarchive-property.component';
-import { IReservation } from 'src/app/interfaces/reservation.interface';
-import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-property-page',
@@ -51,23 +49,17 @@ export class PropertyPageComponent implements OnInit {
 
   findAllProperties() {
     this.propertyService.findAllProperties().subscribe((data) => {
-      data.forEach((property) => {
-        if (property.id_property !== undefined) {
-          this.hasReservations(property.id_property).subscribe((hasReservations) => {
-            if (hasReservations) {
-              property.activity_status.id = this.activityStatusId;
-            }
-          });
-        }
-      });
-  
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.updateActivityStatus();
     });
   }
-  
-  
+
+  updateActivityStatus() {
+    return this.propertyService.updateActivityStatus();
+  }
+
 
   archiveProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({
@@ -209,16 +201,5 @@ export class PropertyPageComponent implements OnInit {
       }
     });
   }
-
-  hasReservations(id: number): Observable<boolean> {
-    return this.reservationService.findAllReservations().pipe(
-      map((reservations: IReservation[]) => {
-        return reservations.some((reservation) => reservation.property.id_property === id);
-      })
-    );
-  }
-  
  
-  
-  
 }
