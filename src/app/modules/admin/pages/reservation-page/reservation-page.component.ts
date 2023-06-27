@@ -268,6 +268,7 @@ export class ReservationPageComponent implements OnInit {
       } else {
         const dialogRef = this.dialog.open(PaymentFormComponent, {
           width: '800px',
+          height: '600px',
           disableClose: true,
           data: { reservationId: reservationId },
         });
