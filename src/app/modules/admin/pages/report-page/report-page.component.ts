@@ -45,14 +45,16 @@ export class ReportPageComponent implements OnInit {
 
   generateIncomeReport() {
     const incomeByProperty: {
-      [propertyId: string]: { income: string; propertyName: string };
+      [propertyId: string]: { income: number; propertyName: string };
     } = {};
-
+  
     for (const payment of this.payments) {
       const propertyId = payment.property.reference_number;
       const propertyName = payment.property.property_name;
-      const amount = payment.booking_amount;
-
+      const initialPrice = parseFloat(payment.booking.starting_price);
+      const discount = parseFloat(payment.booking_discount || '0');
+      const amount = initialPrice - discount;
+  
       if (propertyId) {
         if (incomeByProperty[propertyId]) {
           incomeByProperty[propertyId].income += amount;
@@ -61,7 +63,7 @@ export class ReportPageComponent implements OnInit {
         }
       }
     }
-
+  
     const incomeReportData = Object.entries(incomeByProperty).map(
       ([propertyId, { income, propertyName }]) => ({
         propertyId,
@@ -71,6 +73,7 @@ export class ReportPageComponent implements OnInit {
     );
     this.incomeReport = new MatTableDataSource(incomeReportData) || [];
   }
+  
 
   generateIncomeByPaymentTypeReport() {
     const incomeByPaymentType: { [paymentType: string]: number } = {};
@@ -126,7 +129,7 @@ export class ReportPageComponent implements OnInit {
       'Menos de una semana': 0,
       '1 semana': 0,
       '2 semanas': 0,
-      'Más de 2 semanas': 0,
+      'MÃ¡s de 2 semanas': 0,
       '1 mes': 0,
     };
 
