@@ -184,8 +184,8 @@ export class ClientPageComponent implements OnInit {
 
         const doc = new jsPDF();
         const addPageWithBackgroundColor = () => {
-          const lightGreenColor = '#C1FFC1';
-          doc.setFillColor(lightGreenColor);
+          const lightColor = '#FFFFFF';
+          doc.setFillColor(lightColor);
           doc.rect(
             0,
             0,
@@ -198,7 +198,7 @@ export class ClientPageComponent implements OnInit {
         const logo = new Image();
         logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
         doc.addImage(logo, 'PNG', 10, 10, 30, 30);
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(16);
         doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
@@ -219,8 +219,8 @@ export class ClientPageComponent implements OnInit {
         const pageWidth = doc.internal.pageSize.getWidth();
         const titleX = (pageWidth - titleWidth) / 2;
         doc.text(title, titleX, 80);
-        doc.setFont('arial', 'bolditalic');
-        doc.setFontSize(15);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
         let startY = 100;
         const lineHeight = 10;
         payments.forEach((payment, index) => {
@@ -229,10 +229,10 @@ export class ClientPageComponent implements OnInit {
             addPageWithBackgroundColor();
             startY = 10;
           }
-          doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(14);
           doc.text(`Cobro ${index + 1}:`, 10, startY);
-          doc.setFont('arial', 'bolditalic');
+          doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Informacion de cobro:', 20, startY + lineHeight);
           doc.setFont('helvetica', 'normal');
@@ -250,7 +250,7 @@ export class ClientPageComponent implements OnInit {
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
           doc.line(20, startY + lineHeight * 4, 190, startY + lineHeight * 4);
-          doc.setFont('arial', 'bolditalic');
+          doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Detalles Cobro:', 20, startY + lineHeight * 5);
           doc.setFont('helvetica', 'normal');
@@ -266,12 +266,16 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 7
           );
           doc.text(
-            `Monto de Reserva: $ ${parseFloat(payment.booking_starting_price).toLocaleString()}`,
+            `Monto de Reserva: $ ${parseFloat(
+              payment.booking_starting_price
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 8
           );
           doc.text(
-            `Monto deposito: $ ${parseFloat(payment.deposit_amount).toLocaleString()}`,
+            `Monto deposito: $ ${parseFloat(
+              payment.deposit_amount
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 9
           );
@@ -281,38 +285,46 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 10
           );
           doc.text(
-            `Monto a Pagar: $ ${parseFloat(payment.booking_amount).toLocaleString()}`,
+            `Monto a Pagar: $ ${parseFloat(
+              payment.booking_amount
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 11
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
           doc.line(20, startY + lineHeight * 12, 190, startY + lineHeight * 12);
-          doc.setFont('arial', 'bolditalic');
+          doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Gastos Extras:', 20, startY + lineHeight * 13);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
-            `Gastos adicionales: $ ${parseFloat(payment.extra_expenses).toLocaleString()}`,
+            `Gastos adicionales: $ ${parseFloat(
+              payment.extra_expenses
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
           doc.line(20, startY + lineHeight * 15, 190, startY + lineHeight * 15);
-          doc.setFont('arial', 'bolditalic');
+          doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Importe Final:', 20, startY + lineHeight * 16);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
-            `Subtotal: $ ${parseFloat(payment.payment_amount_subtotal).toLocaleString()}`,
+            `Subtotal: $ ${parseFloat(
+              payment.payment_amount_subtotal
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );
           doc.text(
-            `Total: $ ${parseFloat(payment.payment_amount_total).toLocaleString()}`,
+            `Total: $ ${parseFloat(
+              payment.payment_amount_total
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 18
           );
@@ -360,8 +372,8 @@ export class ClientPageComponent implements OnInit {
 
         const doc = new jsPDF();
         const addPageWithBackgroundColor = () => {
-          const lightGreenColor = '#C1FFC1';
-          doc.setFillColor(lightGreenColor);
+          const lightColor = '#FFFFFF';
+          doc.setFillColor(lightColor);
           doc.rect(
             0,
             0,
@@ -373,7 +385,8 @@ export class ClientPageComponent implements OnInit {
         addPageWithBackgroundColor();
         const logo = new Image();
         logo.src = 'https://dummyimage.com/100x100/000/fff&text=Logo';
-        doc.addImage(logo, 'PNG', 10, 10, 30, 30);doc.setFont('helvetica', 'bold');
+        doc.addImage(logo, 'PNG', 10, 10, 30, 30);
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(16);
         doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
@@ -384,7 +397,7 @@ export class ClientPageComponent implements OnInit {
           40
         );
         doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
-        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);        
+        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
         doc.setLineWidth(0.5);
         doc.line(10, 70, 200, 70);
         doc.setFont('helvetica', 'bold');
@@ -394,8 +407,8 @@ export class ClientPageComponent implements OnInit {
         const pageWidth = doc.internal.pageSize.getWidth();
         const titleX = (pageWidth - titleWidth) / 2;
         doc.text(title, titleX, 80);
-        doc.setFont('arial', 'bolditalic');
-        doc.setFontSize(15);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
         let startY = 100;
         const lineHeight = 10;
         bookings.forEach((booking, index) => {
@@ -404,11 +417,11 @@ export class ClientPageComponent implements OnInit {
             addPageWithBackgroundColor();
             startY = 10;
           }
-          doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(14);
           doc.text(`Reserva ${index + 1}:`, 10, startY);
-          doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(14);
           doc.text('Informacion de reserva:', 20, startY + lineHeight);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
@@ -430,8 +443,8 @@ export class ClientPageComponent implements OnInit {
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
           doc.line(20, startY + lineHeight * 5, 190, startY + lineHeight * 5);
-          doc.setFont('arial', 'bolditalic');
-          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(14);
           doc.text('Detalles de la reserva:', 20, startY + lineHeight * 6);
 
           doc.setFont('helvetica', 'normal');
@@ -473,7 +486,9 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 13
           );
           doc.text(
-            `Monto de reserva: $ ${parseFloat(booking.starting_price).toLocaleString()}`,
+            `Monto de reserva: $ ${parseFloat(
+              booking.starting_price
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 14
           );
@@ -483,12 +498,16 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 15
           );
           doc.text(
-            `Monto deposito: $ ${parseFloat(booking.deposit_amount).toLocaleString()}`,
+            `Monto deposito: $ ${parseFloat(
+              booking.deposit_amount
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 16
           );
           doc.text(
-            `Monto a pagar: $ ${parseFloat(booking.booking_amount).toLocaleString()}`,
+            `Monto a pagar: $ ${parseFloat(
+              booking.booking_amount
+            ).toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );
