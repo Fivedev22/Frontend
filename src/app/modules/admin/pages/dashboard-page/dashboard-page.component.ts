@@ -146,19 +146,24 @@ export class DashboardPageComponent implements AfterViewInit {
 
   handleEventClick(eventClickArg: EventClickArg) {
     const eventId = +eventClickArg.event.id;
-    this.reservationService.findOneReservation(eventId).subscribe(
-      (reservation: IReservation) => {
+    this.reservationService
+      .findOneReservation(eventId)
+      .subscribe((reservation: IReservation) => {
         const popupWindow = window.open('', '_blank', 'width=600,height=400');
         popupWindow?.document.write(`
         <html>
         <head>
           <style>
             body {
-              background-color: #c8e6c9; /* Color de fondo verde manzana claro */
-              font-family: Georgia, 'Times New Roman', Times, serif; /* Fuente predeterminada */
+              font-family: helvetica;
             }
-            h2, p {
-              font-style: italic; /* Fuente en cursiva */
+            h2{
+              font-size: 16px;
+              font-style: normal; 
+            } 
+            p {
+              font-size: 14px;
+              font-style: normal; 
             }
           </style>
         </head>
@@ -181,11 +186,7 @@ export class DashboardPageComponent implements AfterViewInit {
         </body>
       </html>
         `);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      });
   }
 
   showReservationDetails() {
