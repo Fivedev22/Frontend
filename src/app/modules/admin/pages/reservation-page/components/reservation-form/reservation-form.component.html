@@ -265,8 +265,8 @@
               matInput
               placeholder=""
               type="time"
-              min="14:00"
-              max="20:00"
+              min="00:00"
+              max="24:00"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error
@@ -275,9 +275,9 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
+            <!-- <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
               <strong>Debe ser entre las 14:00 y las 20:00</strong>
-            </mat-error>
+            </mat-error> -->
           </mat-form-field>
         </mat-grid-tile>
 
@@ -289,8 +289,8 @@
               matInput
               placeholder=""
               type="time"
-              min="08:00"
-              max="10:00"
+              min="00:00"
+              max="24:00"
             />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error
@@ -299,12 +299,9 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
-            <mat-error
-              align="end"
-              *ngIf="hasError('check_out_hour', 'pattern')"
-            >
+            <!-- <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
               <strong>Debe ser entre las 08:00 y las 10:00</strong>
-            </mat-error>
+            </mat-error> -->
           </mat-form-field>
         </mat-grid-tile>
 
