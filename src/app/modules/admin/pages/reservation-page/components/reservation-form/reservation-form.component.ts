@@ -379,11 +379,19 @@ export class ReservationFormComponent implements OnInit {
       this.reservationForm.controls['deposit_amount'].value
     );
     let precioReserva = this.montoConDescuento - montoSenia;
-    if (precioReserva <= 0) {
-      precioReserva = this.montoConDescuento;
-      this.reservationForm.patchValue({ deposit_amount: precioReserva });
+    // if (precioReserva <= 0) {
+    //   precioReserva = this.montoConDescuento;
+    //   this.reservationForm.patchValue({ deposit_amount: precioReserva });
+    // }
+    if (montoSenia > this.montoConDescuento) {
+      this.reservationForm.patchValue({ deposit_amount: this.montoConDescuento });
     }
 
+    if (precioReserva <= 0) {
+        precioReserva = 0;
+        this.reservationForm.patchValue({ deposit_amount: precioReserva });
+    }
+      
     if (montoSenia > montoInicial) {
       this.reservationForm.patchValue({ deposit_amount: precioReserva });
     }
