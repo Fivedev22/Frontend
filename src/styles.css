@@ -1,6 +1,54 @@
 html,
 body {
-    height: 100%;
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.fc-prev-button,
+.fc-next-button {
+  border: none;
+  background-color: transparent !important;
+}
+/* .bi, */
+.bi-chevron-right,
+.bi-chevron-left {
+  color: black !important;
+}
+
+.fc-today-button,
+.fc-dayGridMonth-button,
+.fc-dayGridWeek-button,
+.fc-dayGridDay-button {
+  border: none !important;
+  background-color: transparent !important;
+  color: black !important;
+}
+
+.fc-today-button:hover,
+.fc-dayGridMonth-button:hover,
+.fc-dayGridWeek-button:hover,
+.fc-dayGridDay-button:hover {
+  border: none !important;
+}
+
+.fc-day {
+  color: rgb(0, 0, 0) !important;
+}
+
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+.fc-toolbar-title {
+  text-transform: uppercase !important;
+}
+
+.fc .fc-media-screen .fc-direction-ltr {
+  width: 100% !important;
+}
+
+.fc-event-title-container {
+  padding: 5px !important;
+  font-size: 14px !important;
 }

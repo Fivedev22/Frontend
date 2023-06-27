@@ -117,15 +117,15 @@ export class DashboardPageComponent implements AfterViewInit {
 
   getColorByIndex(index: number): string {
     const colors = [
-      'red',
-      'blue',
-      'green',
-      'orange',
-      'purple',
-      'mustard',
-      'gray',
-      'black',
-      'navy',
+      '#e81e4a',
+      '#663333',
+      '#f85741',
+      '#243a69',
+      '#2790b0',
+      '#94ba65',
+      '#353432',
+      '#4e4d4a',
+      '#2b4e72',
     ];
     const colorIndex = index % colors.length;
     return colors[colorIndex];
