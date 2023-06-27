@@ -36,8 +36,11 @@ import { TableCxrComponent } from 'src/app/global/components/table-cxr/table-cxr
 import { TablePxrComponent } from 'src/app/global/components/table-pxr/table-pxr.component';
 import Swal from 'sweetalert2';
 import { formatDate } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
-
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  NativeDateAdapter,
+} from '@angular/material/core';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
@@ -65,8 +68,8 @@ class PickDateAdapter extends NativeDateAdapter {
   templateUrl: './reservation-form.component.html',
   styleUrls: ['./reservation-form.component.css'],
   providers: [
-    {provide: DateAdapter, useClass: PickDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS}
+    { provide: DateAdapter, useClass: PickDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS },
   ],
   encapsulation: ViewEncapsulation.None,
 })
@@ -90,9 +93,6 @@ export class ReservationFormComponent implements OnInit {
   montoConDescuento!: number;
   minDate!: Date;
 
-  
-
-
   actionTitle: string = 'Registrar Reserva';
   actionButton: string = 'Registrar';
 
@@ -110,8 +110,6 @@ export class ReservationFormComponent implements OnInit {
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
-
-    
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
@@ -157,7 +155,6 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.get('booking_amount')?.valueChanges.subscribe(() => {
       this.calcularMontoDepositoEstimado();
     });
-    
 
     if (this.reservationData) {
       this.addReservationData(this.reservationData);
@@ -224,8 +221,14 @@ export class ReservationFormComponent implements OnInit {
             Validators.min(0),
           ],
         ],
-        check_in_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
-        check_out_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
+        check_in_date: [
+          '',
+          [Validators.required, this.validateCheckInOutDate.bind(this)],
+        ],
+        check_out_date: [
+          '',
+          [Validators.required, this.validateCheckInOutDate.bind(this)],
+        ],
         check_in_hour: ['', [Validators.required]],
         check_out_hour: ['', [Validators.required]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
@@ -234,37 +237,39 @@ export class ReservationFormComponent implements OnInit {
         estimated_amount_deposit: [''],
         booking_amount: ['', [Validators.min(0)]],
       },
-      { validator:  [this.checkInCheckOutValidator, this.validateDepositAmount] }
+      { validator: [this.checkInCheckOutValidator, this.validateDepositAmount] }
     );
-  }  
-
+  }
 
   validateDepositAmount(formGroup: FormGroup) {
     const depositAmount = formGroup.get('deposit_amount')?.value;
-    const estimatedAmountDeposit = formGroup.get('estimated_amount_deposit')?.value;
-  
-    if (depositAmount && estimatedAmountDeposit && depositAmount < estimatedAmountDeposit) {
-      formGroup.get('deposit_amount')?.setErrors({ 'invalidAmount': true });
+    const estimatedAmountDeposit = formGroup.get(
+      'estimated_amount_deposit'
+    )?.value;
+
+    if (
+      depositAmount &&
+      estimatedAmountDeposit &&
+      depositAmount < estimatedAmountDeposit
+    ) {
+      formGroup.get('deposit_amount')?.setErrors({ invalidAmount: true });
     } else {
       formGroup.get('deposit_amount')?.setErrors(null);
     }
   }
-  
 
   validateCheckInOutDate(control: AbstractControl) {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     const selectedDate = new Date(control.value);
-  
+
     if (selectedDate < currentDate) {
       return { pastDate: true };
     }
-  
+
     return null;
   }
-  
 
-  
   checkInCheckOutValidator(reservationForm: FormGroup) {
     const checkInDate = reservationForm.get('check_in_date')?.value;
     const checkOutDate = reservationForm.get('check_out_date')?.value;
@@ -382,7 +387,6 @@ export class ReservationFormComponent implements OnInit {
     if (montoSenia > montoInicial) {
       this.reservationForm.patchValue({ deposit_amount: precioReserva });
     }
-    
 
     this.reservationForm.patchValue({ booking_amount: precioReserva });
   }
@@ -392,13 +396,14 @@ export class ReservationFormComponent implements OnInit {
       this.reservationForm.controls['starting_price'].value
     );
     const montoDepositoEstimado = precioReserva * 0.3;
-    this.reservationForm.patchValue({ estimated_amount_deposit: montoDepositoEstimado });
+    this.reservationForm.patchValue({
+      estimated_amount_deposit: montoDepositoEstimado,
+    });
   }
-  
 
   sendReservation() {
     const depositAmount = this.reservationForm.controls['deposit_amount'].value;
-  
+
     if (depositAmount > 0) {
       if (!this.reservationData) {
         this.createReservation();
@@ -406,10 +411,13 @@ export class ReservationFormComponent implements OnInit {
         this.updateReservation();
       }
     } else {
-      Swal.fire('Error', 'El monto del depósito debe ser mayor a cero', 'error');
+      Swal.fire(
+        'Error',
+        'El monto del depósito debe ser mayor a cero',
+        'error'
+      );
     }
   }
-  
 
   createReservation() {
     if (this.reservationForm.valid) {
@@ -477,7 +485,11 @@ export class ReservationFormComponent implements OnInit {
 
   openFormCreateClient() {
     this.dialog
-      .open(ClientFormComponent, { width: '800px', disableClose: true })
+      .open(ClientFormComponent, {
+        width: '800px',
+        height: '600px',
+        disableClose: true,
+      })
       .afterClosed()
       .subscribe((val) => {
         if (val === 'save') {
@@ -510,7 +522,7 @@ export class ReservationFormComponent implements OnInit {
         }
       });
   }
-  
+
   openPropertySearch() {
     this.dialog
       .open(TablePxrComponent, {

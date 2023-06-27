@@ -85,19 +85,13 @@
                 [formControl]="clientDetail"
                 readonly
               />
-              <button
-                mat-icon-button
-                class="icon-button"
-                (click)="openClientSearch()"
-              >
-                <mat-icon>search</mat-icon>
-              </button>
+              <div mat-icon-button class="icon-button">
+                <mat-icon (click)="openClientSearch()">search</mat-icon>
+                <mat-icon (click)="openFormCreateClient()">add</mat-icon>
+              </div>
             </div>
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('client', 'required')"
-            >
+            <mat-error align=" end" *ngIf="hasError('client', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
@@ -122,10 +116,7 @@
               </button>
             </div>
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('property', 'required')"
-            >
+            <mat-error align=" end" *ngIf="hasError('property', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
@@ -220,9 +211,14 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('check_in_date', 'pastDate')">
-              <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
-            </mat-error>          
+            <mat-error
+              align="end"
+              *ngIf="hasError('check_in_date', 'pastDate')"
+            >
+              <strong
+                >La fecha debe ser igual o posterior a la fecha actual</strong
+              >
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -236,7 +232,7 @@
               [max]="maxDate"
               [matDatepicker]="picker2"
               [matDatepickerFilter]="dateFilter"
-              />
+            />
             <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle
               matIconSuffix
@@ -248,14 +244,16 @@
               align=" end"
               *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
             >
+              <strong>Debe ser POSTERIOR a la fecha de check-in</strong>
+            </mat-error>
+            <mat-error
+              align="end"
+              *ngIf="hasError('check_out_date', 'pastDate')"
+            >
               <strong
-                >Debe ser POSTERIOR a la fecha de
-                check-in</strong
+                >La fecha debe ser igual o posterior a la fecha actual</strong
               >
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('check_out_date', 'pastDate')">
-              <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
-            </mat-error>       
           </mat-form-field>
         </mat-grid-tile>
 
@@ -301,7 +299,10 @@
             >
               <strong>Campo requerido</strong>
             </mat-error>
-            <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
+            <mat-error
+              align="end"
+              *ngIf="hasError('check_out_hour', 'pattern')"
+            >
               <strong>Debe ser entre las 08:00 y las 10:00</strong>
             </mat-error>
           </mat-form-field>
@@ -379,10 +380,11 @@
               <strong>El monto debe ser mayor o igual al monto estimado</strong>
             </mat-error>
             <mat-error
-            align=" end"
-            *ngIf="hasError('deposit_amount', 'required')">
-            <strong>Campo requerido</strong>
-          </mat-error>   
+              align=" end"
+              *ngIf="hasError('deposit_amount', 'required')"
+            >
+              <strong>Campo requerido</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 

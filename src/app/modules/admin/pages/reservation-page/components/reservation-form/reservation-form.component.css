@@ -53,7 +53,6 @@ mat-form-field {
   right: 0px;
   transform: translateY(-50%);
   color: #898989;
+  display: flex;
+  gap: 10px;
 }
-
-
-
