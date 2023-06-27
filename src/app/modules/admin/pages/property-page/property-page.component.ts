@@ -48,18 +48,15 @@ export class PropertyPageComponent implements OnInit {
   }
 
   findAllProperties() {
-    this.propertyService.findAllProperties().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.updateActivityStatus();
+    this.propertyService.updateActivityStatus().subscribe(() => {
+      this.propertyService.findAllProperties().subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
     });
   }
-
-  updateActivityStatus() {
-    return this.propertyService.updateActivityStatus();
-  }
-
+  
 
   archiveProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({

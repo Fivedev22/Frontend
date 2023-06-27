@@ -281,7 +281,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 10
           );
           doc.text(
-            `Monto a Cobrar: $ ${parseFloat(payment.booking_amount).toLocaleString()}`,
+            `Monto a Pagar: $ ${parseFloat(payment.booking_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 11
           );
@@ -488,7 +488,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 16
           );
           doc.text(
-            `Monto a cobrar: $ ${parseFloat(booking.booking_amount).toLocaleString()}`,
+            `Monto a pagar: $ ${parseFloat(booking.booking_amount).toLocaleString()}`,
             20,
             startY + lineHeight * 17
           );

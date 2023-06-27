@@ -207,7 +207,7 @@
               [matDatepicker]="picker"
               [matDatepickerFilter]="dateFilter"
             />
-            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker"
@@ -236,8 +236,8 @@
               [max]="maxDate"
               [matDatepicker]="picker2"
               [matDatepickerFilter]="dateFilter"
-            />
-            <mat-hint>MM/DD/YYYY</mat-hint>
+              />
+            <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker2"
@@ -255,7 +255,7 @@
             </mat-error>
             <mat-error align="end" *ngIf="hasError('check_out_date', 'pastDate')">
               <strong>La fecha debe ser igual o posterior a la fecha actual</strong>
-            </mat-error>
+            </mat-error>       
           </mat-form-field>
         </mat-grid-tile>
 

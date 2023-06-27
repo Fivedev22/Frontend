@@ -113,4 +113,9 @@ export class PropertyService {
   updateActivityStatus(): Observable<any> {
     return this.http.post<any>(`${this.PROPERTY_URL}update-activity-status`, null);
   }
+
+  findPropertiesWithAvailabilityLibre(): Observable<IProperty[]> {
+    return this.http.get<IProperty[]>(`${this.PROPERTY_URL}availability/libre`);
+  }
+  
 }

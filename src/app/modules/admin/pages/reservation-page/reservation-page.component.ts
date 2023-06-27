@@ -228,7 +228,7 @@ export class ReservationPageComponent implements OnInit {
       );
       doc.text(`Descuento: % ${data.discount}`, 10, 260);
       doc.text(
-        `Monto a Cobrar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
+        `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
         270
       );
