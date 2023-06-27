@@ -205,7 +205,7 @@ export class PaymentPageComponent {
       );
       doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
       doc.text(
-        `Monto a Cobrar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
+        `Monto a Pagar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
         10,
         220
       );

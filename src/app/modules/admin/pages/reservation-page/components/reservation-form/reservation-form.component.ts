@@ -1,6 +1,7 @@
 import {
   Component,
   Inject,
+  Injectable,
   OnInit,
   ViewChild,
   ViewEncapsulation,
@@ -34,11 +35,39 @@ import { Observable } from 'rxjs';
 import { TableCxrComponent } from 'src/app/global/components/table-cxr/table-cxr.component';
 import { TablePxrComponent } from 'src/app/global/components/table-pxr/table-pxr.component';
 import Swal from 'sweetalert2';
+import { formatDate } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
+
+
+export const PICK_FORMATS = {
+  parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'numeric' },
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'numeric' },
+  },
+};
+
+@Injectable()
+class PickDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      return formatDate(date, 'dd-MM-yyyy', this.locale);
+    } else {
+      return date.toDateString();
+    }
+  }
+}
 
 @Component({
   selector: 'app-reservation-form',
   templateUrl: './reservation-form.component.html',
   styleUrls: ['./reservation-form.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: PickDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS}
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class ReservationFormComponent implements OnInit {
@@ -60,6 +89,7 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
+
   
 
 
@@ -196,8 +226,8 @@ export class ReservationFormComponent implements OnInit {
         ],
         check_in_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
         check_out_date: ['', [Validators.required, this.validateCheckInOutDate.bind(this)]],
-        check_in_hour: ['', [Validators.required, Validators.pattern('^1[4-9]|20:00$')]],
-        check_out_hour: ['', [Validators.required,Validators.pattern('^0[8-9]|10:00$')]],
+        check_in_hour: ['', [Validators.required]],
+        check_out_hour: ['', [Validators.required]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -344,9 +374,15 @@ export class ReservationFormComponent implements OnInit {
       this.reservationForm.controls['deposit_amount'].value
     );
     let precioReserva = this.montoConDescuento - montoSenia;
-    if (precioReserva < 0) {
-      precioReserva = 0;
+    if (precioReserva <= 0) {
+      precioReserva = this.montoConDescuento;
+      this.reservationForm.patchValue({ deposit_amount: precioReserva });
     }
+
+    if (montoSenia > montoInicial) {
+      this.reservationForm.patchValue({ deposit_amount: precioReserva });
+    }
+    
 
     this.reservationForm.patchValue({ booking_amount: precioReserva });
   }
@@ -361,9 +397,19 @@ export class ReservationFormComponent implements OnInit {
   
 
   sendReservation() {
-    if (!this.reservationData) this.createReservation();
-    else this.updateReservation();
+    const depositAmount = this.reservationForm.controls['deposit_amount'].value;
+  
+    if (depositAmount > 0) {
+      if (!this.reservationData) {
+        this.createReservation();
+      } else {
+        this.updateReservation();
+      }
+    } else {
+      Swal.fire('Error', 'El monto del depósito debe ser mayor a cero', 'error');
+    }
   }
+  
 
   createReservation() {
     if (this.reservationForm.valid) {

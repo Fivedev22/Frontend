@@ -13,11 +13,39 @@ import { PaymentTypeService } from '../../../../../../services/payment_type.serv
 import { PaymentStatusService } from '../../../../../../services/payment_status.service';
 import { IReservation } from '../../../../../../interfaces/reservation.interface';
 import { ReservationService } from '../../../../../../services/reservation.service';
+import { formatDate } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
+
+
+export const PICK_FORMATS = {
+  parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'numeric' },
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'numeric' },
+  },
+};
+
+class PickDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      return formatDate(date, 'dd-MM-yyyy', this.locale);
+    } else {
+      return date.toDateString();
+    }
+  }
+}
 
 @Component({
   selector: 'app-payment-form',
   templateUrl: './payment-form.component.html',
   styleUrls: ['./payment-form.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: PickDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS}
+  ],
+
 })
 export class PaymentFormComponent implements OnInit {
   clients!: IClient[];
@@ -94,6 +122,31 @@ export class PaymentFormComponent implements OnInit {
       this.actionTitle = 'Modificar Cobro';
       this.actionButton = 'Actualizar';
     }
+
+    if (!this.paymentData) {
+      const checkInDate = new Date(this.paymentData.check_in_date);
+    const checkOutDate = new Date(this.paymentData.check_out_date);
+    
+    const checkInControl = this.paymentForm.controls['check_in_date'];
+    const checkOutControl = this.paymentForm.controls['check_out_date'];
+    const checkInValue = checkInControl.value;
+    const checkOutValue = checkOutControl.value;
+    const datesModified = checkInControl.dirty || checkOutControl.dirty;
+    
+    if (!datesModified) {
+      checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
+      checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+      
+      checkInControl.setValue(checkInDate);
+      checkOutControl.setValue(checkOutDate);
+    } else {
+      checkInControl.setValue(checkInValue);
+      checkOutControl.setValue(checkOutValue);
+    }
+
+  }
+    
+  
   }
 
   public hasError = (controlName: string, errorName: string) => {
@@ -101,12 +154,18 @@ export class PaymentFormComponent implements OnInit {
   };
 
   addReservationData(reservation: IReservation) {
+    const checkInDate = new Date(reservation.check_in_date);
+    const checkOutDate = new Date(reservation.check_out_date);
+  
+    checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
+    checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+  
     this.paymentForm.patchValue({
       booking: reservation.id_booking,
       client: reservation.client.id_client,
       property: reservation.property.id_property,
-      check_in_date: reservation.check_in_date,
-      check_out_date: reservation.check_out_date,
+      check_in_date: checkInDate,
+      check_out_date: checkOutDate,
       booking_starting_price: reservation.starting_price,
       booking_discount: reservation.discount,
       deposit_amount: reservation.deposit_amount,
@@ -115,6 +174,7 @@ export class PaymentFormComponent implements OnInit {
       payment_status: 2,
     });    
   }
+  
 
   
 

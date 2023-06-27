@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { IProperty } from 'src/app/interfaces/property.interface';
 import { PropertyService } from 'src/app/services/property-page.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-table-pxr',
@@ -25,15 +26,24 @@ export class TablePxrComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.findAllProperties();
+    this.findAllPropertiesAvailable();
   }
 
-  findAllProperties() {
-    this.propertyService.findAllProperties().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+  findAllPropertiesAvailable() {
+    this.propertyService.findPropertiesWithAvailabilityLibre().subscribe(
+      (data) => {
+        if (data.length > 0) {
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        } else {
+          Swal.fire('No hay inmuebles disponibles para reservar');
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   applyFilter(event: Event) {
