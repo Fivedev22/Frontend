@@ -7,432 +7,494 @@
   <div class="content-form-dialog">
     <mat-grid-list cols="2" rowHeight="2:0.5" gutterSize="15px">
       <form [formGroup]="reservationForm" autocomplete="off" novalidate>
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Número de Reserva</mat-label>
-            <input
-              formControlName="booking_number"
-              matInput
-              placeholder=""
-              type="number"
-              readonly
-            />
-          </mat-form-field>
-        </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha de Reserva</mat-label>
-            <input formControlName="createdAt" matInput type="text" readonly />
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Tipo de Reserva</mat-label>
-            <mat-select
-              formControlName="booking_type"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let booking_type of booking_types"
-                [value]="booking_type.id"
-              >
-                {{ booking_type.booking_type_name }}</mat-option
-              >
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('booking_type', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Procedencia de Reserva</mat-label>
-            <mat-select
-              formControlName="booking_origin"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let booking_origin of booking_origins"
-                [value]="booking_origin.id"
-              >
-                {{ booking_origin.origin_name }}</mat-option
-              >
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('booking_origin', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile colspan="2">
-          <mat-form-field appearance="outline">
-            <mat-label>Cliente Seleccionado</mat-label>
-            <div class="input-container">
+        <ng-container *ngIf="currentStep === 1">
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Número de Reserva</mat-label>
               <input
+                formControlName="booking_number"
                 matInput
-                type="text"
-                [formControl]="clientDetail"
+                placeholder=""
+                type="number"
                 readonly
               />
-              <div mat-icon-button class="icon-button">
-                <mat-icon (click)="openClientSearch()">search</mat-icon>
-                <mat-icon (click)="openFormCreateClient()">add</mat-icon>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Reserva</mat-label>
+              <input formControlName="createdAt" matInput type="text" readonly />
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de Reserva</mat-label>
+              <mat-select
+                formControlName="booking_type"
+                placeholder="Seleccione..."
+              >
+                <mat-option
+                  *ngFor="let booking_type of booking_types"
+                  [value]="booking_type.id"
+                >
+                  {{ booking_type.booking_type_name }}</mat-option
+                >
+              </mat-select>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('booking_type', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Procedencia de Reserva</mat-label>
+              <mat-select
+                formControlName="booking_origin"
+                placeholder="Seleccione..."
+              >
+                <mat-option
+                  *ngFor="let booking_origin of booking_origins"
+                  [value]="booking_origin.id"
+                >
+                  {{ booking_origin.origin_name }}</mat-option
+                >
+              </mat-select>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('booking_origin', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="2">
+            <mat-form-field appearance="outline">
+              <mat-label>Cliente Seleccionado</mat-label>
+              <div class="input-container">
+                <input
+                  matInput
+                  type="text"
+                  [formControl]="clientDetail"
+                  readonly
+                />
+                <div mat-icon-button class="icon-button">
+                  <mat-icon (click)="openClientSearch()">search</mat-icon>
+                  <mat-icon (click)="openFormCreateClient()">add</mat-icon>
+                </div>
               </div>
-            </div>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('client', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile colspan="2">
-          <mat-form-field appearance="outline">
-            <mat-label>Inmueble Seleccionado</mat-label>
-            <div class="input-container">
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align=" end" *ngIf="hasError('client', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile colspan="2">
+            <mat-form-field appearance="outline">
+              <mat-label>Inmueble Seleccionado</mat-label>
+              <div class="input-container">
+                <input
+                  matInput
+                  type="text"
+                  [formControl]="propertyDetail"
+                  readonly
+                />
+                <button
+                  mat-icon-button
+                  class="icon-button"
+                  (click)="openPropertySearch()"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+              </div>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align=" end" *ngIf="hasError('property', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+        </ng-container>
+  
+        <ng-container *ngIf="currentStep === 2">
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Llegada</mat-label>
               <input
+                formControlName="check_in_date"
                 matInput
-                type="text"
-                [formControl]="propertyDetail"
-                readonly
+                [min]="minDate"
+                [max]="maxDate"
+                [matDatepicker]="picker"
+                [matDatepickerFilter]="dateFilter"
               />
-              <button
-                mat-icon-button
-                class="icon-button"
-                (click)="openPropertySearch()"
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker touchUi #picker color="accent"></mat-datepicker>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align="end"
+                *ngIf="hasError('check_in_date', 'required')"
               >
-                <mat-icon>search</mat-icon>
-              </button>
-            </div>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('property', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Cantidad de Adultos</mat-label>
-            <input
-              formControlName="adults_number"
-              matInput
-              placeholder="Ingrese cantidad"
-              type="text"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align="end" *ngIf="hasError('adults_number', 'required')"
-              ><strong>Campo requerido</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('adults_number', 'min')"
-              ><strong>Minimo 1 adulto</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('adults_number', 'pattern')">
-              <strong>Solo se permiten números</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Cantidad de Niños</mat-label>
-            <input
-              formControlName="kids_number"
-              matInput
-              placeholder="Ingrese cantidad"
-              type="text"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('kids_number', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('kids_number', 'pattern')"
-              ><strong>Solo se permiten números</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('kids_number', 'min')">
-              Minimo <strong>O como valor</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Cantidad de Mascotas</mat-label>
-            <input
-              formControlName="pets_number"
-              matInput
-              placeholder="Ingrese cantidad"
-              type="text"
-            />
-            <mat-error align="end" *ngIf="hasError('pets_number', 'pattern')"
-              ><strong>Solo se permiten números</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('pets_number', 'min')"
-              ><strong>Minimo O como valor</strong>
-            </mat-error>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('pets_number', 'required')">
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha de Llegada</mat-label>
-            <input
-              formControlName="check_in_date"
-              matInput
-              [min]="minDate"
-              [max]="maxDate"
-              [matDatepicker]="picker"
-              [matDatepickerFilter]="dateFilter"
-            />
-            <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker color="accent"></mat-datepicker>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align="end"
-              *ngIf="hasError('check_in_date', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <mat-error
-              align="end"
-              *ngIf="hasError('check_in_date', 'pastDate')"
-            >
-              <strong
-                >La fecha debe ser igual o posterior a la fecha actual</strong
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error
+                align="end"
+                *ngIf="hasError('check_in_date', 'pastDate')"
               >
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha de Salida</mat-label>
-            <input
-              formControlName="check_out_date"
-              matInput
-              [min]="minDate"
-              [max]="maxDate"
-              [matDatepicker]="picker2"
-              [matDatepickerFilter]="dateFilter"
-            />
-            <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker2 color="accent"> </mat-datepicker>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
-            >
-              <strong>Debe ser POSTERIOR a la fecha de check-in</strong>
-            </mat-error>
-            <mat-error
-              align="end"
-              *ngIf="hasError('check_out_date', 'pastDate')"
-            >
-              <strong
-                >La fecha debe ser igual o posterior a la fecha actual</strong
+                <strong
+                  >La fecha debe ser igual o posterior a la fecha actual</strong
+                >
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Salida</mat-label>
+              <input
+                formControlName="check_out_date"
+                matInput
+                [min]="minDate"
+                [max]="maxDate"
+                [matDatepicker]="picker2"
+                [matDatepickerFilter]="dateFilter"
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker touchUi #picker2 color="accent"> </mat-datepicker>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('check_out_date', 'checkOutBeforeCheckIn')"
               >
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
+                <strong>Debe ser POSTERIOR a la fecha de check-in</strong>
+              </mat-error>
+              <mat-error
+                align="end"
+                *ngIf="hasError('check_out_date', 'pastDate')"
+              >
+                <strong
+                  >La fecha debe ser igual o posterior a la fecha actual</strong
+                >
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Hora de Llegada</mat-label>
+              <input
+                formControlName="check_in_hour"
+                matInput
+                placeholder=""
+                type="time"
+                min="00:00"
+                max="24:00"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('check_in_hour', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <!-- <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
+                <strong>Debe ser entre las 14:00 y las 20:00</strong>
+              </mat-error> -->
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Hora de Salida</mat-label>
+              <input
+                formControlName="check_out_hour"
+                matInput
+                placeholder=""
+                type="time"
+                min="00:00"
+                max="24:00"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('check_out_hour', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <!-- <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
+                <strong>Debe ser entre las 08:00 y las 10:00</strong>
+              </mat-error> -->
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Hora de Llegada</mat-label>
-            <input
-              formControlName="check_in_hour"
-              matInput
-              placeholder=""
-              type="time"
-              min="00:00"
-              max="24:00"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('check_in_hour', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <!-- <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
-              <strong>Debe ser entre las 14:00 y las 20:00</strong>
-            </mat-error> -->
-          </mat-form-field>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Cantidad de Adultos</mat-label>
+              <input
+                formControlName="adults_number"
+                matInput
+                placeholder="Ingrese cantidad"
+                type="text"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align="end" *ngIf="hasError('adults_number', 'required')"
+                ><strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('adults_number', 'min')"
+                ><strong>Minimo 1 adulto</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('adults_number', 'pattern')">
+                <strong>Solo se permiten números</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Cantidad de Niños</mat-label>
+              <input
+                formControlName="kids_number"
+                matInput
+                placeholder="Ingrese cantidad"
+                type="text"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align=" end" *ngIf="hasError('kids_number', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('kids_number', 'pattern')"
+                ><strong>Solo se permiten números</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('kids_number', 'min')">
+                Minimo <strong>O como valor</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Cantidad de Mascotas</mat-label>
+              <input
+                formControlName="pets_number"
+                matInput
+                placeholder="Ingrese cantidad"
+                type="text"
+              />
+              <mat-error align="end" *ngIf="hasError('pets_number', 'pattern')"
+                ><strong>Solo se permiten números</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('pets_number', 'min')"
+                ><strong>Minimo O como valor</strong>
+              </mat-error>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align=" end" *ngIf="hasError('pets_number', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
 
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Hora de Salida</mat-label>
-            <input
-              formControlName="check_out_hour"
-              matInput
-              placeholder=""
-              type="time"
-              min="00:00"
-              max="24:00"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('check_out_hour', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <!-- <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
-              <strong>Debe ser entre las 08:00 y las 10:00</strong>
-            </mat-error> -->
-          </mat-form-field>
+          <mat-grid-tile>
+          <div formArrayName="cars">
+            <ng-container *ngIf="carsFormArray">
+              <div *ngFor="let carGroup of carsFormArray.controls; let i = index">
+                <div [formGroupName]="i">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Marca</mat-label>
+                    <mat-select formControlName="brand">
+                      <mat-option *ngFor="let brand of carBrands" [value]="brand">{{ brand }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Modelo</mat-label>
+                    <input matInput formControlName="model" type="text" placeholder="Ingrese modelo">
+                  </mat-form-field>
+        
+                  <mat-form-field appearance="outline">
+                    <mat-label>Patente</mat-label>
+                    <input matInput formControlName="licensePlate" type="text" placeholder="Ingrese patente">
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <mat-icon (click)="addCar()">add</mat-icon>
         </mat-grid-tile>
+        </ng-container>
+        
+        <ng-container *ngIf="currentStep === 3">
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Monto de Reserva</mat-label>
+              <input
+                formControlName="starting_price"
+                matInput
+                placeholder="Ingrese monto"
+                type="text"
+                currencyMask
+                [options]="{
+                  prefix: '$ ',
+                  thousands: '.',
+                  decimal: ',',
+                  align: 'left'
+                }"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('starting_price', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('starting_price', 'min')"
+                ><strong>Mínimo $ 100 como monto inicial</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Descuento</mat-label>
+              <input
+                formControlName="discount"
+                matInput
+                placeholder="Ingrese descuento"
+                type="text"
+                currencyMask
+                [options]="{
+                  prefix: '% ',
+                  thousands: '.',
+                  decimal: ',',
+                  align: 'left'
+                }"
+              />
+              <mat-error align="end" *ngIf="hasError('discount', 'min')"
+                ><strong>Mínimo 0 como valor</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Monto de Seña</mat-label>
+              <input
+                formControlName="deposit_amount"
+                matInput
+                placeholder="Ingrese monto de seña"
+                type="text"
+                currencyMask
+                [options]="{
+                  prefix: '$ ',
+                  thousands: '.',
+                  decimal: ',',
+                  align: 'left'
+                }"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
+                <strong>El monto debe ser mayor o igual al monto estimado</strong>
+              </mat-error>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('deposit_amount', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Forma de Pago (Seña)</mat-label>
+              <mat-select
+                formControlName="payment_type"
+                placeholder="Seleccione..."
+              >
+                <mat-option
+                  *ngFor="let payment_type of payment_types"
+                  [value]="payment_type.id"
+                >
+                  {{ payment_type.payment_type_name }}</mat-option
+                >
+              </mat-select>
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error
+                align=" end"
+                *ngIf="hasError('payment_type', 'required')"
+              >
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Monto Estimado de Seña</mat-label>
+              <input
+                formControlName="estimated_amount_deposit"
+                matInput
+                placeholder="Monto estimado de seña"
+                type="text"
+                readonly
+                currencyMask
+                [options]="{
+                  prefix: '$ ',
+                  thousands: '.',
+                  decimal: ',',
+                  align: 'left'
+                }"
+                [value]=""
+              />
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Monto a Cobrar</mat-label>
+              <input
+                formControlName="booking_amount"
+                matInput
+                placeholder=""
+                type="text"
+                readonly
+                currencyMask
+                [options]="{
+                  prefix: '$ ',
+                  thousands: '.',
+                  decimal: ',',
+                  align: 'left'
+                }"
+              />
+              <mat-error align="end" *ngIf="hasError('booking_amount', 'min')"
+                ><strong>Mínimo 0 como monto de reserva</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+        </ng-container>
 
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Monto de Reserva</mat-label>
-            <input
-              formControlName="starting_price"
-              matInput
-              placeholder="Ingrese monto"
-              type="text"
-              currencyMask
-              [options]="{
-                prefix: '$ ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('starting_price', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <mat-error align="end" *ngIf="hasError('starting_price', 'min')"
-              ><strong>Mínimo $ 100 como monto inicial</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Descuento</mat-label>
-            <input
-              formControlName="discount"
-              matInput
-              placeholder="Ingrese descuento"
-              type="text"
-              currencyMask
-              [options]="{
-                prefix: '% ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-            />
-            <mat-error align="end" *ngIf="hasError('discount', 'min')"
-              ><strong>Mínimo 0 como valor</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Monto de Seña</mat-label>
-            <input
-              formControlName="deposit_amount"
-              matInput
-              placeholder="Ingrese monto de seña"
-              type="text"
-              currencyMask
-              [options]="{
-                prefix: '$ ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
-              <strong>El monto debe ser mayor o igual al monto estimado</strong>
-            </mat-error>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('deposit_amount', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Monto Estimado de Seña</mat-label>
-            <input
-              formControlName="estimated_amount_deposit"
-              matInput
-              placeholder="Monto estimado de seña"
-              type="text"
-              readonly
-              currencyMask
-              [options]="{
-                prefix: '$ ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-              [value]=""
-            />
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Monto a Cobrar</mat-label>
-            <input
-              formControlName="booking_amount"
-              matInput
-              placeholder=""
-              type="text"
-              readonly
-              currencyMask
-              [options]="{
-                prefix: '$ ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-            />
-            <mat-error align="end" *ngIf="hasError('booking_amount', 'min')"
-              ><strong>Mínimo 0 como monto de reserva</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
       </form>
     </mat-grid-list>
   </div>
   <mat-divider></mat-divider>
   <div class="content-footer-dialog">
+    <button mat-button color="primary" (click)="previousStep()" *ngIf="currentStep > 1">Anterior</button>
+    <button mat-button color="primary" (click)="nextStep()" *ngIf="currentStep < 4">Siguiente</button>  
     <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
     <button
       mat-stroked-button

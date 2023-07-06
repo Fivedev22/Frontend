@@ -16,6 +16,8 @@ import { NotePageComponent } from './components/note-page/note-page.component';
 
 // bootstrap
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
+import { PropertyService } from 'src/app/services/property-page.service';
+import { IProperty } from 'src/app/interfaces/property.interface';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -36,6 +38,7 @@ export class DashboardPageComponent implements AfterViewInit {
 
   constructor(
     private reservationService: ReservationService,
+    private propertyService: PropertyService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -153,19 +156,20 @@ export class DashboardPageComponent implements AfterViewInit {
         popupWindow?.document.write(`
         <html>
         <head>
-          <style>
-            body {
-              font-family: helvetica;
-            }
-            h2{
-              font-size: 16px;
-              font-style: normal; 
-            } 
-            p {
-              font-size: 14px;
-              font-style: normal; 
-            }
-          </style>
+        <style>
+        body {
+          font-family: helvetica;
+          background-color: #e8f5e9; /* Agregado: Color verde claro al fondo */
+        }
+        h2 {
+          font-size: 16px;
+          font-style: normal;
+        }
+        p {
+          font-size: 14px;
+          font-style: normal;
+        }
+      </style>
         </head>
         <body>
           <h2>Detalles de la reserva</h2>
@@ -179,15 +183,100 @@ export class DashboardPageComponent implements AfterViewInit {
           <p>- Cantidad adultos: <b>${reservation.adults_number}</b></p>
           <p>- Cantidad niños: <b>${reservation.kids_number}</b></p>
           <p>- Mascotas: <b>${reservation.pets_number}</b></p>
-          <p>- Precio inicial: <b>$ ${reservation.starting_price.toLocaleString()}</b></p>
+          <p>- Monto de reserva: <b>$ ${parseFloat(reservation.starting_price).toLocaleString()}</b></p>
           <p>- Descuento: <b>% ${reservation.discount}</b></p>
-          <p>- Monto depósito: <b>${reservation.deposit_amount.toLocaleString()}</b>$ </p>
-          <p>- Monto reserva: <b>$ ${reservation.booking_amount.toLocaleString()}</b></p>
+          <p>- Monto depósito: <b>${parseFloat(reservation.deposit_amount).toLocaleString()}</b>$ </p>
+          <p>- Forma de Pago (depósito): <b>${reservation.payment_type.payment_type_name}</b> </p>
+          <p>- Monto a cobrar: <b>$ ${parseFloat(reservation.booking_amount).toLocaleString()}</b></p>
         </body>
       </html>
         `);
       });
   }
+
+  viewPropertyStatus() {
+    this.propertyService.updateActivityStatus().subscribe(
+      () => {
+        this.propertyService.findAllProperties().subscribe(
+          (properties: IProperty[]) => {
+            const tableRows = properties.map(property => {
+              return `
+                <tr>
+                  <td>${property.property_name}</td>
+                  <td>${property.availability_status.availability_status_name}</td>
+                  <td>${property.activity_status.activity_status_name}</td>
+                </tr>
+              `;
+            }).join('');
+  
+            const popupWindow = window.open('', '_blank', 'width=800,height=600');
+            popupWindow?.document.write(`
+              <html>
+                <head>
+                  <title>Inmuebles</title>
+                  <style>
+                    body {
+                      background-color: #e8f5e9; /* Fondo verde claro */
+                      font-family: Arial, sans-serif; /* Fuente */
+                      font-size: 20px; /* Tamaño de fuente */
+                      line-height: 1.5; /* Espaciado entre líneas */
+                      margin: 20px; /* Márgenes */
+                    }
+                  
+                    h2 {
+                      font-weight: normal; /* Titulos sin negrita */
+                    }
+                  
+                    table {
+                      width: 100%;
+                      border-collapse: collapse;
+                    }
+                  
+                    th, td {
+                      padding: 8px;
+                      text-align: left;
+                      border-bottom: 1px solid #ddd;
+                    }
+                  
+                    th {
+                      background-color: #4CAF50; /* Color de fondo del encabezado */
+                      color: white; /* Color de texto del encabezado */
+                    }
+                  
+                    tr:nth-child(even) {
+                      background-color: #f2f2f2; /* Color de fondo de las filas pares */
+                    }
+                  </style>
+                </head>
+                <body>
+                  <h2>Estado de inmuebles</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Nombre Inmueble</th>
+                        <th>Estado Disponibilidad</th>
+                        <th>Estado Actividad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${tableRows}
+                    </tbody>
+                  </table>
+                </body>
+              </html>
+            `);
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+  
 
   showReservationDetails() {
     const reservationDetailsElement =

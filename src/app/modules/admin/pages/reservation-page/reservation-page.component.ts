@@ -147,7 +147,7 @@ export class ReservationPageComponent implements OnInit {
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe((data) => {
       const doc = new jsPDF();
-
+      
       const addPageWithBackgroundColor = () => {
         const lightColor = '#FFFFFF';
         doc.setFillColor(lightColor);
@@ -158,7 +158,7 @@ export class ReservationPageComponent implements OnInit {
           doc.internal.pageSize.getHeight()
         );
       };
-
+  
       addPageWithBackgroundColor();
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(16);
@@ -226,14 +226,19 @@ export class ReservationPageComponent implements OnInit {
         10,
         250
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 260);
+      doc.text(
+        `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
+        10,
+        260
+      );
+      doc.text(`Descuento: % ${data.discount}`, 10, 270);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        270
+        280
       );
       doc.setLineWidth(0.5);
-      const lineY = 280;
+      const lineY = 290;
       doc.line(10, lineY, 200, lineY);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
@@ -241,7 +246,18 @@ export class ReservationPageComponent implements OnInit {
       const textWidth = doc.getTextWidth(text);
       const pageWidth2 = doc.internal.pageSize.getWidth();
       const x = (pageWidth2 - textWidth) / 2;
-      doc.text(text, x, lineY + 10);
+  
+      // Verificar si el texto se ajusta en la página actual
+      if (lineY + 10 + doc.getLineHeight() < doc.internal.pageSize.getHeight()) {
+        // Si el texto cabe en la página actual, se muestra normalmente
+        doc.text(text, x, lineY + 10);
+      } else {
+        // Si no cabe en la página actual, se agrega una nueva página y se muestra el texto allí
+        doc.addPage();
+        addPageWithBackgroundColor();
+        doc.text(text, x, 20); // Ajusta la posición del texto según tus necesidades
+      }
+  
       const pdfBytes = doc.output();
       const pdfUrl = URL.createObjectURL(
         new Blob([pdfBytes], { type: 'application/pdf' })
@@ -258,6 +274,7 @@ export class ReservationPageComponent implements OnInit {
       }
     });
   }
+  
 
   openPaymentForm(reservationId: number) {
     this.paymentService.findAllPayments().subscribe((payments: IPayment[]) => {

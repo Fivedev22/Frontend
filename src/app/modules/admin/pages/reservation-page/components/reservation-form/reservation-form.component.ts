@@ -9,6 +9,7 @@ import {
 import { IReservationType } from '../../../../../../interfaces/reservation_type.interface';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -41,6 +42,10 @@ import {
   MAT_DATE_FORMATS,
   NativeDateAdapter,
 } from '@angular/material/core';
+import { IPaymentType } from 'src/app/interfaces/payment_type.interface';
+import { PaymentTypeService } from 'src/app/services/payment_type.service';
+import { ICar } from 'src/app/interfaces/car.interface';
+import { carBrands } from './car-brands';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
@@ -76,6 +81,7 @@ class PickDateAdapter extends NativeDateAdapter {
 export class ReservationFormComponent implements OnInit {
   booking_types!: IReservationType[];
   booking_origins!: IReservationOrigin[];
+  payment_types!: IPaymentType[];
   clients!: IClient[];
   properties!: IProperty[];
   reservationForm!: FormGroup;
@@ -92,6 +98,13 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
+  carsFormArray!: FormArray;
+  carBrands: string[] = carBrands;
+  currentStep: number = 1;
+
+
+
+
 
   actionTitle: string = 'Registrar Reserva';
   actionButton: string = 'Registrar';
@@ -110,6 +123,8 @@ export class ReservationFormComponent implements OnInit {
     private propertyService: PropertyService,
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
+    private paymentTypeService: PaymentTypeService,
+
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
@@ -137,8 +152,10 @@ export class ReservationFormComponent implements OnInit {
     this.findAllReservationOrigin();
     this.findAllProperties();
     this.findAllClients();
+    this.findAllPaymentTypes();
     this.getBookingsOcuped();
     this.formBuilder.group;
+    this.carsFormArray = this.reservationForm.get('cars') as FormArray;
 
     this.reservationForm.get('starting_price')?.valueChanges.subscribe(() => {
       this.calcularPrecioReserva();
@@ -183,12 +200,42 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
+  nextStep() {
+    if (this.currentStep < 5) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);
   };
 
+  buildCarFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      brand: [''],
+      model: [''],
+      licensePlate: [''],
+    });
+  }
+
+  addCar() {
+    const carsFormArray = this.reservationForm.get('cars') as FormArray;
+    const carFormGroup = this.buildCarFormGroup();
+    carsFormArray.push(carFormGroup);
+  }
+  
+  
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
+    const carFormArray = this.formBuilder.array([
+      this.buildCarFormGroup(),
+    ]);
     return this.formBuilder.group(
       {
         booking_number: [''],
@@ -197,6 +244,16 @@ export class ReservationFormComponent implements OnInit {
         booking_origin: ['', [Validators.required]],
         client: ['', [Validators.required]],
         property: ['', [Validators.required]],
+        check_in_date: [
+          '',
+          [Validators.required, this.validateCheckInOutDate.bind(this)],
+        ],
+        check_out_date: [
+          '',
+          [Validators.required, this.validateCheckInOutDate.bind(this)],
+        ],
+        check_in_hour: ['', [Validators.required]],
+        check_out_hour: ['', [Validators.required]],
         adults_number: [
           '',
           [
@@ -221,19 +278,11 @@ export class ReservationFormComponent implements OnInit {
             Validators.min(0),
           ],
         ],
-        check_in_date: [
-          '',
-          [Validators.required, this.validateCheckInOutDate.bind(this)],
-        ],
-        check_out_date: [
-          '',
-          [Validators.required, this.validateCheckInOutDate.bind(this)],
-        ],
-        check_in_hour: ['', [Validators.required]],
-        check_out_hour: ['', [Validators.required]],
+        cars: carFormArray, // Agregar el campo "cars" como un FormArray vacío
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
+        payment_type: ['', [Validators.required]],
         estimated_amount_deposit: [''],
         booking_amount: ['', [Validators.min(0)]],
       },
@@ -344,6 +393,17 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['adults_number'].setValue(data.adults_number);
     this.reservationForm.controls['kids_number'].setValue(data.kids_number);
     this.reservationForm.controls['pets_number'].setValue(data.pets_number);
+
+    const carsFormArray = this.reservationForm.get('cars') as FormArray;
+    carsFormArray.clear(); // Limpiar el FormArray antes de agregar nuevos autos
+  
+    if (data.cars && data.cars.length > 0) {
+      data.cars.forEach((car: any) => {
+        const carFormGroup = this.buildCarFormGroup();
+        carFormGroup.patchValue(car);
+        carsFormArray.push(carFormGroup);
+      });
+    }
     this.reservationForm.controls['check_in_date'].setValue(data.check_in_date);
     this.reservationForm.controls['check_out_date'].setValue(
       data.check_out_date
@@ -359,6 +419,7 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['deposit_amount'].setValue(
       data.deposit_amount
     );
+    this.reservationForm.controls['payment_type'].setValue(data.payment_type.id);
     this.reservationForm.controls['estimated_amount_deposit'].setValue(
       data.estimated_amount_deposit
     );
@@ -366,6 +427,7 @@ export class ReservationFormComponent implements OnInit {
       data.booking_amount
     );
   }
+
   calcularPrecioReserva() {
     const montoInicial = Number(
       this.reservationForm.controls['starting_price'].value
@@ -488,6 +550,12 @@ export class ReservationFormComponent implements OnInit {
   findAllProperties() {
     this.propertyService.findAllProperties().subscribe((data) => {
       this.properties = data;
+    });
+  }
+
+  findAllPaymentTypes() {
+    this.paymentTypeService.findAll().subscribe((data) => {
+      this.payment_types = data;
     });
   }
 
