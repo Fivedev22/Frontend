@@ -25,7 +25,6 @@ export class ReportPageComponent implements OnInit {
 
   constructor(
     private paymentService: PaymentService,
-    private reservationService: ReservationService
   ) {}
 
   ngOnInit() {
@@ -77,11 +76,13 @@ export class ReportPageComponent implements OnInit {
 
   generateIncomeByPaymentTypeReport() {
     const incomeByPaymentType: { [paymentType: string]: number } = {};
-
+  
     for (const payment of this.payments) {
       const paymentType = payment.payment_type.payment_type_name;
-      const amount = parseFloat(payment.payment_amount_total);
-
+      const startingPrice = parseFloat(payment.booking.starting_price);
+      const discount = parseFloat(payment.booking_discount || '0');
+      const amount = startingPrice - discount;
+  
       if (paymentType) {
         if (incomeByPaymentType[paymentType]) {
           incomeByPaymentType[paymentType] += amount;
@@ -90,25 +91,29 @@ export class ReportPageComponent implements OnInit {
         }
       }
     }
-
-    const incomeByPaymentTypeReportData = Object.entries(
-      incomeByPaymentType
-    ).map(([paymentType, income]) => ({ paymentType, income }));
-    this.incomeReport2 =
-      new MatTableDataSource(incomeByPaymentTypeReportData) || [];
+  
+    const incomeByPaymentTypeReportData = Object.entries(incomeByPaymentType).map(
+      ([paymentType, income]) => ({
+        paymentType,
+        income,
+      })
+    );
+    this.incomeReport2 = new MatTableDataSource(incomeByPaymentTypeReportData) || [];
   }
-
+  
   generateClientIncomeReport() {
     const clientIncomes: { [clientName: string]: number } = {};
-
+  
     for (const payment of this.payments) {
       const firstName = payment.client.name;
       const lastName = payment.client.last_name;
-    const amount = parseFloat(payment.payment_amount_total);
-
+      const startingPrice = parseFloat(payment.booking.starting_price);
+      const discount = parseFloat(payment.booking_discount || '0');
+      const amount = startingPrice - discount;
+  
       if (firstName && lastName) {
         const clientName = `${firstName} ${lastName}`;
-
+  
         if (clientIncomes[clientName]) {
           clientIncomes[clientName] += amount;
         } else {
@@ -116,37 +121,38 @@ export class ReportPageComponent implements OnInit {
         }
       }
     }
-
+  
     const clientIncomeReportData = Object.entries(clientIncomes).map(
       ([clientName, income]) => ({ clientName, income })
     );
-    this.clientIncomeReport =
-      new MatTableDataSource(clientIncomeReportData) || [];
-  }
+    this.clientIncomeReport = new MatTableDataSource(clientIncomeReportData) || [];
+  }  
 
   generateDurationIncomeReport() {
     const durations: { [key: string]: number } = {
       'Menos de una semana': 0,
       '1 semana': 0,
       '2 semanas': 0,
-      'MÃ¡s de 2 semanas': 0,
+      'Más de 2 semanas': 0,
       '1 mes': 0,
     };
-
+  
     for (const payment of this.payments) {
       const checkInDate = new Date(payment.booking.check_in_date);
       const checkOutDate = new Date(payment.booking.check_out_date);
-
+  
       if (checkInDate && checkOutDate) {
         const duration = this.calculateDuration(checkInDate, checkOutDate);
-        const amount = parseFloat(payment.payment_amount_total);
-
+        const startingPrice = parseFloat(payment.booking.starting_price);
+        const discount = parseFloat(payment.booking_discount || '0');
+        const amount = startingPrice - discount;
+  
         if (duration && durations.hasOwnProperty(duration)) {
           durations[duration] += amount;
         }
       }
     }
-
+  
     const durationIncomeReportData = Object.entries(durations).map(
       ([duration, income]) => ({ duration, income })
     );

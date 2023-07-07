@@ -201,7 +201,7 @@ export class ReservationFormComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep < 5) {
+    if (this.currentStep < 3) {
       this.currentStep++;
     }
   }

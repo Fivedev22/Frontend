@@ -24,10 +24,13 @@ export class PaymentPageComponent {
     'booking',
     'property',
     'client',
-    'payment_amount_total',
+    'booking_starting_price',
     'payment_status',
     'actions',
   ];
+
+  bookingPriceAfterDiscount!: number;
+
 
   dataSource!: MatTableDataSource<IPayment>;
 

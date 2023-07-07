@@ -21,18 +21,19 @@ export class StatisticPageComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    this.createReservationChart();
     this.createPaymentChart();
+    this.topPaymentTypesChart();
+    this.createPendingPaymentsChart();
+    this.createReservationChart();
     this.ClientsByProvinceChart();
     this.createGenderChart();
     this.topClientChart();
-    this.topPaymentTypesChart();
     this.reservationTypeChart();
     this.createOriginChart();
     this.createReservationsByMonthChart();
     this.createPropertyChart();
     this.PropertyByProvinceChart();
-  }
+  }  
 
   createReservationChart() {
     const canvas = document.getElementById(
@@ -107,7 +108,7 @@ export class StatisticPageComponent implements AfterViewInit {
   createPaymentChart() {
     const canvas = document.getElementById('barChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+  
     if (ctx) {
       this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
         const allMonths = Array.from({ length: 12 }, (_, i) => {
@@ -118,14 +119,18 @@ export class StatisticPageComponent implements AfterViewInit {
         const dataByMonth = payments.reduce((acc, payment) => {
           const date = new Date(payment.createdAt);
           const month = date.toLocaleString('default', { month: 'long' });
-          acc[month] = (acc[month] || 0) + payment.payment_amount_total;
+          const startingPrice = parseFloat(payment.booking_starting_price);
+          const discount = parseFloat(payment.booking_discount ?? "0");
+          const totalPrice = startingPrice - discount;         
+          
+          acc[month] = (acc[month] || 0) + totalPrice;
           return acc;
-        }, {} as any);
-        const datasetData = allMonths.map((month) => dataByMonth[month] || 0);
-        const totalIncome = datasetData.reduce(
-          (acc, income) => acc + income,
-          0
-        );
+        }, {} as any);        
+        const datasetData = allMonths.map((month) => {
+          const value = dataByMonth[month] || 0;
+          return parseFloat(value.toFixed(2));
+        });
+        const totalIncome = datasetData.reduce((acc, income) => acc + income, 0);
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -152,7 +157,7 @@ export class StatisticPageComponent implements AfterViewInit {
               },
               subtitle: {
                 display: true,
-                text: `Total: $${totalIncome.toFixed(2)}`,
+                text: `Total: $${totalIncome}`,
               },
               tooltip: {
                 callbacks: {
@@ -182,6 +187,75 @@ export class StatisticPageComponent implements AfterViewInit {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
   }
+  
+  createPendingPaymentsChart() {
+    const canvas = document.getElementById('paymentPendingChart') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+  
+    if (ctx) {
+      this.paymentsService.findAllPayments().subscribe((payments) => {
+        const pendingPayments = payments.filter(payment => payment.payment_status.id_payment_status === 1);
+        const dataByMonth: Record<string, number> = {};
+  
+        pendingPayments.forEach(payment => {
+          const date = new Date(payment.createdAt);
+          const month = date.toLocaleString('default', { month: 'long' });
+  
+          const startingPrice = parseFloat(payment.booking_starting_price);
+          const discount = parseFloat(payment.booking_discount ?? '0'); // Si discount es undefined, se asigna '0'
+          const totalPrice = startingPrice - discount; // Resta el descuento al precio inicial
+  
+          if (!dataByMonth[month]) {
+            dataByMonth[month] = totalPrice;
+          } else {
+            dataByMonth[month] += totalPrice;
+          }
+        });
+  
+        const months = Object.keys(dataByMonth);
+        const datasetData = months.map(month => dataByMonth[month]);
+  
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: months,
+            datasets: [{
+              label: 'Monto de Pagos Pendientes',
+              data: datasetData,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Montos de Pagos Pendientes',
+              },
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      });
+    } else {
+      console.error('No se pudo obtener el contexto del lienzo.');
+    }
+  }
+  
 
   ClientsByProvinceChart() {
     const canvas = document.getElementById(
