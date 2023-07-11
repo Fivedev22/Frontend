@@ -18,6 +18,7 @@ import { NotePageComponent } from './components/note-page/note-page.component';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import { PropertyService } from 'src/app/services/property-page.service';
 import { IProperty } from 'src/app/interfaces/property.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -199,6 +200,10 @@ export class DashboardPageComponent implements AfterViewInit {
       () => {
         this.propertyService.findAllProperties().subscribe(
           (properties: IProperty[]) => {
+            if (properties.length === 0) {
+              Swal.fire('No se encontraron inmuebles', 'No hay propiedades disponibles', 'info');
+              return;
+            }
             const tableRows = properties.map(property => {
               return `
                 <tr>

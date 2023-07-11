@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PropertyService } from '../../../../../../services/property-page.service';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 import Swal from 'sweetalert2';
 interface ImageFile {
   file: File;
@@ -11,9 +13,21 @@ interface ImageFile {
   selector: 'app-image-upload-dialog',
   templateUrl: './image-upload-dialog.component.html',
   styleUrls: ['./image-upload-dialog.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('500ms', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('500ms', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class ImageUploadDialogComponent implements OnInit {
-  images!: any[];
+  images: any[] = [];
+  currentImageIndex: number = 0;
   noImagesMessage!: string;
   selectedImages: any[] = [];
   isUploadButtonDisabled: boolean = true;
@@ -25,6 +39,21 @@ export class ImageUploadDialogComponent implements OnInit {
 
   ngOnInit() {
     this.getPropertyImages();
+    if (this.images.length > 0) {
+      this.currentImageIndex = 0;
+    }
+  }
+
+  previousImage() {
+    if (this.currentImageIndex > 0) {
+      this.currentImageIndex--;
+    }
+  }
+
+  nextImage() {
+    if (this.currentImageIndex < this.images.length - 1) {
+      this.currentImageIndex++;
+    }
   }
 
   getPropertyImages() {

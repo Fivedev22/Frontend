@@ -278,7 +278,7 @@ export class ReservationFormComponent implements OnInit {
             Validators.min(0),
           ],
         ],
-        cars: carFormArray, // Agregar el campo "cars" como un FormArray vacío
+        cars: carFormArray,
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],

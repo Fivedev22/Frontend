@@ -34,14 +34,24 @@
     <br />
     <p class="inventory_title">Subidas</p>
     <div class="image-container">
-      <div class="image-content" *ngFor="let image of images">
-        <img [src]="getImageUrl(image.filename)" alt="Image" class="image" />
-        <button (click)="deleteImage(image.id)" class="delete-icon">
-          <i class="material-icons">delete</i>
-        </button>
+      <div class="image-content" *ngFor="let image of images; let i = index">
+        <ng-container *ngIf="currentImageIndex === i">
+          <img [src]="getImageUrl(image.filename)" alt="Image" class="image" [@fadeInOut] />
+          <button (click)="deleteImage(image.id)" class="delete-icon">
+            <i class="material-icons">delete</i>
+          </button>
+        </ng-container>
       </div>
     </div>
-  </div>
+    <div class="image-navigation">
+      <button (click)="previousImage()" [disabled]="currentImageIndex === 0" class="navigation-button">
+        Anterior
+      </button>
+      <button (click)="nextImage()" [disabled]="currentImageIndex === images.length - 1" class="navigation-button">
+        Siguiente
+      </button>
+    </div>
+    </div>
   <mat-divider></mat-divider>
   <div class="content-footer-dialog">
     <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>

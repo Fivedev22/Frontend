@@ -9,6 +9,7 @@
       <form [formGroup]="reservationForm" autocomplete="off" novalidate>
 
         <ng-container *ngIf="currentStep === 1">
+          <h2>Detalles de la Reserva</h2>
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Número de Reserva</mat-label>
@@ -125,6 +126,7 @@
         </ng-container>
   
         <ng-container *ngIf="currentStep === 2">
+          <h2>Detalles de la Estadía</h2>
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Fecha de Llegada</mat-label>
@@ -339,6 +341,7 @@
         </ng-container>
         
         <ng-container *ngIf="currentStep === 3">
+          <h2>Detalle del Monto y Confirmación</h2>
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Monto de Reserva</mat-label>
