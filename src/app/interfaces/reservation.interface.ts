@@ -1,4 +1,3 @@
-import { ICar } from "./car.interface";
 import { IClient } from "./client.interface";
 import { IPaymentType } from "./payment_type.interface";
 import { IProperty } from "./property.interface";
@@ -13,14 +12,16 @@ export interface IReservation {
     booking_origin: IReservationOrigin;
     client: IClient;
     property: IProperty;
-    adults_number: number;
-    kids_number: number;
-    pets_number?: number;
-    cars?: ICar[];
     check_in_date: Date;
     check_out_date: Date;
     check_in_hour: string;
     check_out_hour: string;
+    adults_number: number;
+    kids_number: number;
+    pets_number?: number;
+    brand?: string;
+    model?: string;
+    licensePlate?: string;
     starting_price: string;
     discount?: string;
     deposit_amount: string;

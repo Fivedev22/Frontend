@@ -44,7 +44,6 @@ import {
 } from '@angular/material/core';
 import { IPaymentType } from 'src/app/interfaces/payment_type.interface';
 import { PaymentTypeService } from 'src/app/services/payment_type.service';
-import { ICar } from 'src/app/interfaces/car.interface';
 import { carBrands } from './car-brands';
 
 export const PICK_FORMATS = {
@@ -98,9 +97,10 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
-  carsFormArray!: FormArray;
   carBrands: string[] = carBrands;
   currentStep: number = 1;
+  public showFields = false;
+
 
 
 
@@ -155,7 +155,6 @@ export class ReservationFormComponent implements OnInit {
     this.findAllPaymentTypes();
     this.getBookingsOcuped();
     this.formBuilder.group;
-    this.carsFormArray = this.reservationForm.get('cars') as FormArray;
 
     this.reservationForm.get('starting_price')?.valueChanges.subscribe(() => {
       this.calcularPrecioReserva();
@@ -212,30 +211,17 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
+  public toggleFields(): void {
+    this.showFields = !this.showFields;
+  }
+  
+
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);
   };
 
-  buildCarFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      brand: [''],
-      model: [''],
-      licensePlate: [''],
-    });
-  }
-
-  addCar() {
-    const carsFormArray = this.reservationForm.get('cars') as FormArray;
-    const carFormGroup = this.buildCarFormGroup();
-    carsFormArray.push(carFormGroup);
-  }
-  
-  
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
-    const carFormArray = this.formBuilder.array([
-      this.buildCarFormGroup(),
-    ]);
     return this.formBuilder.group(
       {
         booking_number: [''],
@@ -278,7 +264,9 @@ export class ReservationFormComponent implements OnInit {
             Validators.min(0),
           ],
         ],
-        cars: carFormArray,
+        brand: ['', [Validators.required]],
+        model: ['', [Validators.required]],
+        licensePlate: ['', [Validators.required]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -390,20 +378,6 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['property'].setValue(
       data.property.id_property
     );
-    this.reservationForm.controls['adults_number'].setValue(data.adults_number);
-    this.reservationForm.controls['kids_number'].setValue(data.kids_number);
-    this.reservationForm.controls['pets_number'].setValue(data.pets_number);
-
-    const carsFormArray = this.reservationForm.get('cars') as FormArray;
-    carsFormArray.clear(); // Limpiar el FormArray antes de agregar nuevos autos
-  
-    if (data.cars && data.cars.length > 0) {
-      data.cars.forEach((car: any) => {
-        const carFormGroup = this.buildCarFormGroup();
-        carFormGroup.patchValue(car);
-        carsFormArray.push(carFormGroup);
-      });
-    }
     this.reservationForm.controls['check_in_date'].setValue(data.check_in_date);
     this.reservationForm.controls['check_out_date'].setValue(
       data.check_out_date
@@ -412,6 +386,12 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['check_out_hour'].setValue(
       data.check_out_hour
     );
+    this.reservationForm.controls['adults_number'].setValue(data.adults_number);
+    this.reservationForm.controls['kids_number'].setValue(data.kids_number);
+    this.reservationForm.controls['pets_number'].setValue(data.pets_number);
+    this.reservationForm.controls['brand'].setValue(data.brand);
+    this.reservationForm.controls['model'].setValue(data.model);
+    this.reservationForm.controls['licensePlate'].setValue(data.licensePlate);
     this.reservationForm.controls['starting_price'].setValue(
       data.starting_price
     );
