@@ -25,11 +25,11 @@ export class ReservationPageComponent implements OnInit {
 
   displayedColumns: string[] = [
     'booking_number',
-    'booking_type',
     'client',
     'property',
     'check_in_date',
     'check_out_date',
+    'deposit_amount',
     'actions',
   ];
 

@@ -44,7 +44,7 @@ import {
 } from '@angular/material/core';
 import { IPaymentType } from 'src/app/interfaces/payment_type.interface';
 import { PaymentTypeService } from 'src/app/services/payment_type.service';
-import { carBrands } from './car-brands';
+import { vehicleBrands } from './car-brands';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
@@ -97,7 +97,7 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
-  carBrands: string[] = carBrands;
+  vehicleBrands: string[] = vehicleBrands;
   currentStep: number = 1;
   public showFields = false;
 
@@ -180,22 +180,18 @@ export class ReservationFormComponent implements OnInit {
       const checkInDate = new Date(this.reservationData.check_in_date);
       const checkOutDate = new Date(this.reservationData.check_out_date);
 
-      const checkInControl = this.reservationForm.controls['check_in_date'];
-      const checkOutControl = this.reservationForm.controls['check_out_date'];
-      const checkInValue = checkInControl.value;
-      const checkOutValue = checkOutControl.value;
-      const datesModified = checkInControl.dirty || checkOutControl.dirty;
+      // Ajustar las fechas según la zona horaria del cliente
+      checkInDate.setTime(
+        checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+      );
+      checkOutDate.setTime(
+        checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+      );
 
-      if (!datesModified) {
-        checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-        checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
-
-        checkInControl.setValue(checkInDate);
-        checkOutControl.setValue(checkOutDate);
-      } else {
-        checkInControl.setValue(checkInValue);
-        checkOutControl.setValue(checkOutValue);
-      }
+      this.reservationForm.patchValue({
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate
+      });
     }
   }
 
@@ -265,8 +261,8 @@ export class ReservationFormComponent implements OnInit {
           ],
         ],
         brand: ['', [Validators.required]],
-        model: ['', [Validators.required]],
-        licensePlate: ['', [Validators.required]],
+        model: ['', [Validators.required, Validators.pattern('^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ]*$')]],
+        licensePlate: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,7}$')]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -299,13 +295,13 @@ export class ReservationFormComponent implements OnInit {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     const selectedDate = new Date(control.value);
-
-    if (selectedDate < currentDate) {
+  
+    if (selectedDate < currentDate && !control.value) {
       return { pastDate: true };
     }
-
+  
     return null;
-  }
+  }  
 
   checkInCheckOutValidator(reservationForm: FormGroup) {
     const checkInDate = reservationForm.get('check_in_date')?.value;

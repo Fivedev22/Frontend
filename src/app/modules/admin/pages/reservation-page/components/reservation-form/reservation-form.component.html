@@ -309,13 +309,13 @@
                 <strong>Campo requerido</strong>
               </mat-error>
             </mat-form-field>
-          </mat-grid-tile>    
-          
+          </mat-grid-tile>  
+                  
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Marca del Vehículo</mat-label>
               <mat-select formControlName="brand" placeholder="Seleccione la marca">
-                <mat-option *ngFor="let brand of carBrands" [value]="brand">
+                <mat-option *ngFor="let brand of vehicleBrands" [value]="brand">
                   {{ brand }}
                 </mat-option>
               </mat-select>
@@ -339,8 +339,11 @@
               <mat-error align="end" *ngIf="hasError('model', 'required')">
                 <strong>Campo requerido</strong>
               </mat-error>
+              <mat-error align="end" *ngIf="hasError('model', 'pattern')">
+                <strong>Ingrese un modelo válido</strong>
+              </mat-error>
             </mat-form-field>
-          </mat-grid-tile>
+          </mat-grid-tile>          
           
           <mat-grid-tile>
             <mat-form-field appearance="outline">
@@ -355,10 +358,11 @@
               <mat-error align="end" *ngIf="hasError('licensePlate', 'required')"> 
                 <strong>Campo requerido</strong>
               </mat-error>
+              <mat-error align="end" *ngIf="hasError('licensePlate', 'pattern')">
+                <strong>Debe contener entre 6 y 7 letras/números</strong>
+              </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-          
-
         </ng-container>
         
         <ng-container *ngIf="currentStep === 3">
