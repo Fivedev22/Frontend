@@ -50,21 +50,26 @@ export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
   display: {
     dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'numeric' },
-    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    monthYearLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
     monthYearA11yLabel: { year: 'numeric', month: 'numeric' },
   },
 };
 
 @Injectable()
 class PickDateAdapter extends NativeDateAdapter {
-  override format(date: Date, displayFormat: Object): string {
+  override getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+    return ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  }
+
+  override format(date: Date, displayFormat: any): string {
     if (displayFormat === 'input') {
-      return formatDate(date, 'dd-MM-yyyy', this.locale);
+      return formatDate(date, 'dd/MM/yyyy', this.locale);
     } else {
-      return date.toDateString();
+      return super.format(date, displayFormat);
     }
   }
+  
 }
 
 @Component({
@@ -128,8 +133,18 @@ export class ReservationFormComponent implements OnInit {
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
-    this.minDate = new Date();
-    this.minDate.setHours(0, 0, 0, 0);
+    if (this.reservationData) {
+      // Edit mode - Set minDate for both check-in and check-out
+      const checkInDate = new Date(this.reservationData.check_in);
+      const checkOutDate = new Date(this.reservationData.check_out);
+  
+      this.minDate = new Date(Math.min(checkInDate.getTime(), checkOutDate.getTime()));
+      this.minDate.setHours(0, 0, 0, 0);
+    } else {
+      // Create mode - Set minDate to the current date
+      this.minDate = new Date();
+      this.minDate.setHours(0, 0, 0, 0);
+    }
   }
 
   maxDate = new Date(2100, 0, 1);
