@@ -18,6 +18,7 @@ export const vehicleBrands: string[] = [
   'DAF',
   'Dodge',
   'Ducati',
+  'Fiat',
   'Forest River',
   'Ford',
   'Freightliner',

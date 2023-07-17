@@ -134,14 +134,12 @@ export class ReservationFormComponent implements OnInit {
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
     if (this.reservationData) {
-      // Edit mode - Set minDate for both check-in and check-out
       const checkInDate = new Date(this.reservationData.check_in);
       const checkOutDate = new Date(this.reservationData.check_out);
   
       this.minDate = new Date(Math.min(checkInDate.getTime(), checkOutDate.getTime()));
       this.minDate.setHours(0, 0, 0, 0);
     } else {
-      // Create mode - Set minDate to the current date
       this.minDate = new Date();
       this.minDate.setHours(0, 0, 0, 0);
     }

@@ -845,4 +845,5 @@ export class StatisticPageComponent implements AfterViewInit {
         break;
     }
   }
+  
 }

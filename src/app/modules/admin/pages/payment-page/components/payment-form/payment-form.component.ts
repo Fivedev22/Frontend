@@ -117,34 +117,35 @@ export class PaymentFormComponent implements OnInit {
       this.calcularPrecioFinal();
     });
 
+    
     if (this.paymentData && this.paymentData.id_payment) {
       this.addPaymentData(this.paymentData);
       this.actionTitle = 'Modificar Cobro';
       this.actionButton = 'Actualizar';
     }
 
-    if (!this.paymentData) {
-      const checkInDate = new Date(this.paymentData.check_in_date);
-    const checkOutDate = new Date(this.paymentData.check_out_date);
     
-    const checkInControl = this.paymentForm.controls['check_in_date'];
-    const checkOutControl = this.paymentForm.controls['check_out_date'];
-    const checkInValue = checkInControl.value;
-    const checkOutValue = checkOutControl.value;
-    const datesModified = checkInControl.dirty || checkOutControl.dirty;
-    
-    if (!datesModified) {
-      checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-      checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+    if (this.paymentData) {
       
-      checkInControl.setValue(checkInDate);
-      checkOutControl.setValue(checkOutDate);
-    } else {
-      checkInControl.setValue(checkInValue);
-      checkOutControl.setValue(checkOutValue);
-    }
+      const checkInDate = new Date(this.paymentData.check_in_date);
+      const checkOutDate = new Date(this.paymentData.check_out_date);
 
-  }
+      // Ajustar las fechas según la zona horaria del cliente
+      checkInDate.setTime(
+        checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+      );
+      checkOutDate.setTime(
+        checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+      );
+      console.log('checkInDate:', checkInDate);
+      console.log('checkOutDate:', checkOutDate);
+
+
+      this.paymentForm.patchValue({
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate
+      });
+    }
     
   
   }
@@ -153,12 +154,14 @@ export class PaymentFormComponent implements OnInit {
     return this.paymentForm.controls[controlName].hasError(errorName);
   };
 
-  addReservationData(reservation: IReservation) {
+  addReservationData(reservation: IReservation) { 
     const checkInDate = new Date(reservation.check_in_date);
     const checkOutDate = new Date(reservation.check_out_date);
   
-    checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-    checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+    // Ajustar las fechas según la zona horaria del cliente
+    checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
+    checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
+    
   
     this.paymentForm.patchValue({
       booking: reservation.id_booking,
@@ -174,6 +177,7 @@ export class PaymentFormComponent implements OnInit {
       payment_status: 2,
     });    
   }
+  
   
 
   
