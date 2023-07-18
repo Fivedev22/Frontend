@@ -239,9 +239,6 @@
               >
                 <strong>Campo requerido</strong>
               </mat-error>
-              <!-- <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
-                <strong>Debe ser entre las 08:00 y las 10:00</strong>
-              </mat-error> -->
             </mat-form-field>
           </mat-grid-tile>
 
@@ -251,7 +248,7 @@
               <input
                 formControlName="adults_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
@@ -273,7 +270,7 @@
               <input
                 formControlName="kids_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
@@ -295,7 +292,7 @@
               <input
                 formControlName="pets_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-error align="end" *ngIf="hasError('pets_number', 'pattern')"
@@ -314,11 +311,7 @@
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Marca del Vehículo</mat-label>
-              <mat-select formControlName="brand" placeholder="Seleccione la marca">
-                <mat-option *ngFor="let brand of vehicleBrands" [value]="brand">
-                  {{ brand }}
-                </mat-option>
-              </mat-select>
+              <input matInput formControlName="brand" placeholder="Ingrese la marca...">
               <mat-hint align="end">Campo requerido</mat-hint>
               <mat-error align="end" *ngIf="hasError('brand', 'required')">
                 <strong>Campo requerido</strong>
@@ -326,13 +319,14 @@
             </mat-form-field>
           </mat-grid-tile>
           
+          
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Modelo del Vehículo</mat-label>
               <input
                 formControlName="model"
                 matInput
-                placeholder="Ingrese el modelo"
+                placeholder="Ingrese el modelo..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
@@ -351,7 +345,7 @@
               <input
                 formControlName="licensePlate"
                 matInput
-                placeholder="Ingrese la patente"
+                placeholder="Ingrese la patente..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
