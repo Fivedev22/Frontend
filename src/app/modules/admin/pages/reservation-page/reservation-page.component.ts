@@ -147,7 +147,7 @@ export class ReservationPageComponent implements OnInit {
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe((data) => {
       const doc = new jsPDF();
-      
+  
       const addPageWithBackgroundColor = () => {
         const lightColor = '#FFFFFF';
         doc.setFillColor(lightColor);
@@ -207,55 +207,55 @@ export class ReservationPageComponent implements OnInit {
       doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 160);
       doc.text(`Cantidad menores: ${data.kids_number}`, 10, 170);
       doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 180);
-      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 190);
-      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
-      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
-      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
+      doc.text(`Marca vehiculo: ${data.brand}`, 10, 190);
+      doc.text(`Modelo vehiculo: ${data.model}`, 10, 200);
+      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 210);
+      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 220);
+      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 230);
+      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 240);
+      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 250);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Importe Detallado', 10, 230);
+      doc.text('Importe Detallado', 10, 260);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
         10,
-        240
+        270
       );
       doc.text(
         `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
         10,
-        250
+        280
       );
       doc.text(
         `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
         10,
-        260
+        290
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 270);
+      doc.text(`Descuento: % ${data.discount}`, 10, 300);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        280
+        310
       );
       doc.setLineWidth(0.5);
-      const lineY = 290;
+      const lineY = 320;
       doc.line(10, lineY, 200, lineY);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
       const textWidth = doc.getTextWidth(text);
-      const pageWidth2 = doc.internal.pageSize.getWidth();
-      const x = (pageWidth2 - textWidth) / 2;
+      const pageHeight = doc.internal.pageSize.getHeight();
   
-      // Verificar si el texto se ajusta en la página actual
-      if (lineY + 10 + doc.getLineHeight() < doc.internal.pageSize.getHeight()) {
-        // Si el texto cabe en la página actual, se muestra normalmente
-        doc.text(text, x, lineY + 10);
+      if (lineY + 10 + doc.getLineHeight() < pageHeight) {
+        doc.text(text, 10, lineY + 10);
       } else {
-        // Si no cabe en la página actual, se agrega una nueva página y se muestra el texto allí
         doc.addPage();
         addPageWithBackgroundColor();
-        doc.text(text, x, 20); // Ajusta la posición del texto según tus necesidades
+        const x = (pageWidth - textWidth) / 2;
+        doc.text(text, x, 20);
       }
   
       const pdfBytes = doc.output();
@@ -274,6 +274,7 @@ export class ReservationPageComponent implements OnInit {
       }
     });
   }
+  
   
 
   openPaymentForm(reservationId: number) {
