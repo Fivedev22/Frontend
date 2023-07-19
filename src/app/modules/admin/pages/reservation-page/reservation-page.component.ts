@@ -183,81 +183,75 @@ export class ReservationPageComponent implements OnInit {
       doc.text(title, titleX, 80);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Detalles de reserva', 10, 90);
+      doc.text('Detalles de Reserva', 10, 90);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
-      doc.text(`Reserva Nro: ${data.booking_number}`, 10, 100);
+      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
+      doc.text(`Nro Reserva: ${data.booking_number}`, 10, 105);
       doc.text(
         `Tipo de Reserva: ${data.booking_type.booking_type_name}`,
         10,
-        120
+        110
       );
       doc.text(
         `Procedencia de Reserva: ${data.booking_origin.origin_name}`,
         10,
-        130
+        115
       );
       doc.text(
         `Cliente: ${data.client.name} ${data.client.last_name}`,
         10,
-        140
+        120
       );
-      doc.text(`Propiedad: ${data.property.property_name}`, 10, 150);
-      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 160);
-      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 170);
-      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 180);
-      doc.text(`Marca vehiculo: ${data.brand}`, 10, 190);
-      doc.text(`Modelo vehiculo: ${data.model}`, 10, 200);
-      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 210);
-      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 220);
-      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 230);
-      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 240);
-      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 250);
+      doc.text(`Propiedad: ${data.property.property_name}`, 10, 125);
+      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 130);
+      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 135);
+      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 140);
+      doc.text(`Marca vehiculo: ${data.brand}`, 10, 145);
+      doc.text(`Modelo vehiculo: ${data.model}`, 10, 150);
+      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 155);
+      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 160);
+      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 165);
+      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 170);
+      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 175);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Importe Detallado', 10, 260);
+      doc.text('Importe Detallado', 10, 185);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
         10,
-        270
+        195
       );
       doc.text(
         `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
         10,
-        280
+        200
       );
       doc.text(
         `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
         10,
-        290
+        205
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 300);
+      doc.text(`Descuento: % ${data.discount}`, 10, 210);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        310
+        215
       );
       doc.setLineWidth(0.5);
-      const lineY = 320;
+      const lineY = 220;
       doc.line(10, lineY, 200, lineY);
+      
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
       const textWidth = doc.getTextWidth(text);
-      const pageHeight = doc.internal.pageSize.getHeight();
-  
-      if (lineY + 10 + doc.getLineHeight() < pageHeight) {
-        doc.text(text, 10, lineY + 10);
-      } else {
-        doc.addPage();
-        addPageWithBackgroundColor();
-        const x = (pageWidth - textWidth) / 2;
-        doc.text(text, x, 20);
-      }
-  
+      const pageWidth2 = doc.internal.pageSize.getWidth();
+      const textX = (pageWidth - textWidth) / 2;
+      doc.text(text, textX, lineY + 15);
+      
       const pdfBytes = doc.output();
       const pdfUrl = URL.createObjectURL(
         new Blob([pdfBytes], { type: 'application/pdf' })
