@@ -271,38 +271,6 @@
 
         <mat-grid-tile>
           <mat-form-field appearance="outline">
-            <mat-label>Subtotal</mat-label>
-            <input
-              formControlName="payment_amount_subtotal"
-              matInput
-              placeholder=""
-              type="text"
-              readonly
-              currencyMask
-              [options]="{
-                prefix: '$ ',
-                thousands: '.',
-                decimal: ',',
-                align: 'left'
-              }"
-            />
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('payment_amount_subtotal', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-            <mat-error
-              align="end"
-              *ngIf="hasError('payment_amount_subtotal', 'min')"
-              ><strong>Mínimo 0 como valor</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
             <mat-label>Total</mat-label>
             <input
               formControlName="payment_amount_total"
@@ -351,30 +319,6 @@
             <mat-error
               align=" end"
               *ngIf="hasError('payment_type', 'required')"
-            >
-              <strong>Campo requerido</strong>
-            </mat-error>
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-form-field appearance="outline">
-            <mat-label>Estado de Pago</mat-label>
-            <mat-select
-              formControlName="payment_status"
-              placeholder="Seleccione..."
-            >
-              <mat-option
-                *ngFor="let payment_status of payment_statuses"
-                [value]="payment_status.id_payment_status"
-              >
-                {{ payment_status.payment_status_name }}</mat-option
-              >
-            </mat-select>
-            <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error
-              align=" end"
-              *ngIf="hasError('payment_status', 'required')"
             >
               <strong>Campo requerido</strong>
             </mat-error>

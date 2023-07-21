@@ -197,10 +197,9 @@ export class PaymentFormComponent implements OnInit {
       deposit_amount: ['', [Validators.required, Validators.min(0)]],
       booking_amount: ['', [Validators.required, Validators.min(0)]],
       extra_expenses: ['', [Validators.min(0)]],
-      payment_amount_subtotal: ['', [Validators.required, Validators.min(0)]],
       payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
-      payment_status: ['', [Validators.required]],
+      payment_status: [''],
     });
   }
 
@@ -222,9 +221,6 @@ export class PaymentFormComponent implements OnInit {
     this.paymentForm.controls['deposit_amount'].setValue(data.deposit_amount);
     this.paymentForm.controls['booking_amount'].setValue(data.booking_amount);
     this.paymentForm.controls['extra_expenses'].setValue(data.extra_expenses);
-    this.paymentForm.controls['payment_amount_subtotal'].setValue(
-      data.payment_amount_subtotal
-    );
     this.paymentForm.controls['payment_amount_total'].setValue(
       data.payment_amount_total
     );
@@ -244,7 +240,6 @@ export class PaymentFormComponent implements OnInit {
     if (precioReserva < 0) {
       precioReserva = 0;
     }
-    this.paymentForm.patchValue({ payment_amount_subtotal: precioReserva });
     this.paymentForm.patchValue({ payment_amount_total: precioReserva });
   }
 

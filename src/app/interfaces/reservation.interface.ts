@@ -29,4 +29,5 @@ export interface IReservation {
     estimated_amount_deposit: string;
     booking_amount: string;
     is_active?: boolean;
+    is_paid?: boolean;
 }

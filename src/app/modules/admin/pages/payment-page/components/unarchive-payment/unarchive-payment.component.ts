@@ -147,7 +147,6 @@ export class UnarchivePaymentComponent {
           Monto del depósito: ${payment.deposit_amount}
           Monto total de la reserva: ${payment.booking_amount}
           Gastos adicionales: ${payment.extra_expenses || 'N/A'}
-          Subtotal del cobro: ${payment.payment_amount_subtotal}
           Total del cobro: ${payment.payment_amount_total}
           Tipo de pago: ${payment.payment_type.payment_type_name}
           Estado del pago: ${payment.payment_status.payment_status_name}

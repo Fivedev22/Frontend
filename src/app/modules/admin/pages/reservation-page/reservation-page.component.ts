@@ -14,6 +14,9 @@ import { ContractUploadComponent } from './components/contract-upload/contract-u
 import { PaymentService } from '../../../../services/payment.service';
 import { UnarchiveReservationComponent } from './components/unarchive-reservation/unarchive-reservation.component';
 import { IPayment } from 'src/app/interfaces/payment.interface';
+import { map } from 'rxjs';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-reservation-page',
@@ -30,6 +33,7 @@ export class ReservationPageComponent implements OnInit {
     'check_in_date',
     'check_out_date',
     'deposit_amount',
+    'is_paid',
     'actions',
   ];
 
@@ -50,10 +54,35 @@ export class ReservationPageComponent implements OnInit {
   }
 
   findAllReservations() {
-    this.reservationService.findAllReservations().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.reservationService.findAllReservations().subscribe((reservations) => {
+      const observables = reservations.map((reservation) =>
+        this.paymentService.findAllPayments().pipe(
+          map((payments) => {
+            const hasPayments = payments.some(
+              (payment) => payment.booking.id_booking === reservation.id_booking
+            );
+  
+            // Update the local attribute
+            reservation.is_paid = hasPayments;
+  
+            // Call the updateIsPaid function if there are payments
+            if (hasPayments) {
+              this.reservationService.updateIsPaid(reservation.id_booking!).subscribe(
+                () => console.log(`Updated is_paid for reservation ${reservation.id_booking}`),
+                (error) => console.error('Error updating is_paid:', error)
+              );
+            }
+  
+            return reservation;
+          })
+        )
+      );
+  
+      forkJoin(observables).subscribe((updatedReservations) => {
+        this.dataSource = new MatTableDataSource<IReservation>(updatedReservations);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
     });
   }
 
