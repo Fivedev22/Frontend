@@ -18,7 +18,6 @@ export interface IPayment {
     deposit_amount: string;
     booking_amount: string;
     extra_expenses?: string;
-    payment_amount_subtotal: string;
     payment_amount_total: string;
     payment_type: IPaymentType;
     payment_status: IPaymentStatus;

@@ -14,6 +14,9 @@ import { ContractUploadComponent } from './components/contract-upload/contract-u
 import { PaymentService } from '../../../../services/payment.service';
 import { UnarchiveReservationComponent } from './components/unarchive-reservation/unarchive-reservation.component';
 import { IPayment } from 'src/app/interfaces/payment.interface';
+import { map } from 'rxjs';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-reservation-page',
@@ -25,11 +28,12 @@ export class ReservationPageComponent implements OnInit {
 
   displayedColumns: string[] = [
     'booking_number',
-    'booking_type',
     'client',
     'property',
     'check_in_date',
     'check_out_date',
+    'deposit_amount',
+    'is_paid',
     'actions',
   ];
 
@@ -50,10 +54,35 @@ export class ReservationPageComponent implements OnInit {
   }
 
   findAllReservations() {
-    this.reservationService.findAllReservations().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.reservationService.findAllReservations().subscribe((reservations) => {
+      const observables = reservations.map((reservation) =>
+        this.paymentService.findAllPayments().pipe(
+          map((payments) => {
+            const hasPayments = payments.some(
+              (payment) => payment.booking.id_booking === reservation.id_booking
+            );
+  
+            // Update the local attribute
+            reservation.is_paid = hasPayments;
+  
+            // Call the updateIsPaid function if there are payments
+            if (hasPayments) {
+              this.reservationService.updateIsPaid(reservation.id_booking!).subscribe(
+                () => console.log(`Updated is_paid for reservation ${reservation.id_booking}`),
+                (error) => console.error('Error updating is_paid:', error)
+              );
+            }
+  
+            return reservation;
+          })
+        )
+      );
+  
+      forkJoin(observables).subscribe((updatedReservations) => {
+        this.dataSource = new MatTableDataSource<IReservation>(updatedReservations);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
     });
   }
 
@@ -147,7 +176,7 @@ export class ReservationPageComponent implements OnInit {
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe((data) => {
       const doc = new jsPDF();
-      
+  
       const addPageWithBackgroundColor = () => {
         const lightColor = '#FFFFFF';
         doc.setFillColor(lightColor);
@@ -183,81 +212,75 @@ export class ReservationPageComponent implements OnInit {
       doc.text(title, titleX, 80);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Detalles de reserva', 10, 90);
+      doc.text('Detalles de Reserva', 10, 90);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 110);
-      doc.text(`Reserva Nro: ${data.booking_number}`, 10, 100);
+      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
+      doc.text(`Nro Reserva: ${data.booking_number}`, 10, 105);
       doc.text(
         `Tipo de Reserva: ${data.booking_type.booking_type_name}`,
         10,
-        120
+        110
       );
       doc.text(
         `Procedencia de Reserva: ${data.booking_origin.origin_name}`,
         10,
-        130
+        115
       );
       doc.text(
         `Cliente: ${data.client.name} ${data.client.last_name}`,
         10,
-        140
+        120
       );
-      doc.text(`Propiedad: ${data.property.property_name}`, 10, 150);
-      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 160);
-      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 170);
-      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 180);
-      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 190);
-      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 200);
-      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 210);
-      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 220);
+      doc.text(`Propiedad: ${data.property.property_name}`, 10, 125);
+      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 130);
+      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 135);
+      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 140);
+      doc.text(`Marca vehiculo: ${data.brand}`, 10, 145);
+      doc.text(`Modelo vehiculo: ${data.model}`, 10, 150);
+      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 155);
+      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 160);
+      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 165);
+      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 170);
+      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 175);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Importe Detallado', 10, 230);
+      doc.text('Importe Detallado', 10, 185);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
         10,
-        240
+        195
       );
       doc.text(
         `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
         10,
-        250
+        200
       );
       doc.text(
         `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
         10,
-        260
+        205
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 270);
+      doc.text(`Descuento: % ${data.discount}`, 10, 210);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        280
+        215
       );
       doc.setLineWidth(0.5);
-      const lineY = 290;
+      const lineY = 220;
       doc.line(10, lineY, 200, lineY);
+      
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
       const textWidth = doc.getTextWidth(text);
       const pageWidth2 = doc.internal.pageSize.getWidth();
-      const x = (pageWidth2 - textWidth) / 2;
-  
-      // Verificar si el texto se ajusta en la página actual
-      if (lineY + 10 + doc.getLineHeight() < doc.internal.pageSize.getHeight()) {
-        // Si el texto cabe en la página actual, se muestra normalmente
-        doc.text(text, x, lineY + 10);
-      } else {
-        // Si no cabe en la página actual, se agrega una nueva página y se muestra el texto allí
-        doc.addPage();
-        addPageWithBackgroundColor();
-        doc.text(text, x, 20); // Ajusta la posición del texto según tus necesidades
-      }
-  
+      const textX = (pageWidth - textWidth) / 2;
+      doc.text(text, textX, lineY + 15);
+      
       const pdfBytes = doc.output();
       const pdfUrl = URL.createObjectURL(
         new Blob([pdfBytes], { type: 'application/pdf' })
@@ -274,6 +297,7 @@ export class ReservationPageComponent implements OnInit {
       }
     });
   }
+  
   
 
   openPaymentForm(reservationId: number) {

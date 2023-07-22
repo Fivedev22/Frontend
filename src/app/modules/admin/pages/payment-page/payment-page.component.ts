@@ -25,7 +25,6 @@ export class PaymentPageComponent {
     'property',
     'client',
     'booking_starting_price',
-    'payment_status',
     'actions',
   ];
 
@@ -219,17 +218,12 @@ export class PaymentPageComponent {
         230
       );
       doc.text(
-        `Subtotal: $ ${parseFloat(data.payment_amount_subtotal).toLocaleString()}`,
+        `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
         10,
         240
       );
-      doc.text(
-        `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
-        10,
-        250
-      );
       doc.setLineWidth(0.5);
-      const lineY = 260;
+      const lineY = 250;
       doc.line(10, lineY, 200, lineY);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);

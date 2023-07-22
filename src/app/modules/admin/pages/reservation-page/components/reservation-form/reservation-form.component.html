@@ -239,9 +239,6 @@
               >
                 <strong>Campo requerido</strong>
               </mat-error>
-              <!-- <mat-error align="end" *ngIf="hasError('check_out_hour', 'pattern')">
-                <strong>Debe ser entre las 08:00 y las 10:00</strong>
-              </mat-error> -->
             </mat-form-field>
           </mat-grid-tile>
 
@@ -251,7 +248,7 @@
               <input
                 formControlName="adults_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
@@ -273,7 +270,7 @@
               <input
                 formControlName="kids_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
@@ -295,7 +292,7 @@
               <input
                 formControlName="pets_number"
                 matInput
-                placeholder="Ingrese cantidad"
+                placeholder="Ingrese la cantidad..."
                 type="text"
               />
               <mat-error align="end" *ngIf="hasError('pets_number', 'pattern')"
@@ -309,35 +306,57 @@
                 <strong>Campo requerido</strong>
               </mat-error>
             </mat-form-field>
-          </mat-grid-tile>
-
-          <mat-grid-tile>
-          <div formArrayName="cars">
-            <ng-container *ngIf="carsFormArray">
-              <div *ngFor="let carGroup of carsFormArray.controls; let i = index">
-                <div [formGroupName]="i">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Marca</mat-label>
-                    <mat-select formControlName="brand">
-                      <mat-option *ngFor="let brand of carBrands" [value]="brand">{{ brand }}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+          </mat-grid-tile>  
                   
-                  <mat-form-field appearance="outline">
-                    <mat-label>Modelo</mat-label>
-                    <input matInput formControlName="model" type="text" placeholder="Ingrese modelo">
-                  </mat-form-field>
-        
-                  <mat-form-field appearance="outline">
-                    <mat-label>Patente</mat-label>
-                    <input matInput formControlName="licensePlate" type="text" placeholder="Ingrese patente">
-                  </mat-form-field>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-          <mat-icon (click)="addCar()">add</mat-icon>
-        </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Marca del Vehículo</mat-label>
+              <input matInput formControlName="brand" placeholder="Ingrese la marca...">
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align="end" *ngIf="hasError('brand', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
+          
+          
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Modelo del Vehículo</mat-label>
+              <input
+                formControlName="model"
+                matInput
+                placeholder="Ingrese el modelo..."
+                type="text"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align="end" *ngIf="hasError('model', 'required')">
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('model', 'pattern')">
+                <strong>Ingrese un modelo válido</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>          
+          
+          <mat-grid-tile>
+            <mat-form-field appearance="outline">
+              <mat-label>Patente del Vehículo</mat-label>
+              <input
+                formControlName="licensePlate"
+                matInput
+                placeholder="Ingrese la patente..."
+                type="text"
+              />
+              <mat-hint align="end">Campo requerido</mat-hint>
+              <mat-error align="end" *ngIf="hasError('licensePlate', 'required')"> 
+                <strong>Campo requerido</strong>
+              </mat-error>
+              <mat-error align="end" *ngIf="hasError('licensePlate', 'pattern')">
+                <strong>Debe contener entre 6 y 7 letras/números</strong>
+              </mat-error>
+            </mat-form-field>
+          </mat-grid-tile>
         </ng-container>
         
         <ng-container *ngIf="currentStep === 3">

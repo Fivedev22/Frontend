@@ -44,28 +44,32 @@ import {
 } from '@angular/material/core';
 import { IPaymentType } from 'src/app/interfaces/payment_type.interface';
 import { PaymentTypeService } from 'src/app/services/payment_type.service';
-import { ICar } from 'src/app/interfaces/car.interface';
-import { carBrands } from './car-brands';
+import { vehicleBrands } from './car-brands';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
   display: {
     dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'numeric' },
-    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    monthYearLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
     monthYearA11yLabel: { year: 'numeric', month: 'numeric' },
   },
 };
 
 @Injectable()
 class PickDateAdapter extends NativeDateAdapter {
-  override format(date: Date, displayFormat: Object): string {
+  override getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+    return ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  }
+
+  override format(date: Date, displayFormat: any): string {
     if (displayFormat === 'input') {
-      return formatDate(date, 'dd-MM-yyyy', this.locale);
+      return formatDate(date, 'dd/MM/yyyy', this.locale);
     } else {
-      return date.toDateString();
+      return super.format(date, displayFormat);
     }
   }
+  
 }
 
 @Component({
@@ -98,9 +102,10 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
-  carsFormArray!: FormArray;
-  carBrands: string[] = carBrands;
+  vehicleBrands: string[] = vehicleBrands;
   currentStep: number = 1;
+  public showFields = false;
+
 
 
 
@@ -128,8 +133,16 @@ export class ReservationFormComponent implements OnInit {
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
-    this.minDate = new Date();
-    this.minDate.setHours(0, 0, 0, 0);
+    if (this.reservationData) {
+      const checkInDate = new Date(this.reservationData.check_in);
+      const checkOutDate = new Date(this.reservationData.check_out);
+  
+      this.minDate = new Date(Math.min(checkInDate.getTime(), checkOutDate.getTime()));
+      this.minDate.setHours(0, 0, 0, 0);
+    } else {
+      this.minDate = new Date();
+      this.minDate.setHours(0, 0, 0, 0);
+    }
   }
 
   maxDate = new Date(2100, 0, 1);
@@ -155,7 +168,6 @@ export class ReservationFormComponent implements OnInit {
     this.findAllPaymentTypes();
     this.getBookingsOcuped();
     this.formBuilder.group;
-    this.carsFormArray = this.reservationForm.get('cars') as FormArray;
 
     this.reservationForm.get('starting_price')?.valueChanges.subscribe(() => {
       this.calcularPrecioReserva();
@@ -181,22 +193,18 @@ export class ReservationFormComponent implements OnInit {
       const checkInDate = new Date(this.reservationData.check_in_date);
       const checkOutDate = new Date(this.reservationData.check_out_date);
 
-      const checkInControl = this.reservationForm.controls['check_in_date'];
-      const checkOutControl = this.reservationForm.controls['check_out_date'];
-      const checkInValue = checkInControl.value;
-      const checkOutValue = checkOutControl.value;
-      const datesModified = checkInControl.dirty || checkOutControl.dirty;
+      // Ajustar las fechas según la zona horaria del cliente
+      checkInDate.setTime(
+        checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+      );
+      checkOutDate.setTime(
+        checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+      );
 
-      if (!datesModified) {
-        checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-        checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
-
-        checkInControl.setValue(checkInDate);
-        checkOutControl.setValue(checkOutDate);
-      } else {
-        checkInControl.setValue(checkInValue);
-        checkOutControl.setValue(checkOutValue);
-      }
+      this.reservationForm.patchValue({
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate
+      });
     }
   }
 
@@ -212,30 +220,17 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
+  public toggleFields(): void {
+    this.showFields = !this.showFields;
+  }
+  
+
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);
   };
 
-  buildCarFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      brand: [''],
-      model: [''],
-      licensePlate: [''],
-    });
-  }
-
-  addCar() {
-    const carsFormArray = this.reservationForm.get('cars') as FormArray;
-    const carFormGroup = this.buildCarFormGroup();
-    carsFormArray.push(carFormGroup);
-  }
-  
-  
   initForm(): FormGroup {
     const dateDay = new Date().toLocaleDateString();
-    const carFormArray = this.formBuilder.array([
-      this.buildCarFormGroup(),
-    ]);
     return this.formBuilder.group(
       {
         booking_number: [''],
@@ -278,7 +273,9 @@ export class ReservationFormComponent implements OnInit {
             Validators.min(0),
           ],
         ],
-        cars: carFormArray,
+        brand: ['', [Validators.required]],
+        model: ['', [Validators.required, Validators.pattern('^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ]*$')]],
+        licensePlate: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,7}$')]],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -311,13 +308,13 @@ export class ReservationFormComponent implements OnInit {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     const selectedDate = new Date(control.value);
-
-    if (selectedDate < currentDate) {
+  
+    if (selectedDate < currentDate && !control.value) {
       return { pastDate: true };
     }
-
+  
     return null;
-  }
+  }  
 
   checkInCheckOutValidator(reservationForm: FormGroup) {
     const checkInDate = reservationForm.get('check_in_date')?.value;
@@ -390,20 +387,6 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['property'].setValue(
       data.property.id_property
     );
-    this.reservationForm.controls['adults_number'].setValue(data.adults_number);
-    this.reservationForm.controls['kids_number'].setValue(data.kids_number);
-    this.reservationForm.controls['pets_number'].setValue(data.pets_number);
-
-    const carsFormArray = this.reservationForm.get('cars') as FormArray;
-    carsFormArray.clear(); // Limpiar el FormArray antes de agregar nuevos autos
-  
-    if (data.cars && data.cars.length > 0) {
-      data.cars.forEach((car: any) => {
-        const carFormGroup = this.buildCarFormGroup();
-        carFormGroup.patchValue(car);
-        carsFormArray.push(carFormGroup);
-      });
-    }
     this.reservationForm.controls['check_in_date'].setValue(data.check_in_date);
     this.reservationForm.controls['check_out_date'].setValue(
       data.check_out_date
@@ -412,6 +395,12 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['check_out_hour'].setValue(
       data.check_out_hour
     );
+    this.reservationForm.controls['adults_number'].setValue(data.adults_number);
+    this.reservationForm.controls['kids_number'].setValue(data.kids_number);
+    this.reservationForm.controls['pets_number'].setValue(data.pets_number);
+    this.reservationForm.controls['brand'].setValue(data.brand);
+    this.reservationForm.controls['model'].setValue(data.model);
+    this.reservationForm.controls['licensePlate'].setValue(data.licensePlate);
     this.reservationForm.controls['starting_price'].setValue(
       data.starting_price
     );

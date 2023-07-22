@@ -184,8 +184,12 @@ export class DashboardPageComponent implements AfterViewInit {
           <p>- Cantidad adultos: <b>${reservation.adults_number}</b></p>
           <p>- Cantidad niños: <b>${reservation.kids_number}</b></p>
           <p>- Mascotas: <b>${reservation.pets_number}</b></p>
+          <p>- Marca: <b>${reservation.brand}</b></p>
+          <p>- Modelo: <b>${reservation.model}</b></p>
+          <p>- Matrícula: <b>${reservation.licensePlate}</b></p>
           <p>- Monto de reserva: <b>$ ${parseFloat(reservation.starting_price).toLocaleString()}</b></p>
           <p>- Descuento: <b>% ${reservation.discount}</b></p>
+          <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(reservation.starting_price,reservation.discount)}</b></p>
           <p>- Monto depósito: <b>${parseFloat(reservation.deposit_amount).toLocaleString()}</b>$ </p>
           <p>- Forma de Pago (depósito): <b>${reservation.payment_type.payment_type_name}</b> </p>
           <p>- Monto a cobrar: <b>$ ${parseFloat(reservation.booking_amount).toLocaleString()}</b></p>
@@ -193,6 +197,12 @@ export class DashboardPageComponent implements AfterViewInit {
       </html>
         `);
       });
+      function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+        const startingPriceNum = parseFloat(startingPrice);
+        const discountNum = discount ? parseFloat(discount) : 0;
+        const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+        return discountedAmount.toLocaleString();
+      }
   }
 
   viewPropertyStatus() {

@@ -114,7 +114,7 @@ export class ClientFormComponent implements OnInit {
           Validators.required,
           Validators.pattern('[0-9]*'),
           Validators.minLength(10),
-          Validators.maxLength(11),
+          Validators.maxLength(10),
         ],
       ],
       gender_type: ['',[Validators.required]],

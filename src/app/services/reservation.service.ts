@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { IReservation } from '../interfaces/reservation.interface';
-import { IClient } from '../interfaces/client.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -101,5 +100,9 @@ export class ReservationService {
 
   deleteContract(contractId: number): Observable<any> {
     return this.http.delete(`${this.RESERVATION_URL}contracts/${contractId}`);
+  }
+
+  updateIsPaid(id: number): Observable<any> {
+    return this.http.patch(`${this.RESERVATION_URL}updateIsPaid/${id}`, null);
   }
 }

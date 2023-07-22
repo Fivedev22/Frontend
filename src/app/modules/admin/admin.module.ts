@@ -43,8 +43,8 @@ import { UnarchivePropertyComponent } from './pages/property-page/components/una
 import { UnarchivePaymentComponent } from './pages/payment-page/components/unarchive-payment/unarchive-payment.component';
 import { UnarchiveReservationComponent } from './pages/reservation-page/components/unarchive-reservation/unarchive-reservation.component';
 import { ReportPageComponent } from './pages/report-page/report-page.component';
-import { PhoneMaskDirective } from './pages/client-page/components/client-form/phone-mask-directive';
 import { NotePageComponent } from './pages/dashboard-page/components/note-page/note-page.component';
+import { IsPaidPipe } from 'src/app/pipes/is_paid.pipe';
 
 @NgModule({
   declarations: [
@@ -56,6 +56,7 @@ import { NotePageComponent } from './pages/dashboard-page/components/note-page/n
     PaymentPageComponent,
     ClientFormComponent,
     ForeignPipe,
+    IsPaidPipe,
     ProvincePipe,
     GenderTypePipe,
     DocumentTypePipe,
@@ -83,7 +84,6 @@ import { NotePageComponent } from './pages/dashboard-page/components/note-page/n
     UnarchivePropertyComponent,
     UnarchivePaymentComponent,
     UnarchiveReservationComponent,
-    PhoneMaskDirective,
     NotePageComponent,
   ],
   imports: [

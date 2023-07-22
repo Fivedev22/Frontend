@@ -315,21 +315,14 @@ export class ClientPageComponent implements OnInit {
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
-            `Subtotal: $ ${parseFloat(
-              payment.payment_amount_subtotal
-            ).toLocaleString()}`,
-            20,
-            startY + lineHeight * 17
-          );
-          doc.text(
             `Total: $ ${parseFloat(
               payment.payment_amount_total
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 18
+            startY + lineHeight * 17
           );
 
-          startY += lineHeight * 19;
+          startY += lineHeight * 18;
         });
         const pdfBytes = doc.output();
         const pdfUrl = URL.createObjectURL(

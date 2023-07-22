@@ -121,9 +121,9 @@ export class StatisticPageComponent implements AfterViewInit {
           const month = date.toLocaleString('default', { month: 'long' });
           const startingPrice = parseFloat(payment.booking_starting_price);
           const discount = parseFloat(payment.booking_discount ?? "0");
-          const totalPrice = startingPrice - discount;         
-          
-          acc[month] = (acc[month] || 0) + totalPrice;
+          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
+        
+          acc[month] = (acc[month] || 0) + discountedAmount;
           return acc;
         }, {} as any);        
         const datasetData = allMonths.map((month) => {
@@ -200,15 +200,15 @@ export class StatisticPageComponent implements AfterViewInit {
         pendingPayments.forEach(payment => {
           const date = new Date(payment.createdAt);
           const month = date.toLocaleString('default', { month: 'long' });
-  
+        
           const startingPrice = parseFloat(payment.booking_starting_price);
-          const discount = parseFloat(payment.booking_discount ?? '0'); // Si discount es undefined, se asigna '0'
-          const totalPrice = startingPrice - discount; // Resta el descuento al precio inicial
-  
+          const discount = parseFloat(payment.booking_discount ?? '0'); 
+          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
+        
           if (!dataByMonth[month]) {
-            dataByMonth[month] = totalPrice;
+            dataByMonth[month] = discountedAmount;
           } else {
-            dataByMonth[month] += totalPrice;
+            dataByMonth[month] += discountedAmount;
           }
         });
   
@@ -845,4 +845,5 @@ export class StatisticPageComponent implements AfterViewInit {
         break;
     }
   }
+  
 }

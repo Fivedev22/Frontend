@@ -117,34 +117,35 @@ export class PaymentFormComponent implements OnInit {
       this.calcularPrecioFinal();
     });
 
+    
     if (this.paymentData && this.paymentData.id_payment) {
       this.addPaymentData(this.paymentData);
       this.actionTitle = 'Modificar Cobro';
       this.actionButton = 'Actualizar';
     }
 
-    if (!this.paymentData) {
-      const checkInDate = new Date(this.paymentData.check_in_date);
-    const checkOutDate = new Date(this.paymentData.check_out_date);
     
-    const checkInControl = this.paymentForm.controls['check_in_date'];
-    const checkOutControl = this.paymentForm.controls['check_out_date'];
-    const checkInValue = checkInControl.value;
-    const checkOutValue = checkOutControl.value;
-    const datesModified = checkInControl.dirty || checkOutControl.dirty;
-    
-    if (!datesModified) {
-      checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-      checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+    if (this.paymentData) {
       
-      checkInControl.setValue(checkInDate);
-      checkOutControl.setValue(checkOutDate);
-    } else {
-      checkInControl.setValue(checkInValue);
-      checkOutControl.setValue(checkOutValue);
-    }
+      const checkInDate = new Date(this.paymentData.check_in_date);
+      const checkOutDate = new Date(this.paymentData.check_out_date);
 
-  }
+      // Ajustar las fechas según la zona horaria del cliente
+      checkInDate.setTime(
+        checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+      );
+      checkOutDate.setTime(
+        checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+      );
+      console.log('checkInDate:', checkInDate);
+      console.log('checkOutDate:', checkOutDate);
+
+
+      this.paymentForm.patchValue({
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate
+      });
+    }
     
   
   }
@@ -153,12 +154,14 @@ export class PaymentFormComponent implements OnInit {
     return this.paymentForm.controls[controlName].hasError(errorName);
   };
 
-  addReservationData(reservation: IReservation) {
+  addReservationData(reservation: IReservation) { 
     const checkInDate = new Date(reservation.check_in_date);
     const checkOutDate = new Date(reservation.check_out_date);
   
-    checkInDate.setUTCDate(checkInDate.getUTCDate() + 1);
-    checkOutDate.setUTCDate(checkOutDate.getUTCDate() + 1);
+    // Ajustar las fechas según la zona horaria del cliente
+    checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
+    checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
+    
   
     this.paymentForm.patchValue({
       booking: reservation.id_booking,
@@ -174,6 +177,7 @@ export class PaymentFormComponent implements OnInit {
       payment_status: 2,
     });    
   }
+  
   
 
   
@@ -193,10 +197,9 @@ export class PaymentFormComponent implements OnInit {
       deposit_amount: ['', [Validators.required, Validators.min(0)]],
       booking_amount: ['', [Validators.required, Validators.min(0)]],
       extra_expenses: ['', [Validators.min(0)]],
-      payment_amount_subtotal: ['', [Validators.required, Validators.min(0)]],
       payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
-      payment_status: ['', [Validators.required]],
+      payment_status: [''],
     });
   }
 
@@ -218,9 +221,6 @@ export class PaymentFormComponent implements OnInit {
     this.paymentForm.controls['deposit_amount'].setValue(data.deposit_amount);
     this.paymentForm.controls['booking_amount'].setValue(data.booking_amount);
     this.paymentForm.controls['extra_expenses'].setValue(data.extra_expenses);
-    this.paymentForm.controls['payment_amount_subtotal'].setValue(
-      data.payment_amount_subtotal
-    );
     this.paymentForm.controls['payment_amount_total'].setValue(
       data.payment_amount_total
     );
@@ -240,7 +240,6 @@ export class PaymentFormComponent implements OnInit {
     if (precioReserva < 0) {
       precioReserva = 0;
     }
-    this.paymentForm.patchValue({ payment_amount_subtotal: precioReserva });
     this.paymentForm.patchValue({ payment_amount_total: precioReserva });
   }
 
