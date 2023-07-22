@@ -52,3 +52,25 @@ body {
   padding: 5px !important;
   font-size: 14px !important;
 }
+
+.mdc-tab__text-label {
+  text-transform: uppercase;
+}
+
+.mdc-tab {
+  justify-content: start !important;
+  padding: 0px !important;
+}
+
+.mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs
+  > .mat-mdc-tab-header
+  .mat-mdc-tab {
+  flex-grow: 0 !important;
+}
+.mat-mdc-tab-labels {
+  gap: 50px !important;
+}
+
+.mdc-tab-indicator__content--underline {
+  border: none !important;
+}
