@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
     this.toggleSideBarForMe.emit();
   }
   goToWebPage() {
-    const externalUrl = 'https://anahiapartamentosweb.vercel.app/';
+    const externalUrl = 'https://anahiapartamentos.vercel.app/';
     window.open(externalUrl, '_blank');
   }
 }
