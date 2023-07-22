@@ -12,10 +12,10 @@
   /* Estilos 3D */
   border: none;
   border-radius: 999px;
-  
+
   /* Estilos de gradiente en hover */
   background-color: #0d6efd;
-  
+
   /* Otros estilos */
   color: #fff;
   cursor: pointer;
@@ -23,6 +23,22 @@
   z-index: 999;
 }
 
+.custom-button-view {
+  position: absolute;
+  bottom: 1rem;
+  right: 5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  /* Estilos 3D */
+  border: none;
+  border-radius: 999px;
 
+  /* Estilos de gradiente en hover */
+  background-color: #000000;
 
-
+  /* Otros estilos */
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 999;
+}
