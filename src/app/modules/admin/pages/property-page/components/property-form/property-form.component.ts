@@ -87,7 +87,7 @@ export class PropertyFormComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(5),
+          Validators.minLength(1),
           Validators.maxLength(50),
         ],
       ],

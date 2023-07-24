@@ -55,6 +55,7 @@ export class PaymentFormComponent implements OnInit {
   reservations!: IReservation[];
   paymentForm!: FormGroup;
   reservationId: number;
+  selectedClient!: IClient; 
 
   actionTitle: string = 'Registrar Cobro';
   actionButton: string = 'Registrar';
@@ -200,7 +201,7 @@ export class PaymentFormComponent implements OnInit {
       payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
       payment_status: [''],
-    });
+    }); 
   }
 
   addPaymentData(data: any) {
@@ -292,10 +293,29 @@ export class PaymentFormComponent implements OnInit {
     });
   }
 
+  getClientFullName(clientId: number): string {
+    if (!this.clients) {
+      return ''; 
+    }
+  
+    const selectedClient = this.clients.find((client) => client.id_client === clientId);
+    return selectedClient ? `${selectedClient.name} ${selectedClient.last_name}` : '';
+  }
+  
+
   findAllProperties() {
     this.propertyService.findAllProperties().subscribe((data) => {
       this.properties = data;
     });
+  }
+
+  getPropertyFullName(id_property: number): string {
+    if (!this.properties) {
+      return ''; 
+    }
+  
+    const selectedProperty = this.properties.find((property) => property.id_property === id_property);
+    return selectedProperty ? `${selectedProperty.property_name}` : '';
   }
 
   findAllReservations() {

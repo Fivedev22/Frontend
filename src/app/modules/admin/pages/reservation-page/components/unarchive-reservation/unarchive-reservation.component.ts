@@ -138,15 +138,18 @@ export class UnarchiveReservationComponent {
           Número de adultos: ${reservation.adults_number}
           Número de niños: ${reservation.kids_number}
           Número de mascotas: ${reservation.pets_number || 'N/A'}
+          Marca auto: ${reservation.brand}
+          Modelo auto: ${reservation.model}
+          Patente auto: ${reservation.licensePlate}
           Fecha de check-in: ${reservation.check_in_date}
           Fecha de check-out: ${reservation.check_out_date}
           Hora de check-in: ${reservation.check_in_hour}
           Hora de check-out: ${reservation.check_out_hour}
-          Precio inicial: ${reservation.starting_price}
-          Descuento: ${reservation.discount || 'N/A'}
-          Monto del depósito: ${reservation.deposit_amount}
-          Monto estimado del depósito: ${reservation.estimated_amount_deposit}
-          Monto de la reserva: ${reservation.booking_amount}
+          Monto de reserva: ${reservation.starting_price}
+          Descuento: % ${reservation.discount || 'N/A'}
+          Monto del depósito: $ ${reservation.deposit_amount}
+          Monto estimado del depósito: $ ${reservation.estimated_amount_deposit}
+          Monto a cobrar: $ ${reservation.booking_amount}
         `;
   
         const popupWindow = window.open('', 'Detalles de la reserva', 'width=400,height=600');
@@ -155,11 +158,16 @@ export class UnarchiveReservationComponent {
             <head>
               <title>Detalles de la reserva</title>
               <style>
-                body {
-                  font-family: Arial, sans-serif;
-                  margin: 20px;
-                }
-              </style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: lightgreen; /* Agregar fondo verde claro */
+              }
+              pre {
+                text-align: left; /* Ubicar el texto a la izquierda */
+                margin-left: 0; /* Eliminar margen izquierdo */
+              }
+            </style>
             </head>
             <body>
               <h2>Detalles de la reserva</h2>

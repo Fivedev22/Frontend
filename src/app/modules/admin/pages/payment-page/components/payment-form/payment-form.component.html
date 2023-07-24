@@ -53,38 +53,25 @@
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Cliente</mat-label>
-            <mat-select formControlName="client" placeholder="Seleccione...">
-              <mat-option
-                *ngFor="let client of clients"
-                [value]="client.id_client"
-              >
-                {{ client.name }} {{ client.last_name }}</mat-option
-              >
-            </mat-select>
+            <input matInput readonly formControlName="client" placeholder="Seleccione..." [value]="getClientFullName(paymentForm.get('client')?.value)">
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('client', 'required')">
+            <mat-error align="end" *ngIf="hasError('client', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
-
+        
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Propiedad</mat-label>
-            <mat-select formControlName="property" placeholder="Seleccione...">
-              <mat-option
-                *ngFor="let property of properties"
-                [value]="property.id_property"
-              >
-                {{ property.property_name }}</mat-option
-              >
-            </mat-select>
+            <input matInput readonly formControlName="property" placeholder="Seleccione..." [value]="getPropertyFullName(paymentForm.get('property')?.value)" />
             <mat-hint align="end">Campo requerido</mat-hint>
-            <mat-error align=" end" *ngIf="hasError('property', 'required')">
+            <mat-error align="end" *ngIf="hasError('property', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
+        
 
         <mat-grid-tile>
           <mat-form-field appearance="outline">
@@ -99,6 +86,7 @@
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker"
+              [disabled]="true"
             ></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker></mat-datepicker>
             <mat-hint align="end">Campo requerido</mat-hint>
@@ -124,6 +112,7 @@
             <mat-datepicker-toggle
               matIconSuffix
               [for]="picker2"
+              [disabled]="true"
             ></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker2></mat-datepicker>
             <mat-hint align="end">Campo requerido</mat-hint>

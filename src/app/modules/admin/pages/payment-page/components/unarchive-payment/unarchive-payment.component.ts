@@ -20,8 +20,7 @@ export class UnarchivePaymentComponent {
     'booking',
     'property',
     'client',
-    'payment_amount_total',
-    'payment_status',
+    'booking_starting_price',
     'actions',
   ];
 
@@ -149,7 +148,6 @@ export class UnarchivePaymentComponent {
           Gastos adicionales: ${payment.extra_expenses || 'N/A'}
           Total del cobro: ${payment.payment_amount_total}
           Tipo de pago: ${payment.payment_type.payment_type_name}
-          Estado del pago: ${payment.payment_status.payment_status_name}
         `;
   
         const popupWindow = window.open('', 'Detalles del cobro', 'width=400,height=600');
@@ -161,6 +159,11 @@ export class UnarchivePaymentComponent {
                 body {
                   font-family: Arial, sans-serif;
                   margin: 20px;
+                  background-color: lightgreen; /* Agregar fondo verde claro */
+                }
+                pre {
+                  text-align: left; /* Ubicar el texto a la izquierda */
+                  margin-left: 0; /* Eliminar margen izquierdo */
                 }
               </style>
             </head>
@@ -176,5 +179,6 @@ export class UnarchivePaymentComponent {
       }
     );
   }
+  
   
 }

@@ -23,7 +23,6 @@ export class StatisticPageComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.createPaymentChart();
     this.topPaymentTypesChart();
-    this.createPendingPaymentsChart();
     this.createReservationChart();
     this.ClientsByProvinceChart();
     this.createGenderChart();
@@ -188,74 +187,6 @@ export class StatisticPageComponent implements AfterViewInit {
     }
   }
   
-  createPendingPaymentsChart() {
-    const canvas = document.getElementById('paymentPendingChart') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-  
-    if (ctx) {
-      this.paymentsService.findAllPayments().subscribe((payments) => {
-        const pendingPayments = payments.filter(payment => payment.payment_status.id_payment_status === 1);
-        const dataByMonth: Record<string, number> = {};
-  
-        pendingPayments.forEach(payment => {
-          const date = new Date(payment.createdAt);
-          const month = date.toLocaleString('default', { month: 'long' });
-        
-          const startingPrice = parseFloat(payment.booking_starting_price);
-          const discount = parseFloat(payment.booking_discount ?? '0'); 
-          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
-        
-          if (!dataByMonth[month]) {
-            dataByMonth[month] = discountedAmount;
-          } else {
-            dataByMonth[month] += discountedAmount;
-          }
-        });
-  
-        const months = Object.keys(dataByMonth);
-        const datasetData = months.map(month => dataByMonth[month]);
-  
-        const chart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: months,
-            datasets: [{
-              label: 'Monto de Pagos Pendientes',
-              data: datasetData,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            }],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Montos de Pagos Pendientes',
-              },
-            },
-            scales: {
-              x: {
-                grid: {
-                  display: false,
-                },
-              },
-              y: {
-                beginAtZero: true,
-              },
-            },
-          },
-        });
-      });
-    } else {
-      console.error('No se pudo obtener el contexto del lienzo.');
-    }
-  }
-  
 
   ClientsByProvinceChart() {
     const canvas = document.getElementById(
@@ -350,7 +281,7 @@ export class StatisticPageComponent implements AfterViewInit {
         const backgroundColors = this.generateFixedColors(labels.length);
 
         const chart = new Chart(ctx, {
-          type: 'polarArea',
+          type: 'pie',
           data: {
             labels: labels,
             datasets: [
@@ -411,7 +342,7 @@ export class StatisticPageComponent implements AfterViewInit {
               labels: labels,
               datasets: [
                 {
-                  label: 'Clientes con más reservas',
+                  label: 'Cliente',
                   data: data,
                   backgroundColor: backgroundColors,
                   borderColor: 'rgba(75, 192, 192, 1)',
@@ -420,7 +351,7 @@ export class StatisticPageComponent implements AfterViewInit {
                   categoryPercentage: 0.6,
                 },
                 {
-                  label: 'Línea de referencia',
+                  label: 'Promedio',
                   data: data.map(
                     () => data.reduce((a, b) => a + b) / data.length
                   ),
@@ -538,7 +469,7 @@ export class StatisticPageComponent implements AfterViewInit {
           }, {} as any);
 
           const chart = new Chart(ctx, {
-            type: 'polarArea',
+            type: 'bar',
             data: {
               labels: Object.keys(typeCounts),
               datasets: [
@@ -596,7 +527,7 @@ export class StatisticPageComponent implements AfterViewInit {
           const labels = Object.keys(typeCounts);
 
           const chart = new Chart(ctx, {
-            type: 'bubble',
+            type: 'bar',
             data: {
               labels: labels,
               datasets: [
@@ -659,7 +590,7 @@ export class StatisticPageComponent implements AfterViewInit {
           const barColors = this.generateFixedColors(allMonths.length);
 
           const chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'pie',
             data: {
               labels: allMonths,
               datasets: [

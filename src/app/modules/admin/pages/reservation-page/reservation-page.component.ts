@@ -158,20 +158,43 @@ export class ReservationPageComponent implements OnInit {
   }
 
   openFormEditReservation(row: IReservation) {
-    this.dialog
-      .open(ReservationFormComponent, {
-        width: '800px',
-        height: '600px',
-        data: row,
-        disableClose: true,
-      })
-      .afterClosed()
-      .subscribe((val) => {
-        if (val === 'update') {
-          this.findAllReservations();
+    const id = row.id_booking;
+  
+    this.paymentService.findAllPayments().subscribe({
+      next: (payments) => {
+        const hasPayments = payments.some(
+          (payment) => payment.booking.id_booking === id
+        );
+  
+        if (hasPayments) {
+          Swal.fire({
+            icon: 'error',
+            title: 'No se puede editar la reserva',
+            text: 'La reserva tiene un cobro registrado y ya no puede ser editada.',
+          });
+        } else {
+          this.dialog
+            .open(ReservationFormComponent, {
+              width: '800px',
+              height: '600px',
+              data: row,
+              disableClose: true,
+            })
+            .afterClosed()
+            .subscribe((val) => {
+              if (val === 'update') {
+                this.findAllReservations();
+              }
+            });
         }
-      });
+      },
+      error: (error) => {
+        // Manejo de errores si la llamada al servicio falla
+        console.error('Error al obtener los pagos:', error);
+      },
+    });
   }
+  
 
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe((data) => {
@@ -193,84 +216,84 @@ export class ReservationPageComponent implements OnInit {
       doc.setFontSize(16);
       doc.text('Apartamentos Anahi', 10, 20);
       doc.setFontSize(12);
-      doc.text('El Benteveo 990', 10, 30);
+      doc.text('El Benteveo 990', 10, 25);
       doc.text(
         'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
         10,
-        40
+        30
       );
-      doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
-      doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
+      doc.text('Telefono: 0 (3541) 44-8820', 10, 35);
+      doc.text('Email: anahiapartamentos@gmail.com', 10, 40);
       doc.setLineWidth(0.5);
-      doc.line(10, 70, 200, 70);
+      doc.line(10, 45, 200, 45);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
       const title = 'Comprobante de Reserva';
       const titleWidth = doc.getTextWidth(title);
       const pageWidth = doc.internal.pageSize.getWidth();
       const titleX = (pageWidth - titleWidth) / 2;
-      doc.text(title, titleX, 80);
+      doc.text(title, titleX, 55);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Detalles de Reserva', 10, 90);
+      doc.text('Detalles de Reserva', 10, 65);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
-      doc.text(`Nro Reserva: ${data.booking_number}`, 10, 105);
+      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 75);
+      doc.text(`Nro Reserva: ${data.booking_number}`, 10, 80);
       doc.text(
         `Tipo de Reserva: ${data.booking_type.booking_type_name}`,
         10,
-        110
+        85
       );
       doc.text(
         `Procedencia de Reserva: ${data.booking_origin.origin_name}`,
         10,
-        115
+        90
       );
       doc.text(
         `Cliente: ${data.client.name} ${data.client.last_name}`,
         10,
-        120
+        95
       );
-      doc.text(`Propiedad: ${data.property.property_name}`, 10, 125);
-      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 130);
-      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 135);
-      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 140);
-      doc.text(`Marca vehiculo: ${data.brand}`, 10, 145);
-      doc.text(`Modelo vehiculo: ${data.model}`, 10, 150);
-      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 155);
-      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 160);
-      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 165);
-      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 170);
-      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 175);
+      doc.text(`Propiedad: ${data.property.property_name}`, 10, 100);
+      doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 105);
+      doc.text(`Cantidad menores: ${data.kids_number}`, 10, 110);
+      doc.text(`Cantidad mascotas: ${data.pets_number}`, 10, 115);
+      doc.text(`Marca vehiculo: ${data.brand}`, 10, 120);
+      doc.text(`Modelo vehiculo: ${data.model}`, 10, 125);
+      doc.text(`Patente vehiculo: ${data.licensePlate}`, 10, 130);
+      doc.text(`Fecha de check-in: ${data.check_in_date}`, 10, 135);
+      doc.text(`Hora de check-in: ${data.check_in_hour}`, 10, 140);
+      doc.text(`Fecha de check-out: ${data.check_out_date}`, 10, 145);
+      doc.text(`Hora de check-out: ${data.check_out_hour}`, 10, 150);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Importe Detallado', 10, 185);
+      doc.text('Importe Detallado', 10, 160);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
         10,
-        195
+        170
       );
       doc.text(
         `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
         10,
-        200
+        175
       );
       doc.text(
         `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
         10,
-        205
+        180
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 210);
+      doc.text(`Descuento: % ${data.discount}`, 10, 185);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        215
+        190
       );
       doc.setLineWidth(0.5);
-      const lineY = 220;
+      const lineY = 195;
       doc.line(10, lineY, 200, lineY);
       
       doc.setFont('helvetica', 'bold');
