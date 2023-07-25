@@ -133,82 +133,82 @@ export class PaymentPageComponent {
       doc.setFontSize(16);
       doc.text('Apartamentos Anahi', 10, 20);
       doc.setFontSize(12);
-      doc.text('El Benteveo 990', 10, 30);
+      doc.text('El Benteveo 990', 10, 25);
       doc.text(
         'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
         10,
-        40
+        30
       );
-      doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
-      doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
+      doc.text('Telefono: 0 (3541) 44-8820', 10, 35);
+      doc.text('Email: anahiapartamentos@gmail.com', 10, 40);
       doc.setLineWidth(0.5);
-      doc.line(10, 70, 200, 70);
+      doc.line(10, 45, 200, 45);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
       const title = 'Comprobante de Pago';
       const titleWidth = doc.getTextWidth(title);
       const pageWidth = doc.internal.pageSize.getWidth();
       const titleX = (pageWidth - titleWidth) / 2;
-      doc.text(title, titleX, 80);
+      doc.text(title, titleX, 55);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Detalles del pago', 10, 90);
+      doc.text('Detalles del pago', 10, 65);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 100);
-      doc.text(`Nro de cobro: ${data.payment_number}`, 10, 110);
+      doc.text(`Fecha de emision: ${data.createdAt}`, 10, 75);
+      doc.text(`Nro de cobro: ${data.payment_number}`, 10, 80);
       doc.text(
-        `Recibido del cliente: ${data.client.last_name} ${data.client.name}`,
+        `Recibido del cliente: ${data.client.last_name}${data.client.name}`,
         10,
-        120
+        85
       );
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Estadia', 10, 130);
+      doc.text('Estadia', 10, 95);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text(`Nro de reserva: ${data.booking.booking_number}`, 10, 140);
+      doc.text(`Nro de reserva: ${data.booking.booking_number}`, 10, 105);
       doc.text(
         `Nombre de la propiedad: ${data.property.property_name}`,
         10,
-        150
+        110
       );
-      doc.text(`Fecha de check in: ${data.booking.check_in_date}`, 10, 160);
-      doc.text(`Fecha de check out: ${data.booking.check_out_date}`, 10, 170);
+      doc.text(`Fecha de check in: ${data.booking.check_in_date}`, 10, 115);
+      doc.text(`Fecha de check out: ${data.booking.check_out_date}`, 10, 120);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('Importe Detallado', 10, 180);
+      doc.text('Importe Detallado', 10, 130);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
         `Monto de Reserva: $ ${parseFloat(data.booking.starting_price).toLocaleString()}`,
         10,
-        190
+        140
       );
       doc.text(
         `Cantidad deposito : $ ${parseFloat(data.booking.deposit_amount).toLocaleString()}`,
         10,
-        210
+        145
       );
-      doc.text(`Descuento: % ${data.booking.discount}`, 10, 200);
+      doc.text(`Descuento: % ${data.booking.discount}`, 10, 150);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
         10,
-        220
+        155
       );
       const formattedExpenses = parseFloat(data.extra_expenses ?? "0").toLocaleString();
       doc.text(
         `Gastos adicionales: $ ${formattedExpenses}`,
         10,
-        230
+        160
       );
       doc.text(
         `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
         10,
-        240
+        165
       );
       doc.setLineWidth(0.5);
-      const lineY = 250;
+      const lineY = 170;
       doc.line(10, lineY, 200, lineY);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);

@@ -202,26 +202,26 @@ export class ClientPageComponent implements OnInit {
         doc.setFontSize(16);
         doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
-        doc.text('El Benteveo 990', 10, 30);
+        doc.text('El Benteveo 990', 10, 25);
         doc.text(
           'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
           10,
-          40
+          30
         );
-        doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
-        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
+        doc.text('Telefono: 0 (3541) 44-8820', 10, 35);
+        doc.text('Email: anahiapartamentos@gmail.com', 10, 40);
         doc.setLineWidth(0.5);
-        doc.line(10, 70, 200, 70);
+        doc.line(10, 45, 200, 45);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
         const title = `Historial de Cobros - Cliente: ${client.name} ${client.last_name}`;
         const titleWidth = doc.getTextWidth(title);
         const pageWidth = doc.internal.pageSize.getWidth();
         const titleX = (pageWidth - titleWidth) / 2;
-        doc.text(title, titleX, 80);
+        doc.text(title, titleX, 55);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(14);
-        let startY = 100;
+        let startY = 65;
         const lineHeight = 10;
         payments.forEach((payment, index) => {
           if (index > 0) {
@@ -234,7 +234,7 @@ export class ClientPageComponent implements OnInit {
           doc.text(`Cobro ${index + 1}:`, 10, startY);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Informacion de cobro:', 20, startY + lineHeight);
+          doc.text('Informacion del cobro:', 20, startY + lineHeight);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
@@ -245,58 +245,58 @@ export class ClientPageComponent implements OnInit {
           doc.text(
             `Fecha de cobro: ${payment.createdAt}`,
             20,
-            startY + lineHeight * 3
+            startY + lineHeight * 2.5
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 4, 190, startY + lineHeight * 4);
+          doc.line(20, startY + lineHeight * 3, 190, startY + lineHeight * 3);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Detalles Cobro:', 20, startY + lineHeight * 5);
+          doc.text('Detalles del cobro:', 20, startY + lineHeight * 4);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
             `Fecha check-in: ${payment.check_in_date}`,
             20,
-            startY + lineHeight * 6
+            startY + lineHeight * 5
           );
           doc.text(
             `Fecha check-out: ${payment.check_out_date}`,
             20,
-            startY + lineHeight * 7
+            startY + lineHeight * 5.5
           );
           doc.text(
             `Monto de Reserva: $ ${parseFloat(
               payment.booking_starting_price
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 8
+            startY + lineHeight * 6
           );
           doc.text(
             `Monto deposito: $ ${parseFloat(
               payment.deposit_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 9
+            startY + lineHeight * 6.5
           );
           doc.text(
             `Descuento: % ${payment.booking_discount}`,
             20,
-            startY + lineHeight * 10
+            startY + lineHeight * 7
           );
           doc.text(
             `Monto a Pagar: $ ${parseFloat(
               payment.booking_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 11
+            startY + lineHeight * 7.5
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 12, 190, startY + lineHeight * 12);
+          doc.line(20, startY + lineHeight * 8, 190, startY + lineHeight * 8);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Gastos Extras:', 20, startY + lineHeight * 13);
+          doc.text('Gastos Extras:', 20, startY + lineHeight * 9);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
@@ -304,14 +304,14 @@ export class ClientPageComponent implements OnInit {
               payment.extra_expenses
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 14
+            startY + lineHeight * 10
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 15, 190, startY + lineHeight * 15);
+          doc.line(20, startY + lineHeight * 10.5, 190, startY + lineHeight * 10.5);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Importe Final:', 20, startY + lineHeight * 16);
+          doc.text('Importe Final:', 20, startY + lineHeight * 11.5);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
@@ -319,10 +319,10 @@ export class ClientPageComponent implements OnInit {
               payment.payment_amount_total
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 17
+            startY + lineHeight * 12.5
           );
 
-          startY += lineHeight * 18;
+          startY += lineHeight * 13;
         });
         const pdfBytes = doc.output();
         const pdfUrl = URL.createObjectURL(
@@ -383,26 +383,26 @@ export class ClientPageComponent implements OnInit {
         doc.setFontSize(16);
         doc.text('Apartamentos Anahi', 10, 20);
         doc.setFontSize(12);
-        doc.text('El Benteveo 990', 10, 30);
+        doc.text('El Benteveo 990', 10, 25);
         doc.text(
           'Comuna Villa Parque Siquiman, Provincia de Cordoba, Argentina, C.P: 5158',
           10,
-          40
+          30
         );
-        doc.text('Telefono: 0 (3541) 44-8820', 10, 50);
-        doc.text('Email: anahiapartamentos@gmail.com', 10, 60);
+        doc.text('Telefono: 0 (3541) 44-8820', 10, 35);
+        doc.text('Email: anahiapartamentos@gmail.com', 10, 40);
         doc.setLineWidth(0.5);
-        doc.line(10, 70, 200, 70);
+        doc.line(10, 45, 200, 45);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
         const title = `Historial de Reservas - Cliente: ${client.name} ${client.last_name}`;
         const titleWidth = doc.getTextWidth(title);
         const pageWidth = doc.internal.pageSize.getWidth();
         const titleX = (pageWidth - titleWidth) / 2;
-        doc.text(title, titleX, 80);
+        doc.text(title, titleX, 55);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(14);
-        let startY = 100;
+        let startY = 65;
         const lineHeight = 10;
         bookings.forEach((booking, index) => {
           if (index > 0) {
@@ -426,19 +426,19 @@ export class ClientPageComponent implements OnInit {
           doc.text(
             `Fecha de reserva: ${booking.createdAt}`,
             20,
-            startY + lineHeight * 3
+            startY + lineHeight * 2.5
           );
           doc.text(
             `Cliente: ${client.name} ${client.last_name}`,
             20,
-            startY + lineHeight * 4
+            startY + lineHeight * 3
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 5, 190, startY + lineHeight * 5);
+          doc.line(20, startY + lineHeight * 3.5, 190, startY + lineHeight * 3.5);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Detalles de la reserva:', 20, startY + lineHeight * 6);
+          doc.text('Detalles de la reserva:', 20, startY + lineHeight * 4.5);
 
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
@@ -446,65 +446,80 @@ export class ClientPageComponent implements OnInit {
           doc.text(
             `Fecha check-in: ${booking.check_in_date}`,
             20,
-            startY + lineHeight * 7
+            startY + lineHeight * 5.5
           );
           doc.text(
             `Hora check-out: ${booking.check_in_hour}`,
             20,
-            startY + lineHeight * 8
+            startY + lineHeight * 6
           );
           doc.text(
             `Fecha check-out: ${booking.check_out_date}`,
             20,
-            startY + lineHeight * 9
+            startY + lineHeight * 6.5
           );
           doc.text(
             `Hora check-out: ${booking.check_out_hour}`,
             20,
-            startY + lineHeight * 10
+            startY + lineHeight * 7
           );
           doc.text(
             `Cantidad mayores: ${booking.adults_number}`,
             20,
-            startY + lineHeight * 11
+            startY + lineHeight * 7.5
           );
           doc.text(
             `Cantidad menores: ${booking.kids_number}`,
             20,
-            startY + lineHeight * 12
+            startY + lineHeight * 8
           );
           doc.text(
             `Cantidad mascotas: ${booking.pets_number}`,
             20,
-            startY + lineHeight * 13
+            startY + lineHeight * 8.5
+          );
+          doc.text(
+            `Marca del vehiculo: ${booking.brand}`,
+            20,
+            startY + lineHeight * 9
+          );
+          doc.text(
+            `Modelo del vehiculo: ${booking.model}`,
+            20,
+            startY + lineHeight * 9.5
+          );
+          doc.text(
+            `Patente: ${booking.licensePlate}`,
+            20,
+            startY + lineHeight * 10
           );
           doc.text(
             `Monto de reserva: $ ${parseFloat(
               booking.starting_price
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 14
+            startY + lineHeight * 10.5
           );
           doc.text(
             `Descuento: % ${booking.discount}`,
             20,
-            startY + lineHeight * 15
+            startY + lineHeight * 11
           );
           doc.text(
             `Monto deposito: $ ${parseFloat(
               booking.deposit_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 16
+            startY + lineHeight * 11.5
           );
           doc.text(
             `Monto a pagar: $ ${parseFloat(
               booking.booking_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 17
+            startY + lineHeight * 12
           );
-          startY += lineHeight * 18;
+          startY += lineHeight * 13;
         });
         const pdfBytes = doc.output();
         const pdfUrl = URL.createObjectURL(
