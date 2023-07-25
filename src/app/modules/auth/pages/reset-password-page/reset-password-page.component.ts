@@ -69,7 +69,8 @@ export class ResetPasswordPageComponent implements OnInit {
   AlertError() {
     const Toast = Swal.mixin({
       toast: true,
-      position: 'top-end',
+      width: "30%",
+      position: 'top',
       showConfirmButton: false,
       timer: 2000,
       background: '#F25D5D',
