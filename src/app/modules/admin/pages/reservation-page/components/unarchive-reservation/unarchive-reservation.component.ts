@@ -128,50 +128,44 @@ export class UnarchiveReservationComponent {
   viewDetails(reservationId: number) {
     this.reservationService.findOneReservationArchived(reservationId).subscribe(
       (reservation: IReservation) => {
-        const details = `
-          Número de reserva: ${reservation.booking_number}
-          Fecha de creación: ${reservation.createdAt}
-          Tipo de reserva: ${reservation.booking_type.booking_type_name}
-          Procedencia de la reserva: ${reservation.booking_origin.origin_name}
-          Cliente: ${reservation.client.name} ${reservation.client.last_name}
-          Inmueble: ${reservation.property.property_name}
-          Número de adultos: ${reservation.adults_number}
-          Número de niños: ${reservation.kids_number}
-          Número de mascotas: ${reservation.pets_number || 'N/A'}
-          Marca auto: ${reservation.brand}
-          Modelo auto: ${reservation.model}
-          Patente auto: ${reservation.licensePlate}
-          Fecha de check-in: ${reservation.check_in_date}
-          Fecha de check-out: ${reservation.check_out_date}
-          Hora de check-in: ${reservation.check_in_hour}
-          Hora de check-out: ${reservation.check_out_hour}
-          Monto de reserva: ${reservation.starting_price}
-          Descuento: % ${reservation.discount || 'N/A'}
-          Monto del depósito: $ ${reservation.deposit_amount}
-          Monto estimado del depósito: $ ${reservation.estimated_amount_deposit}
-          Monto a cobrar: $ ${reservation.booking_amount}
-        `;
-  
         const popupWindow = window.open('', 'Detalles de la reserva', 'width=400,height=600');
         popupWindow?.document.write(`
           <html>
             <head>
-              <title>Detalles de la reserva</title>
               <style>
-              body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                background-color: lightgreen; /* Agregar fondo verde claro */
-              }
-              pre {
-                text-align: left; /* Ubicar el texto a la izquierda */
-                margin-left: 0; /* Eliminar margen izquierdo */
-              }
-            </style>
+                body {
+                  font-family: helvetica;
+                  background-color: #e8f5e9; /* Agregado: Color verde claro al fondo */
+                }
+                h2 {
+                  font-size: 16px;
+                  font-style: normal;
+                }
+                p {
+                  font-size: 14px;
+                  font-style: normal;
+                }
+              </style>
             </head>
             <body>
               <h2>Detalles de la reserva</h2>
-              <pre>${details}</pre>
+              <p>- Número de reserva: <b>${reservation.booking_number}</b></p>
+              <p>- Propiedad: <b>${reservation.property.property_name}</b></p>
+              <p>- Cliente: <b>${reservation.client.name} ${reservation.client.last_name}</b></p>
+              <p>- Fecha check-in: <b>${reservation.check_in_date}</b></p>
+              <p>- Fecha check-out: <b>${reservation.check_out_date}</b></p>
+              <p>- Cantidad adultos: <b>${reservation.adults_number}</b></p>
+              <p>- Cantidad niños: <b>${reservation.kids_number}</b></p>
+              <p>- Mascotas: <b>${reservation.pets_number}</b></p>
+              <p>- Marca: <b>${reservation.brand}</b></p>
+              <p>- Modelo: <b>${reservation.model}</b></p>
+              <p>- Matrícula: <b>${reservation.licensePlate}</b></p>
+              <p>- Monto de reserva: <b>$ ${parseFloat(reservation.starting_price).toLocaleString()}</b></p>
+              <p>- Descuento: <b>% ${reservation.discount}</b></p>
+              <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(reservation.starting_price, reservation.discount)}</b></p>
+              <p>- Monto depósito: <b>${parseFloat(reservation.deposit_amount).toLocaleString()}</b>$ </p>
+              <p>- Forma de Pago (depósito): <b>${reservation.payment_type.payment_type_name}</b> </p>
+              <p>- Monto a cobrar: <b>$ ${parseFloat(reservation.booking_amount).toLocaleString()}</b></p>
             </body>
           </html>
         `);
@@ -180,6 +174,13 @@ export class UnarchiveReservationComponent {
         console.error('Error al obtener los detalles de la reserva archivada:', error);
       }
     );
+    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      return discountedAmount.toLocaleString();
+    }
   }
+  
   
 }

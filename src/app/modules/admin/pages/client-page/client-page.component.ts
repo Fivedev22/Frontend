@@ -285,18 +285,23 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 7
           );
           doc.text(
+            `Monto con descuento: $ ${calculateDiscountedAmount(payment.booking_starting_price, payment.booking_discount)}`,
+            20,
+            startY + lineHeight * 7.5
+          );
+          doc.text(
             `Monto a Pagar: $ ${parseFloat(
               payment.booking_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 7.5
+            startY + lineHeight * 8
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 8, 190, startY + lineHeight * 8);
+          doc.line(20, startY + lineHeight * 8.5, 190, startY + lineHeight * 8.5);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Gastos Extras:', 20, startY + lineHeight * 9);
+          doc.text('Gastos Extras:', 20, startY + lineHeight * 9.5);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
@@ -304,14 +309,14 @@ export class ClientPageComponent implements OnInit {
               payment.extra_expenses
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 10
+            startY + lineHeight * 10.5
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 10.5, 190, startY + lineHeight * 10.5);
+          doc.line(20, startY + lineHeight * 11, 190, startY + lineHeight * 11);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
-          doc.text('Importe Final:', 20, startY + lineHeight * 11.5);
+          doc.text('Importe Final:', 20, startY + lineHeight * 12);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(12);
           doc.text(
@@ -319,10 +324,10 @@ export class ClientPageComponent implements OnInit {
               payment.payment_amount_total
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 12.5
+            startY + lineHeight * 13
           );
 
-          startY += lineHeight * 13;
+          startY += lineHeight * 13.5;
         });
         const pdfBytes = doc.output();
         const pdfUrl = URL.createObjectURL(
@@ -346,6 +351,12 @@ export class ClientPageComponent implements OnInit {
         );
       }
     );
+    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      return discountedAmount.toLocaleString();
+    }
   }
 
   generatePdfBookings(id: number) {
@@ -489,7 +500,7 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 9.5
           );
           doc.text(
-            `Patente: ${booking.licensePlate}`,
+            `Patente del vehiculo: ${booking.licensePlate}`,
             20,
             startY + lineHeight * 10
           );
@@ -506,18 +517,23 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 11
           );
           doc.text(
+            `Monto con descuento: $ ${calculateDiscountedAmount(booking.starting_price, booking.discount)}`,
+            20,
+            startY + lineHeight * 11.5
+          );
+          doc.text(
             `Monto deposito: $ ${parseFloat(
               booking.deposit_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 11.5
+            startY + lineHeight * 12
           );
           doc.text(
             `Monto a pagar: $ ${parseFloat(
               booking.booking_amount
             ).toLocaleString()}`,
             20,
-            startY + lineHeight * 12
+            startY + lineHeight * 12.5
           );
           startY += lineHeight * 13;
         });
@@ -543,6 +559,12 @@ export class ClientPageComponent implements OnInit {
         );
       }
     );
+    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      return discountedAmount.toLocaleString();
+    }
   }
 
   openArchivedClients() {

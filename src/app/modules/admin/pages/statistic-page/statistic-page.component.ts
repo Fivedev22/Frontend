@@ -1,10 +1,11 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import 'chartjs-chart-geo';
 import { PaymentService } from '../../../../services/payment.service';
 import { ReservationService } from '../../../../services/reservation.service';
 import { ClientService } from '../../../../services/client-page.service';
 import { PropertyService } from '../../../../services/property-page.service';
+
 
 @Component({
   selector: 'app-statistic-page',
@@ -13,11 +14,14 @@ import { PropertyService } from '../../../../services/property-page.service';
 })
 export class StatisticPageComponent implements AfterViewInit {
   selectModule: number = 1;
+  @ViewChild('swiperContainer') swiperContainerRef!: ElementRef;
+
   constructor(
     private paymentsService: PaymentService,
     private reservationService: ReservationService,
     private clientService: ClientService,
     private propertyService: PropertyService
+    
   ) {}
 
   ngAfterViewInit() {
@@ -32,8 +36,9 @@ export class StatisticPageComponent implements AfterViewInit {
     this.createReservationsByMonthChart();
     this.createPropertyChart();
     this.PropertyByProvinceChart();
-  }  
-
+  }
+  
+  
   createReservationChart() {
     const canvas = document.getElementById(
       'reservationChart'
@@ -77,6 +82,7 @@ export class StatisticPageComponent implements AfterViewInit {
             options: {
               indexAxis: 'y',
               responsive: true,
+              maintainAspectRatio: false, 
               plugins: {
                 legend: {
                   position: 'top',
@@ -590,7 +596,7 @@ export class StatisticPageComponent implements AfterViewInit {
           const barColors = this.generateFixedColors(allMonths.length);
 
           const chart = new Chart(ctx, {
-            type: 'pie',
+            type: 'bar',
             data: {
               labels: allMonths,
               datasets: [

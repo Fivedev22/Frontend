@@ -186,7 +186,7 @@ export class DashboardPageComponent implements AfterViewInit {
           <p>- Mascotas: <b>${reservation.pets_number}</b></p>
           <p>- Marca: <b>${reservation.brand}</b></p>
           <p>- Modelo: <b>${reservation.model}</b></p>
-          <p>- Matrícula: <b>${reservation.licensePlate}</b></p>
+          <p>- Patente: <b>${reservation.licensePlate}</b></p>
           <p>- Monto de reserva: <b>$ ${parseFloat(reservation.starting_price).toLocaleString()}</b></p>
           <p>- Descuento: <b>% ${reservation.discount}</b></p>
           <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(reservation.starting_price,reservation.discount)}</b></p>

@@ -191,24 +191,25 @@ export class PaymentPageComponent {
         145
       );
       doc.text(`Descuento: % ${data.booking.discount}`, 10, 150);
+      doc.text(`Monto con descuento: $ ${calculateDiscountedAmount(data.booking_starting_price, data.booking_discount)}`, 10, 155);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
         10,
-        155
+        160
       );
       const formattedExpenses = parseFloat(data.extra_expenses ?? "0").toLocaleString();
       doc.text(
         `Gastos adicionales: $ ${formattedExpenses}`,
         10,
-        160
+        165
       );
       doc.text(
         `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
         10,
-        165
+        170
       );
       doc.setLineWidth(0.5);
-      const lineY = 170;
+      const lineY = 175;
       doc.line(10, lineY, 200, lineY);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
@@ -231,6 +232,12 @@ export class PaymentPageComponent {
         newWindow.document.title = 'Comprobante de Pago Apartamentos Anahí.pdf';
       }
     });
+    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      return discountedAmount.toLocaleString();
+    }
   }
 
   openArchivedPayments() {

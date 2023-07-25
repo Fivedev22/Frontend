@@ -287,13 +287,14 @@ export class ReservationPageComponent implements OnInit {
         180
       );
       doc.text(`Descuento: % ${data.discount}`, 10, 185);
+      doc.text(`Monto con descuento: $ ${calculateDiscountedAmount(data.starting_price, data.discount)}`, 10, 190);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
-        190
+        195
       );
       doc.setLineWidth(0.5);
-      const lineY = 195;
+      const lineY = 200;
       doc.line(10, lineY, 200, lineY);
       
       doc.setFont('helvetica', 'bold');
@@ -319,6 +320,12 @@ export class ReservationPageComponent implements OnInit {
           'Comprobante de Reserva - Apartamentos Anahí.pdf';
       }
     });
+    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      return discountedAmount.toLocaleString();
+    }
   }
   
   
