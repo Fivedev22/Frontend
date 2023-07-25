@@ -365,6 +365,7 @@ export class ReservationFormComponent implements OnInit {
     return !occupiedDatesHash[dateStr];
   };
 
+
   addReservationData(data: any) {
     console.log(data);
     this.actionTitle = 'Modificar Reserva';

@@ -103,21 +103,29 @@ export class DashboardPageComponent implements AfterViewInit {
     return this.reservationService.findAllReservations();
   }
 
+
   transformReservationsToEvents(reservations: IReservation[]): EventInput[] {
-    const events: EventInput[] = reservations.map((reservation, index) => {
+    const currentDate = new Date();
+    const events: EventInput[] = [];
+  
+    reservations.forEach((reservation, index) => {
       const checkOutDate = new Date(reservation.check_out_date);
       checkOutDate.setDate(checkOutDate.getDate() + 1);
-      return {
-        title: ` N° Rva: ${reservation.booking_number} - Propiedad: ${reservation.property.property_name} - Cliente: ${reservation.client.name} ${reservation.client.last_name}`,
-        start: reservation.check_in_date,
-        end: checkOutDate.toISOString().split('T')[0],
-        color: this.getColorByIndex(index),
-        id: reservation.id_booking?.toString(),
-      };
+  
+      if (checkOutDate >= currentDate) {
+        events.push({
+          title: ` N° Rva: ${reservation.booking_number} - Propiedad: ${reservation.property.property_name} - Cliente: ${reservation.client.name} ${reservation.client.last_name}`,
+          start: reservation.check_in_date,
+          end: checkOutDate.toISOString().split('T')[0],
+          color: this.getColorByIndex(index),
+          id: reservation.id_booking?.toString(),
+        });
+      }
     });
-
+  
     return events;
   }
+  
 
   getColorByIndex(index: number): string {
     const colors = [
@@ -301,7 +309,6 @@ export class DashboardPageComponent implements AfterViewInit {
         <p><strong>Número de reserva:</strong> ${this.selectedReservation?.booking_number}</p>
         <p><strong>Propiedad:</strong> ${this.selectedReservation?.property.property_name}</p>
         <p><strong>Cliente:</strong> ${this.selectedReservation?.client.name} ${this.selectedReservation?.client.last_name}</p>
-        <!-- Agrega más detalles según tus necesidades -->
       `;
       reservationDetailsElement.innerHTML = reservationDetailsHtml;
     }
