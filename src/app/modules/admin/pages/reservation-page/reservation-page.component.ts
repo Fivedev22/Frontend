@@ -54,6 +54,7 @@ export class ReservationPageComponent implements OnInit {
   }
 
   findAllReservations() {
+    const currentDate = new Date();
     this.reservationService.findAllReservations().subscribe((reservations) => {
       const observables = reservations.map((reservation) =>
         this.paymentService.findAllPayments().pipe(
@@ -79,7 +80,11 @@ export class ReservationPageComponent implements OnInit {
       );
   
       forkJoin(observables).subscribe((updatedReservations) => {
-        this.dataSource = new MatTableDataSource<IReservation>(updatedReservations);
+        const futureUnpaidReservations = updatedReservations.filter(
+          (reservation) => new Date(reservation.check_out_date) > currentDate || !reservation.is_paid
+        );
+
+        this.dataSource = new MatTableDataSource<IReservation>(futureUnpaidReservations);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });

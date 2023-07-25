@@ -230,7 +230,7 @@ export class ReservationFormComponent implements OnInit {
   };
 
   initForm(): FormGroup {
-    const dateDay = new Date().toLocaleDateString();
+    var dateDay = new Date().toLocaleDateString();
     return this.formBuilder.group(
       {
         booking_number: [''],
