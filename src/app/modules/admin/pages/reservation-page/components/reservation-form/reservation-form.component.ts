@@ -36,7 +36,7 @@ import { Observable } from 'rxjs';
 import { TableCxrComponent } from 'src/app/global/components/table-cxr/table-cxr.component';
 import { TablePxrComponent } from 'src/app/global/components/table-pxr/table-pxr.component';
 import Swal from 'sweetalert2';
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -129,6 +129,7 @@ export class ReservationFormComponent implements OnInit {
     private reservationTypeService: ReservationTypeService,
     private reservationOriginService: ReservationOriginService,
     private paymentTypeService: PaymentTypeService,
+    private datePipe: DatePipe,
 
 
     public dialogRef: MatDialogRef<ReservationFormComponent>
@@ -373,7 +374,8 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['booking_number'].setValue(
       data.booking_number
     );
-    this.reservationForm.controls['createdAt'].setValue(data.createdAt);
+    const formattedDate = this.datePipe.transform(data.createdAt, 'dd/MM/yyyy');
+    this.reservationForm.controls['createdAt'].setValue(formattedDate);
     this.reservationForm.controls['booking_type'].setValue(
       data.booking_type.id
     );

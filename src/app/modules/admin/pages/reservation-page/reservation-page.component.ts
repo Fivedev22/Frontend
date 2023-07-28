@@ -297,17 +297,17 @@ export class ReservationPageComponent implements OnInit {
         170
       );
       doc.text(
-        `Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`,
+        `Descuento: % ${data.discount}`,
         10,
         175
       );
       doc.text(
-        `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
+        `Monto con descuento: $ ${calculateDiscountedAmount(data.starting_price, data.discount)}`,
         10,
         180
       );
-      doc.text(`Descuento: % ${data.discount}`, 10, 185);
-      doc.text(`Monto con descuento: $ ${calculateDiscountedAmount(data.starting_price, data.discount)}`, 10, 190);
+      doc.text(`Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`, 10, 185);
+      doc.text(`Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`, 10, 190);
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,

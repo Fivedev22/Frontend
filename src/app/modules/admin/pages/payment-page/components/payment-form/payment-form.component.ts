@@ -13,7 +13,7 @@ import { PaymentTypeService } from '../../../../../../services/payment_type.serv
 import { PaymentStatusService } from '../../../../../../services/payment_status.service';
 import { IReservation } from '../../../../../../interfaces/reservation.interface';
 import { ReservationService } from '../../../../../../services/reservation.service';
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
 
@@ -75,6 +75,7 @@ export class PaymentFormComponent implements OnInit {
     private reservationService: ReservationService,
     private paymentTypeService: PaymentTypeService,
     private paymentStatusService: PaymentStatusService,
+    private datePipe: DatePipe,
 
     public dialogRef: MatDialogRef<PaymentFormComponent>
   ) {
@@ -208,7 +209,8 @@ export class PaymentFormComponent implements OnInit {
     this.actionTitle = 'Modificar Cobro';
     this.actionButton = 'Actualizar';
     this.paymentForm.controls['payment_number'].setValue(data.payment_number);
-    this.paymentForm.controls['createdAt'].setValue(data.createdAt);
+    const formattedDate = this.datePipe.transform(data.createdAt, 'dd/MM/yyyy');
+    this.paymentForm.controls['createdAt'].setValue(formattedDate);
     this.paymentForm.controls['booking'].setValue(data.booking.id_booking);
     this.paymentForm.controls['client'].setValue(data.client.id_client);
     this.paymentForm.controls['property'].setValue(data.property.id_property);
