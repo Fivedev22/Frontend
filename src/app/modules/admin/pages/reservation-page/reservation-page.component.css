@@ -120,3 +120,7 @@ td {
 .mat-cell {
   width: 100% !important;
 }
+
+.small-button {
+  font-size: 12px;
+}

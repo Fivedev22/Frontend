@@ -345,6 +345,7 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
+
   dateClass = (date: Date): string => {
     return this.dateFilter(date) ? 'disabled-date' : '';
   };
@@ -367,7 +368,6 @@ export class ReservationFormComponent implements OnInit {
 
 
   addReservationData(data: any) {
-    console.log(data);
     this.actionTitle = 'Modificar Reserva';
     this.actionButton = 'Actualizar';
     this.reservationForm.controls['booking_number'].setValue(

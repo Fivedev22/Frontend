@@ -38,6 +38,9 @@ export class ReservationPageComponent implements OnInit {
   ];
 
   dataSource!: MatTableDataSource<IReservation>;
+  showAllReservations: boolean = false;
+
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -53,8 +56,13 @@ export class ReservationPageComponent implements OnInit {
     this.findAllReservations();
   }
 
+  toggleShowAllReservations() {
+    this.showAllReservations = !this.showAllReservations;
+    this.findAllReservations();
+  }
+
   findAllReservations() {
-    const currentDate = new Date();
+    const currentDate = new Date(); 
     this.reservationService.findAllReservations().subscribe((reservations) => {
       const observables = reservations.map((reservation) =>
         this.paymentService.findAllPayments().pipe(
@@ -80,11 +88,18 @@ export class ReservationPageComponent implements OnInit {
       );
   
       forkJoin(observables).subscribe((updatedReservations) => {
-        const futureUnpaidReservations = updatedReservations.filter(
-          (reservation) => new Date(reservation.check_out_date) > currentDate || !reservation.is_paid
-        );
+        if (this.showAllReservations) {
+          // Si showAllReservations es true, mostrar todas las reservas sin filtrar
+          this.dataSource = new MatTableDataSource<IReservation>(updatedReservations);
+        } else {
+          // Filtrar las reservas con fecha de check-out mayor a la fecha actual y estado is_paid igual a false
+          const visibleReservations = updatedReservations.filter(
+            (reservation) => new Date(reservation.check_out_date) > currentDate || !reservation.is_paid
+          );
 
-        this.dataSource = new MatTableDataSource<IReservation>(futureUnpaidReservations);
+          this.dataSource = new MatTableDataSource<IReservation>(visibleReservations);
+        }
+
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });

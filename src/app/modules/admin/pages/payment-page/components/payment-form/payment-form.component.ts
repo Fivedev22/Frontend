@@ -208,6 +208,7 @@ export class PaymentFormComponent implements OnInit {
     this.actionTitle = 'Modificar Cobro';
     this.actionButton = 'Actualizar';
     this.paymentForm.controls['payment_number'].setValue(data.payment_number);
+    this.paymentForm.controls['createdAt'].setValue(data.createdAt);
     this.paymentForm.controls['booking'].setValue(data.booking.id_booking);
     this.paymentForm.controls['client'].setValue(data.client.id_client);
     this.paymentForm.controls['property'].setValue(data.property.id_property);
