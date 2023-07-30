@@ -4,6 +4,10 @@
   background: #f7f9fc;
   transition: 0.8s;
   overflow: hidden;
+
+  position: fixed;
+  margin-top: 66px;
+
 }
 
 .container-nav_title {

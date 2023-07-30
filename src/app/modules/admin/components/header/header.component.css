@@ -7,6 +7,8 @@
   /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
     border-bottom: 1px solid #ccc; */
   z-index: 999;
+  position: fixed;
+  width: 100%;
 }
 
 .navbar-container_logo {

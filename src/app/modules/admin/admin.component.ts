@@ -14,8 +14,11 @@ export class AdminComponent {
 
   sideBarToggler(event: Event) {
     const element = document.getElementById('toggle');
+    const element2 = document.getElementById('main-cont');
     const displayStyle = this.sideBarOpen ? 'none' : 'block';
+    const displayStyle2 = this.sideBarOpen ? '0' : '250px';
     this.renderer.setStyle(element, 'display', displayStyle);
+    this.renderer.setStyle(element2, 'margin-left', displayStyle2);
     this.sideBarOpen = !this.sideBarOpen;
   }
 }
