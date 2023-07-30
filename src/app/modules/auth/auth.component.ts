@@ -15,8 +15,6 @@ export class AuthComponent {
   ) {}
 
   ngOnInit(){
-    let token =  localStorage.getItem('anahi.token');
-
-    token ?  this.router.navigate(['/admin'])  : null
+ 
   }
 }
