@@ -133,7 +133,11 @@ export class UnarchivePaymentComponent {
   viewDetails(paymentId: number) {
     this.paymentService.findOneArchived(paymentId).subscribe(
       (payment: IPayment) => {
-        const popupWindow = window.open('', 'Detalles del cobro', 'width=400,height=600');
+        const popupWindow = window.open(
+          '',
+          'Detalles del cobro',
+          'width=400,height=600'
+        );
         popupWindow?.document.write(`
           <html>
             <head>
@@ -157,34 +161,57 @@ export class UnarchivePaymentComponent {
               <p>- Número de cobro: <b>${payment.payment_number}</b></p>
               <p>- Fecha de creación: <b>${payment.createdAt}</b></p>
               <p>- Reserva: <b>${payment.booking.booking_number}</b></p>
-              <p>- Cliente: <b>${payment.client.name} ${payment.client.last_name}</b></p>
+              <p>- Cliente: <b>${payment.client.name} ${
+          payment.client.last_name
+        }</b></p>
               <p>- Inmueble: <b>${payment.property.property_name}</b></p>
               <p>- Fecha de check-in: <b>${payment.check_in_date}</b></p>
               <p>- Fecha de check-out: <b>${payment.check_out_date}</b></p>
-              <p>- Monto de la reserva: <b> $ ${parseFloat(payment.booking_starting_price).toLocaleString()}</b></p>
-              <p>- Descuento de la reserva: <b> % ${payment.booking_discount || 'N/A'}</b></p>
-              <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(payment.booking_starting_price, payment.booking_discount)}</b></p>
-              <p>- Monto del depósito: <b> $ ${parseFloat(payment.deposit_amount).toLocaleString()}</b></p>
-              <p>- Monto a cobrar: <b> $ ${parseFloat(payment.booking_amount).toLocaleString()}</b></p>
-              <p>- Gastos adicionales: <b> $ ${parseFloat(payment.extra_expenses || 'N/A').toLocaleString()}</b></p>
-              <p>- Total: <b> $ ${parseFloat(payment.payment_amount_total).toLocaleString()}</b></p>
-              <p>- Tipo de pago: <b>${payment.payment_type.payment_type_name}</b></p>
+              <p>- Monto de la reserva: <b> $ ${parseFloat(
+                payment.booking_starting_price
+              ).toLocaleString()}</b></p>
+              <p>- Descuento de la reserva: <b> % ${
+                payment.booking_discount || 'N/A'
+              }</b></p>
+              <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(
+                payment.booking_starting_price,
+                payment.booking_discount
+              )}</b></p>
+              <p>- Monto del depósito: <b> $ ${parseFloat(
+                payment.deposit_amount
+              ).toLocaleString()}</b></p>
+              <p>- Monto a cobrar: <b> $ ${parseFloat(
+                payment.booking_amount
+              ).toLocaleString()}</b></p>
+              <p>- Gastos adicionales: <b> $ ${parseFloat(
+                payment.extra_expenses || 'N/A'
+              ).toLocaleString()}</b></p>
+              <p>- Total: <b> $ ${parseFloat(
+                payment.payment_amount_total
+              ).toLocaleString()}</b></p>
+              <p>- Tipo de pago: <b>${
+                payment.payment_type.payment_type_name
+              }</b></p>
             </body>
           </html>
         `);
       },
       (error: any) => {
-        console.error('Error al obtener los detalles del cobro archivado:', error);
+        console.error(
+          'Error al obtener los detalles del cobro archivado:',
+          error
+        );
       }
     );
-    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
       const startingPriceNum = parseFloat(startingPrice);
       const discountNum = discount ? parseFloat(discount) : 0;
-      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
       return discountedAmount.toLocaleString();
     }
   }
-  
-  
-  
 }

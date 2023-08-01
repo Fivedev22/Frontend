@@ -14,8 +14,11 @@ import { PaymentStatusService } from '../../../../../../services/payment_status.
 import { IReservation } from '../../../../../../interfaces/reservation.interface';
 import { ReservationService } from '../../../../../../services/reservation.service';
 import { DatePipe, formatDate } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
-
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  NativeDateAdapter,
+} from '@angular/material/core';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
@@ -42,10 +45,9 @@ class PickDateAdapter extends NativeDateAdapter {
   templateUrl: './payment-form.component.html',
   styleUrls: ['./payment-form.component.css'],
   providers: [
-    {provide: DateAdapter, useClass: PickDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS}
+    { provide: DateAdapter, useClass: PickDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS },
   ],
-
 })
 export class PaymentFormComponent implements OnInit {
   clients!: IClient[];
@@ -55,7 +57,7 @@ export class PaymentFormComponent implements OnInit {
   reservations!: IReservation[];
   paymentForm!: FormGroup;
   reservationId: number;
-  selectedClient!: IClient; 
+  selectedClient!: IClient;
 
   actionTitle: string = 'Registrar Cobro';
   actionButton: string = 'Registrar';
@@ -119,52 +121,45 @@ export class PaymentFormComponent implements OnInit {
       this.calcularPrecioFinal();
     });
 
-    
     if (this.paymentData && this.paymentData.id_payment) {
       this.addPaymentData(this.paymentData);
       this.actionTitle = 'Modificar Cobro';
       this.actionButton = 'Actualizar';
     }
 
-    
     if (this.paymentData) {
-      
       const checkInDate = new Date(this.paymentData.check_in_date);
       const checkOutDate = new Date(this.paymentData.check_out_date);
 
-      // Ajustar las fechas según la zona horaria del cliente
       checkInDate.setTime(
         checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
       );
       checkOutDate.setTime(
         checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
       );
-      console.log('checkInDate:', checkInDate);
-      console.log('checkOutDate:', checkOutDate);
-
 
       this.paymentForm.patchValue({
         check_in_date: checkInDate,
-        check_out_date: checkOutDate
+        check_out_date: checkOutDate,
       });
     }
-    
-  
   }
 
   public hasError = (controlName: string, errorName: string) => {
     return this.paymentForm.controls[controlName].hasError(errorName);
   };
 
-  addReservationData(reservation: IReservation) { 
+  addReservationData(reservation: IReservation) {
     const checkInDate = new Date(reservation.check_in_date);
     const checkOutDate = new Date(reservation.check_out_date);
-  
-    // Ajustar las fechas según la zona horaria del cliente
-    checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
-    checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
-    
-  
+
+    checkInDate.setTime(
+      checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+    );
+    checkOutDate.setTime(
+      checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+    );
+
     this.paymentForm.patchValue({
       booking: reservation.id_booking,
       client: reservation.client.id_client,
@@ -177,12 +172,8 @@ export class PaymentFormComponent implements OnInit {
       booking_amount: reservation.booking_amount,
       extra_expenses: 0,
       payment_status: 2,
-    });    
+    });
   }
-  
-  
-
-  
 
   initForm(): FormGroup {
     var dateDay = new Date().toLocaleDateString();
@@ -202,7 +193,7 @@ export class PaymentFormComponent implements OnInit {
       payment_amount_total: ['', [Validators.required, Validators.min(0)]],
       payment_type: ['', [Validators.required]],
       payment_status: [''],
-    }); 
+    });
   }
 
   addPaymentData(data: any) {
@@ -256,7 +247,6 @@ export class PaymentFormComponent implements OnInit {
   }
 
   createPayment() {
-    console.log(this.paymentForm.value);
     if (this.paymentForm.valid) {
       this.paymentService.createPayment(this.paymentForm.value).subscribe({
         next: (res) => {
@@ -298,13 +288,16 @@ export class PaymentFormComponent implements OnInit {
 
   getClientFullName(clientId: number): string {
     if (!this.clients) {
-      return ''; 
+      return '';
     }
-  
-    const selectedClient = this.clients.find((client) => client.id_client === clientId);
-    return selectedClient ? `${selectedClient.name} ${selectedClient.last_name}` : '';
+
+    const selectedClient = this.clients.find(
+      (client) => client.id_client === clientId
+    );
+    return selectedClient
+      ? `${selectedClient.name} ${selectedClient.last_name}`
+      : '';
   }
-  
 
   findAllProperties() {
     this.propertyService.findAllProperties().subscribe((data) => {
@@ -314,10 +307,12 @@ export class PaymentFormComponent implements OnInit {
 
   getPropertyFullName(id_property: number): string {
     if (!this.properties) {
-      return ''; 
+      return '';
     }
-  
-    const selectedProperty = this.properties.find((property) => property.id_property === id_property);
+
+    const selectedProperty = this.properties.find(
+      (property) => property.id_property === id_property
+    );
     return selectedProperty ? `${selectedProperty.property_name}` : '';
   }
 

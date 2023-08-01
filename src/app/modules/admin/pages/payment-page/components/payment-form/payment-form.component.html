@@ -53,25 +53,36 @@
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Cliente</mat-label>
-            <input matInput readonly formControlName="client" placeholder="Seleccione..." [value]="getClientFullName(paymentForm.get('client')?.value)">
+            <input
+              matInput
+              readonly
+              formControlName="client"
+              placeholder="Seleccione..."
+              [value]="getClientFullName(paymentForm.get('client')?.value)"
+            />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error align="end" *ngIf="hasError('client', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
-        
+
         <mat-grid-tile>
           <mat-form-field appearance="outline">
             <mat-label>Propiedad</mat-label>
-            <input matInput readonly formControlName="property" placeholder="Seleccione..." [value]="getPropertyFullName(paymentForm.get('property')?.value)" />
+            <input
+              matInput
+              readonly
+              formControlName="property"
+              placeholder="Seleccione..."
+              [value]="getPropertyFullName(paymentForm.get('property')?.value)"
+            />
             <mat-hint align="end">Campo requerido</mat-hint>
             <mat-error align="end" *ngIf="hasError('property', 'required')">
               <strong>Campo requerido</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
-        
 
         <mat-grid-tile>
           <mat-form-field appearance="outline">

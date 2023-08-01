@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,7 +29,6 @@ export class PaymentPageComponent {
   ];
 
   bookingPriceAfterDiscount!: number;
-
 
   dataSource!: MatTableDataSource<IPayment>;
 
@@ -87,7 +86,7 @@ export class PaymentPageComponent {
       }
     });
   }
-  
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -181,33 +180,40 @@ export class PaymentPageComponent {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
-        `Monto de Reserva: $ ${parseFloat(data.booking.starting_price).toLocaleString()}`,
+        `Monto de Reserva: $ ${parseFloat(
+          data.booking.starting_price
+        ).toLocaleString()}`,
         10,
         140
       );
+      doc.text(`Descuento: % ${data.booking.discount}`, 10, 145);
       doc.text(
-        `Descuento: % ${data.booking.discount}`,
+        `Monto con descuento: $ ${calculateDiscountedAmount(
+          data.booking_starting_price,
+          data.booking_discount
+        )}`,
         10,
-        145
+        150
       );
-      doc.text(`Monto con descuento: $ ${calculateDiscountedAmount(data.booking_starting_price, data.booking_discount)}`, 10, 150);
-      doc.text(`Cantidad deposito : $ ${parseFloat(data.booking.deposit_amount).toLocaleString()}`, 10, 155);
       doc.text(
-        `Monto a Pagar: $ ${parseFloat(data.booking.booking_amount).toLocaleString()}`,
+        `Cantidad deposito : $ ${parseFloat(
+          data.booking.deposit_amount
+        ).toLocaleString()}`,
+        10,
+        155
+      );
+      doc.text(
+        `Monto a Pagar: $ ${parseFloat(
+          data.booking.booking_amount
+        ).toLocaleString()}`,
         10,
         160
       );
-      doc.text(
-        `Tipo de pago: ${data.payment_type.payment_type_name}`,
-        10,
-        165
-      );
-      const formattedExpenses = parseFloat(data.extra_expenses ?? "0").toLocaleString();
-      doc.text(
-        `Gastos adicionales: $ ${formattedExpenses}`,
-        10,
-        170
-      );
+      doc.text(`Tipo de pago: ${data.payment_type.payment_type_name}`, 10, 165);
+      const formattedExpenses = parseFloat(
+        data.extra_expenses ?? '0'
+      ).toLocaleString();
+      doc.text(`Gastos adicionales: $ ${formattedExpenses}`, 10, 170);
       doc.text(
         `Total: $ ${parseFloat(data.payment_amount_total).toLocaleString()}`,
         10,
@@ -237,10 +243,14 @@ export class PaymentPageComponent {
         newWindow.document.title = 'Comprobante de Pago Apartamentos Anahí.pdf';
       }
     });
-    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
       const startingPriceNum = parseFloat(startingPrice);
       const discountNum = discount ? parseFloat(discount) : 0;
-      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
       return discountedAmount.toLocaleString();
     }
   }

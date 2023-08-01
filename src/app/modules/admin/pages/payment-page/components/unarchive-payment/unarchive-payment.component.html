@@ -52,7 +52,11 @@
       <ng-container matColumnDef="booking_starting_price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Monto</th>
         <td mat-cell *matCellDef="let row">
-          {{ (row.booking_starting_price - (row.booking_starting_price * (row.booking_discount/100))) | currency }}
+          {{
+            row.booking_starting_price -
+              row.booking_starting_price * (row.booking_discount / 100)
+              | currency
+          }}
         </td>
       </ng-container>
 
