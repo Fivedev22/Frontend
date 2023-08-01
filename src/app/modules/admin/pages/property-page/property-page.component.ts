@@ -21,7 +21,6 @@ export class PropertyPageComponent implements OnInit {
   title = 'property';
   activityStatusId = 2;
 
-
   displayedColumns: string[] = [
     'reference_number',
     'property_name',
@@ -56,7 +55,6 @@ export class PropertyPageComponent implements OnInit {
       });
     });
   }
-  
 
   archiveProperty(id: number, reference_number: number, property_name: string) {
     this.reservationService.findAllReservations().subscribe({
@@ -198,5 +196,4 @@ export class PropertyPageComponent implements OnInit {
       }
     });
   }
- 
 }

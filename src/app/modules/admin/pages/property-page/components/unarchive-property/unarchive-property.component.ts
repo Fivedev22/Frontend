@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { PropertyService } from '../../../../../../services/property-page.service';
 import { IProperty } from '../../../../../../interfaces/property.interface';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
@@ -29,13 +29,9 @@ export class UnarchivePropertyComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private readonly dialog: MatDialog,
     private readonly propertyService: PropertyService,
-    private customPaginator: MatPaginatorIntl,
     private dialogRef: MatDialogRef<UnarchivePropertyComponent>
-  ) {
-    customPaginator.itemsPerPageLabel = 'Filas por página';
-  }
+  ) {}
 
   ngOnInit(): void {
     this.findAllArchived();
@@ -142,16 +138,24 @@ export class UnarchivePropertyComponent {
           Internet: ${property.internet ? 'Sí' : 'No'}
           Piscina: ${property.pool ? 'Sí' : 'No'}
           Cocina: ${property.kitchen ? 'Sí' : 'No'}
-          Equipamiento de lavandería: ${property.laundry_equipment ? 'Sí' : 'No'}
+          Equipamiento de lavandería: ${
+            property.laundry_equipment ? 'Sí' : 'No'
+          }
           Patio: ${property.yard ? 'Sí' : 'No'}
           Estacionamiento: ${property.parking ? 'Sí' : 'No'}
           Acceso para discapacitados: ${property.disabled_access ? 'Sí' : 'No'}
           Camas para niños: ${property.kids_beds ? 'Sí' : 'No'}
-          Estado de disponibilidad: ${property.availability_status.availability_status_name}
+          Estado de disponibilidad: ${
+            property.availability_status.availability_status_name
+          }
           Estado de actividad: ${property.activity_status.activity_status_name}
         `;
-  
-        const popupWindow = window.open('', 'Detalles del inmueble', 'width=400,height=600');
+
+        const popupWindow = window.open(
+          '',
+          'Detalles del inmueble',
+          'width=400,height=600'
+        );
         popupWindow?.document.write(`
           <html>
             <head>
@@ -171,10 +175,11 @@ export class UnarchivePropertyComponent {
         `);
       },
       (error: any) => {
-        console.error('Error al obtener los detalles del inmueble archivado:', error);
+        console.error(
+          'Error al obtener los detalles del inmueble archivado:',
+          error
+        );
       }
     );
   }
-  
-  
 }
