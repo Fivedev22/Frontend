@@ -13,8 +13,6 @@ import { ReservationService } from '../../../../services/reservation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotePageComponent } from './components/note-page/note-page.component';
-
-// bootstrap
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import { PropertyService } from 'src/app/services/property-page.service';
 import { IProperty } from 'src/app/interfaces/property.interface';
@@ -103,15 +101,14 @@ export class DashboardPageComponent implements AfterViewInit {
     return this.reservationService.findAllReservations();
   }
 
-
   transformReservationsToEvents(reservations: IReservation[]): EventInput[] {
     const currentDate = new Date();
     const events: EventInput[] = [];
-  
+
     reservations.forEach((reservation, index) => {
       const checkOutDate = new Date(reservation.check_out_date);
       checkOutDate.setDate(checkOutDate.getDate() + 1);
-  
+
       if (checkOutDate >= currentDate) {
         events.push({
           title: ` N° Rva: ${reservation.booking_number} - Propiedad: ${reservation.property.property_name} - Cliente: ${reservation.client.name} ${reservation.client.last_name}`,
@@ -122,10 +119,9 @@ export class DashboardPageComponent implements AfterViewInit {
         });
       }
     });
-  
+
     return events;
   }
-  
 
   getColorByIndex(index: number): string {
     const colors = [
@@ -195,22 +191,37 @@ export class DashboardPageComponent implements AfterViewInit {
           <p>- Marca: <b>${reservation.brand}</b></p>
           <p>- Modelo: <b>${reservation.model}</b></p>
           <p>- Patente: <b>${reservation.licensePlate}</b></p>
-          <p>- Monto de reserva: <b>$ ${parseFloat(reservation.starting_price).toLocaleString()}</b></p>
+          <p>- Monto de reserva: <b>$ ${parseFloat(
+            reservation.starting_price
+          ).toLocaleString()}</b></p>
           <p>- Descuento: <b>% ${reservation.discount}</b></p>
-          <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(reservation.starting_price,reservation.discount)}</b></p>
-          <p>- Monto depósito: <b>${parseFloat(reservation.deposit_amount).toLocaleString()}</b>$ </p>
-          <p>- Forma de Pago (depósito): <b>${reservation.payment_type.payment_type_name}</b> </p>
-          <p>- Monto a cobrar: <b>$ ${parseFloat(reservation.booking_amount).toLocaleString()}</b></p>
+          <p>- Monto con descuento: <b>$ ${calculateDiscountedAmount(
+            reservation.starting_price,
+            reservation.discount
+          )}</b></p>
+          <p>- Monto depósito: <b>${parseFloat(
+            reservation.deposit_amount
+          ).toLocaleString()}</b>$ </p>
+          <p>- Forma de Pago (depósito): <b>${
+            reservation.payment_type.payment_type_name
+          }</b> </p>
+          <p>- Monto a cobrar: <b>$ ${parseFloat(
+            reservation.booking_amount
+          ).toLocaleString()}</b></p>
         </body>
       </html>
         `);
       });
-      function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
-        const startingPriceNum = parseFloat(startingPrice);
-        const discountNum = discount ? parseFloat(discount) : 0;
-        const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
-        return discountedAmount.toLocaleString();
-      }
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
+      const startingPriceNum = parseFloat(startingPrice);
+      const discountNum = discount ? parseFloat(discount) : 0;
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
+      return discountedAmount.toLocaleString();
+    }
   }
 
   viewPropertyStatus() {
@@ -219,20 +230,30 @@ export class DashboardPageComponent implements AfterViewInit {
         this.propertyService.findAllProperties().subscribe(
           (properties: IProperty[]) => {
             if (properties.length === 0) {
-              Swal.fire('No se encontraron inmuebles', 'No hay propiedades disponibles', 'info');
+              Swal.fire(
+                'No se encontraron inmuebles',
+                'No hay propiedades disponibles',
+                'info'
+              );
               return;
             }
-            const tableRows = properties.map(property => {
-              return `
+            const tableRows = properties
+              .map((property) => {
+                return `
                 <tr>
                   <td>${property.property_name}</td>
                   <td>${property.availability_status.availability_status_name}</td>
                   <td>${property.activity_status.activity_status_name}</td>
                 </tr>
               `;
-            }).join('');
-  
-            const popupWindow = window.open('', '_blank', 'width=800,height=600');
+              })
+              .join('');
+
+            const popupWindow = window.open(
+              '',
+              '_blank',
+              'width=800,height=600'
+            );
             popupWindow?.document.write(`
               <html>
                 <head>
@@ -299,7 +320,6 @@ export class DashboardPageComponent implements AfterViewInit {
       }
     );
   }
-  
 
   showReservationDetails() {
     const reservationDetailsElement =

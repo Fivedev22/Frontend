@@ -25,7 +25,6 @@ export class NotePageComponent implements OnInit {
 
   addNote() {
     if (this.noteForm.valid) {
-      console.log(this.noteForm.value);
       this.noteService.create(this.noteForm.value).subscribe({
         next: (res) => {
           Swal.fire({

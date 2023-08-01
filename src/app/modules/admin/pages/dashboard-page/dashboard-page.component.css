@@ -2,7 +2,6 @@
   width: 100%;
   height: 100%;
   height: calc(100vh - 130px);
-
 }
 
 .custom-button {
@@ -11,14 +10,9 @@
   right: 1rem;
   width: 3.5rem;
   height: 3.5rem;
-  /* Estilos 3D */
   border: none;
   border-radius: 999px;
-
-  /* Estilos de gradiente en hover */
   background-color: #0d6efd;
-
-  /* Otros estilos */
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -31,14 +25,9 @@
   right: 5rem;
   width: 3.5rem;
   height: 3.5rem;
-  /* Estilos 3D */
   border: none;
   border-radius: 999px;
-
-  /* Estilos de gradiente en hover */
   background-color: #000000;
-
-  /* Otros estilos */
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
