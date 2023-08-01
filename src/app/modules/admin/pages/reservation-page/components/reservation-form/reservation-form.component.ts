@@ -123,14 +123,16 @@ export class ReservationFormComponent implements OnInit {
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
     if (this.reservationData) {
-      const checkInDate = new Date(this.reservationData.check_in);
-      const checkOutDate = new Date(this.reservationData.check_out);
-
-      this.minDate = new Date(
-        Math.min(checkInDate.getTime(), checkOutDate.getTime())
-      );
+      const checkInDate = new Date(this.reservationData.check_in_date);
+      checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
+      
+      const checkOutDate = new Date(this.reservationData.check_out_date);
+      checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
+    
+      this.minDate = new Date(Math.min(checkInDate.getTime(), checkOutDate.getTime()));
       this.minDate.setHours(0, 0, 0, 0);
-    } else {
+    }
+     else {
       this.minDate = new Date();
       this.minDate.setHours(0, 0, 0, 0);
     }
@@ -327,20 +329,36 @@ export class ReservationFormComponent implements OnInit {
   }
 
   getBookingsOcuped() {
-    if (!this.reservationData) {
-      this.reservationForm.controls['property'].valueChanges.subscribe(
-        (propertyId) => {
-          if (propertyId) {
-            this.reservationService
-              .getOccupiedDatesForProperty(propertyId)
-              .subscribe((occupiedDates) => {
+    this.reservationForm.controls['property'].valueChanges.subscribe(
+      (propertyId) => {
+        if (propertyId) {
+          this.reservationService
+            .getOccupiedDatesForProperty(propertyId)
+            .subscribe((occupiedDates) => {
+              if (this.reservationData) {
+                // Modo de edición, excluye las fechas de la reserva en edición
+                const checkInDate = new Date(this.reservationData.check_in_date).toISOString().split('T')[0];
+                const checkOutDate = new Date(this.reservationData.check_out_date).toISOString().split('T')[0];
+  
+                // Filtrar las fechas de ocupación para excluir las fechas de la reserva en edición
+                this.occupiedDates = occupiedDates.filter((date) => {
+                  const currentDate = new Date(date).toISOString().split('T')[0];
+                  return !(currentDate >= checkInDate && currentDate <= checkOutDate);
+                });
+              } else {
+                // Modo de creación de reserva, muestra todas las fechas ocupadas
                 this.occupiedDates = occupiedDates;
-              });
-          }
+              }
+            });
         }
-      );
-    }
+      }
+    );
   }
+  
+  
+  
+  
+  
 
   dateClass = (date: Date): string => {
     return this.dateFilter(date) ? 'disabled-date' : '';

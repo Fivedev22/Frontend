@@ -1,3 +1,4 @@
+
 <section class="report-main">
   <app-head title="Espacio reportes"></app-head>
   <div class="report-section-body">
@@ -32,6 +33,7 @@
         <p style="margin-top: 20px; font-style: italic; text-align: center">
           Nota: Las Propiedades no visualizadas indica que no generaron ingresos
         </p>
+        <button (click)="downloadTableAsExcel(incomeReport.data, displayedColumns, 'Ingresos_por_Propiedad')">Descargar como Excel</button>
       </mat-tab>
       <mat-tab label="Ingresos por tipo de pago"
         ><h3 class="report-title">Informe de ingresos por tipo de pago</h3>
@@ -59,6 +61,7 @@
           Nota: Los tipos de pagos no visualizados indica que no generaron
           ningun ingreso
         </p>
+        <button (click)="downloadTableAsExcel(incomeReport2.data, displayedColumns2, 'Ingresos_por_tipo_de_pago')">Descargar como Excel</button>
       </mat-tab>
       <mat-tab label="Ingresos por clientes">
         <h3 class="report-title">Informe de ingresos x clientes</h3>
@@ -84,6 +87,7 @@
           Nota: Los clientes no visualizados indica que no han realizado ningun
           cobro aún
         </p>
+        <button (click)="downloadTableAsExcel(clientIncomeReport.data, displayedColumns3, 'Ingresos_por_clientes')">Descargar como Excel</button>
       </mat-tab>
       <mat-tab label="Ingresos por duración de reserva">
         <h3 class="report-title">
@@ -107,6 +111,9 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns4"></tr>
         </table>
+        <button mat-button (click)="downloadTableAsExcel(incomeReport3.data, displayedColumns4, 'Ingresos_por_duracion_de_reserva')">
+          <mat-icon>download</mat-icon> 
+        </button>
       </mat-tab>
     </mat-tab-group>
   </div>

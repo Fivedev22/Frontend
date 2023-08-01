@@ -3,6 +3,9 @@ import { PaymentService } from '../../../../services/payment.service';
 import { IPayment } from '../../../../interfaces/payment.interface';
 import { IReservation } from '../../../../interfaces/reservation.interface';
 import { MatTableDataSource } from '@angular/material/table';
+import * as XLSX from 'xlsx';
+
+
 
 @Component({
   selector: 'app-report-page',
@@ -38,6 +41,24 @@ export class ReportPageComponent implements OnInit {
       }
     );
   }
+
+
+  downloadTableAsExcel(tableData: any[], columns: string[], fileName: string): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(tableData, { header: columns });
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const downloadLink = document.createElement('a');
+    const url = window.URL.createObjectURL(data);
+    downloadLink.href = url;
+    downloadLink.download = fileName + '.xlsx';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    window.URL.revokeObjectURL(url);
+  }
+
+  
 
   generateIncomeReport() {
     const incomeByProperty: {

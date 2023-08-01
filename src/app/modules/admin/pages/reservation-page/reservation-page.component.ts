@@ -112,6 +112,7 @@ export class ReservationPageComponent implements OnInit {
     });
   }
 
+
   archiveReservation(id: number, booking_number: number, check_in_date: Date) {
     this.paymentService.findAllPayments().subscribe({
       next: (payments) => {
@@ -186,32 +187,68 @@ export class ReservationPageComponent implements OnInit {
   openFormEditReservation(row: IReservation) {
     const id = row.id_booking;
 
-    this.paymentService.findAllPayments().subscribe({
-      next: (payments) => {
-        const hasPayments = payments.some(
-          (payment) => payment.booking.id_booking === id
-        );
+    // Obtener la fecha actual
+    const currentDate = new Date();
 
-        if (hasPayments) {
+    if (id === undefined) {
+      console.error('El ID de la reserva es undefined.');
+      return;
+    }
+    this.reservationService.findOneReservation(id).subscribe({
+      next: (reservation) => {
+        
+     let checkInDate = new Date(reservation.check_in_date);
+     let checkOutDate = new Date(reservation.check_out_date);
+
+     // Aplicar el desfase horario a las fechas
+     checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
+     checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
+
+     console.log(checkInDate)
+     console.log(checkOutDate)
+
+
+        // Comprobar si la fecha actual está dentro del rango de check_in_date y check_out_date
+        if (currentDate >= checkInDate && currentDate <= checkOutDate) {
           Swal.fire({
             icon: 'error',
             title: 'No se puede editar la reserva',
-            text: 'La reserva tiene un cobro registrado y ya no puede ser editada.',
+            text: 'La reserva está en ejecución y no es posible editarla.',
           });
         } else {
-          this.dialog
-            .open(ReservationFormComponent, {
-              width: '800px',
-              height: '600px',
-              data: row,
-              disableClose: true,
-            })
-            .afterClosed()
-            .subscribe((val) => {
-              if (val === 'update') {
-                this.findAllReservations();
+          this.paymentService.findAllPayments().subscribe({
+            next: (payments) => {
+              const hasPayments = payments.some(
+                (payment) => payment.booking.id_booking === id
+              );
+
+              if (hasPayments) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'No se puede editar la reserva',
+                  text: 'La reserva ya tiene un cobro registrado y ya no puede ser editada.',
+                });
+              } else {
+                this.dialog
+                  .open(ReservationFormComponent, {
+                    width: '800px',
+                    height: '600px',
+                    data: row,
+                    disableClose: true,
+                  })
+                  .afterClosed()
+                  .subscribe((val) => {
+                    if (val === 'update') {
+                      this.findAllReservations();
+                    }
+                  });
               }
-            });
+            },
+            error: (error) => {
+              // Manejo de errores si la llamada al servicio falla
+              console.error('Error al obtener los pagos:', error);
+            },
+          });
         }
       },
       error: (error) => {

@@ -5,6 +5,9 @@ import { PaymentService } from '../../../../services/payment.service';
 import { ReservationService } from '../../../../services/reservation.service';
 import { ClientService } from '../../../../services/client-page.service';
 import { PropertyService } from '../../../../services/property-page.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 @Component({
   selector: 'app-statistic-page',
@@ -35,7 +38,28 @@ export class StatisticPageComponent implements AfterViewInit {
     this.createPropertyChart();
     this.PropertyByProvinceChart();
   }
+  
+  downloadChart(chartId: string) {
+    const canvas = document.getElementById(chartId) as HTMLCanvasElement;
 
+    // Crear un nuevo documento PDF
+    const pdf = new jsPDF();
+
+    // Capturar el gráfico y agregarlo como imagen al PDF
+    html2canvas(canvas).then((canvasImage) => {
+      const imageData = canvasImage.toDataURL('image/png');
+      const width = 100; // Ancho de la imagen en el PDF (ajusta según tus necesidades)
+      const height = (canvasImage.height / canvasImage.width) * width; // Mantener la relación de aspecto
+
+      // Agregar la imagen al PDF
+      pdf.addImage(imageData, 'PNG', 10, 10, width, height);
+
+      // Descargar el PDF con el nombre del gráfico
+      pdf.save(`${chartId}_grafico.pdf`);
+    });
+  }
+
+  
   createReservationChart() {
     const canvas = document.getElementById(
       'reservationChart'
@@ -113,34 +137,33 @@ export class StatisticPageComponent implements AfterViewInit {
 
     if (ctx) {
       this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
-        const allMonths = Array.from({ length: 12 }, (_, i) => {
-          const date = new Date();
-          date.setMonth(i);
-          return date.toLocaleString('default', { month: 'long' });
-        });
+        const monthNames = [
+          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+          'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+  
         const dataByMonth = payments.reduce((acc, payment) => {
           const date = new Date(payment.createdAt);
-          const month = date.toLocaleString('default', { month: 'long' });
+          const month = monthNames[date.getMonth()]; // Obtener el nombre del mes en español
           const startingPrice = parseFloat(payment.booking_starting_price);
-          const discount = parseFloat(payment.booking_discount ?? '0');
-          const discountedAmount =
-            startingPrice - startingPrice * (discount / 100);
-
+          const discount = parseFloat(payment.booking_discount ?? "0");
+          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
+  
           acc[month] = (acc[month] || 0) + discountedAmount;
           return acc;
         }, {} as any);
-        const datasetData = allMonths.map((month) => {
+  
+        const datasetData = monthNames.map((month) => {
           const value = dataByMonth[month] || 0;
           return parseFloat(value.toFixed(2));
         });
-        const totalIncome = datasetData.reduce(
-          (acc, income) => acc + income,
-          0
-        );
+  
+        const totalIncome = datasetData.reduce((acc, income) => acc + income, 0);
+  
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: allMonths,
+            labels: monthNames,
             datasets: [
               {
                 label: 'Monto ingresado por mes',
@@ -193,6 +216,8 @@ export class StatisticPageComponent implements AfterViewInit {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
   }
+  
+  
 
   ClientsByProvinceChart() {
     const canvas = document.getElementById(
@@ -565,77 +590,70 @@ export class StatisticPageComponent implements AfterViewInit {
   }
 
   createReservationsByMonthChart() {
-    const canvas = document.getElementById(
-      'barByMonthChart'
-    ) as HTMLCanvasElement;
+    const canvas = document.getElementById('barByMonthChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+  
     if (ctx) {
-      this.reservationService
-        .findAllReservations()
-        .subscribe((reservations) => {
-          const allMonths = Array.from({ length: 12 }, (_, i) => {
-            const date = new Date();
-            date.setMonth(i);
-            return date.toLocaleString('default', { month: 'long' });
+      this.reservationService.findAllReservations().subscribe((reservations) => {
+        const monthNames = [
+          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+          'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+  
+        const reservationsByMonth = monthNames.map((month) => {
+          const reservationsInMonth = reservations.filter((reservation) => {
+            const reservationDate = new Date(reservation.check_in_date);
+            const reservationMonth = reservationDate.getMonth(); // Obtener el número del mes (0 a 11)
+            return reservationMonth === monthNames.indexOf(month);
           });
-
-          const reservationsByMonth = allMonths.map((month) => {
-            const reservationsInMonth = reservations.filter((reservation) => {
-              const reservationDate = new Date(reservation.check_in_date);
-              const reservationMonth = reservationDate.toLocaleString(
-                'default',
-                { month: 'long' }
-              );
-              return reservationMonth === month;
-            });
-            return reservationsInMonth.length;
-          });
-
-          const barColors = this.generateFixedColors(allMonths.length);
-
-          const chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: allMonths,
-              datasets: [
-                {
-                  label: 'Cantidad de reservas por mes',
-                  data: reservationsByMonth,
-                  backgroundColor: barColors,
-                  borderColor: 'rgba(75, 192, 192, 1)',
-                  borderWidth: 1,
-                },
-              ],
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Cantidad de reservas por mes',
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    display: false,
-                  },
-                },
-                y: {
-                  beginAtZero: true,
-                },
-              },
-            },
-          });
+          return reservationsInMonth.length;
         });
+  
+        const barColors = this.generateFixedColors(monthNames.length);
+  
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: monthNames,
+            datasets: [
+              {
+                label: 'Cantidad de reservas por mes',
+                data: reservationsByMonth,
+                backgroundColor: barColors,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Cantidad de reservas por mes',
+              },
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      });
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
-  }
+  }  
+  
 
   createPropertyChart() {
     const canvas = document.getElementById(
