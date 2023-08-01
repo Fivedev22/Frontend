@@ -109,6 +109,8 @@ td {
 }
 
 .cpc-tableTitle {
+  display: flex;
+  justify-content: space-between;
   font-size: 16px;
   color: #898989;
 }
@@ -122,5 +124,16 @@ td {
 }
 
 .small-button {
+  border: none;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.pagado {
+  color: #1b9c85;
+}
+
+.pendiente {
+  color: #f1a53b;
 }

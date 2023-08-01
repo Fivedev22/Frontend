@@ -17,7 +17,6 @@ import { IPayment } from 'src/app/interfaces/payment.interface';
 import { map } from 'rxjs';
 import { forkJoin } from 'rxjs';
 
-
 @Component({
   selector: 'app-reservation-page',
   templateUrl: './reservation-page.component.html',
@@ -40,8 +39,6 @@ export class ReservationPageComponent implements OnInit {
   dataSource!: MatTableDataSource<IReservation>;
   showAllReservations: boolean = false;
 
-
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -56,13 +53,19 @@ export class ReservationPageComponent implements OnInit {
     this.findAllReservations();
   }
 
+  ngAfterViewInit() {
+    this.sort.direction = 'asc';
+    this.sort.active = 'is_paid';
+    this.findAllReservations();
+  }
+
   toggleShowAllReservations() {
     this.showAllReservations = !this.showAllReservations;
     this.findAllReservations();
   }
 
   findAllReservations() {
-    const currentDate = new Date(); 
+    const currentDate = new Date();
     this.reservationService.findAllReservations().subscribe((reservations) => {
       const observables = reservations.map((reservation) =>
         this.paymentService.findAllPayments().pipe(
@@ -70,34 +73,45 @@ export class ReservationPageComponent implements OnInit {
             const hasPayments = payments.some(
               (payment) => payment.booking.id_booking === reservation.id_booking
             );
-  
+
             // Update the local attribute
             reservation.is_paid = hasPayments;
-  
+
             // Call the updateIsPaid function if there are payments
             if (hasPayments) {
-              this.reservationService.updateIsPaid(reservation.id_booking!).subscribe(
-                () => console.log(`Updated is_paid for reservation ${reservation.id_booking}`),
-                (error) => console.error('Error updating is_paid:', error)
-              );
+              this.reservationService
+                .updateIsPaid(reservation.id_booking!)
+                .subscribe(
+                  () =>
+                    console.log(
+                      `Updated is_paid for reservation ${reservation.id_booking}`
+                    ),
+                  (error) => console.error('Error updating is_paid:', error)
+                );
             }
-  
+
             return reservation;
           })
         )
       );
-  
+
       forkJoin(observables).subscribe((updatedReservations) => {
         if (this.showAllReservations) {
           // Si showAllReservations es true, mostrar todas las reservas sin filtrar
-          this.dataSource = new MatTableDataSource<IReservation>(updatedReservations);
+          this.dataSource = new MatTableDataSource<IReservation>(
+            updatedReservations
+          );
         } else {
           // Filtrar las reservas con fecha de check-out mayor a la fecha actual y estado is_paid igual a false
           const visibleReservations = updatedReservations.filter(
-            (reservation) => new Date(reservation.check_out_date) > currentDate || !reservation.is_paid
+            (reservation) =>
+              new Date(reservation.check_out_date) > currentDate ||
+              !reservation.is_paid
           );
 
-          this.dataSource = new MatTableDataSource<IReservation>(visibleReservations);
+          this.dataSource = new MatTableDataSource<IReservation>(
+            visibleReservations
+          );
         }
 
         this.dataSource.paginator = this.paginator;
@@ -179,13 +193,13 @@ export class ReservationPageComponent implements OnInit {
 
   openFormEditReservation(row: IReservation) {
     const id = row.id_booking;
-  
+
     this.paymentService.findAllPayments().subscribe({
       next: (payments) => {
         const hasPayments = payments.some(
           (payment) => payment.booking.id_booking === id
         );
-  
+
         if (hasPayments) {
           Swal.fire({
             icon: 'error',
@@ -214,12 +228,11 @@ export class ReservationPageComponent implements OnInit {
       },
     });
   }
-  
 
   generatePdf(id: number) {
     this.reservationService.findOneReservation(id).subscribe((data) => {
       const doc = new jsPDF();
-  
+
       const addPageWithBackgroundColor = () => {
         const lightColor = '#FFFFFF';
         doc.setFillColor(lightColor);
@@ -230,7 +243,7 @@ export class ReservationPageComponent implements OnInit {
           doc.internal.pageSize.getHeight()
         );
       };
-  
+
       addPageWithBackgroundColor();
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(16);
@@ -270,11 +283,7 @@ export class ReservationPageComponent implements OnInit {
         10,
         90
       );
-      doc.text(
-        `Cliente: ${data.client.name} ${data.client.last_name}`,
-        10,
-        95
-      );
+      doc.text(`Cliente: ${data.client.name} ${data.client.last_name}`, 10, 95);
       doc.text(`Propiedad: ${data.property.property_name}`, 10, 100);
       doc.text(`Cantidad adultos: ${data.adults_number}`, 10, 105);
       doc.text(`Cantidad menores: ${data.kids_number}`, 10, 110);
@@ -292,22 +301,33 @@ export class ReservationPageComponent implements OnInit {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.text(
-        `Monto de Reserva: $ ${parseFloat(data.starting_price).toLocaleString()}`,
+        `Monto de Reserva: $ ${parseFloat(
+          data.starting_price
+        ).toLocaleString()}`,
         10,
         170
       );
+      doc.text(`Descuento: % ${data.discount}`, 10, 175);
       doc.text(
-        `Descuento: % ${data.discount}`,
-        10,
-        175
-      );
-      doc.text(
-        `Monto con descuento: $ ${calculateDiscountedAmount(data.starting_price, data.discount)}`,
+        `Monto con descuento: $ ${calculateDiscountedAmount(
+          data.starting_price,
+          data.discount
+        )}`,
         10,
         180
       );
-      doc.text(`Cantidad Deposito : $ ${parseFloat(data.deposit_amount).toLocaleString()}`, 10, 185);
-      doc.text(`Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`, 10, 190);
+      doc.text(
+        `Cantidad Deposito : $ ${parseFloat(
+          data.deposit_amount
+        ).toLocaleString()}`,
+        10,
+        185
+      );
+      doc.text(
+        `Tipo de Pago (Deposito): ${data.payment_type.payment_type_name}`,
+        10,
+        190
+      );
       doc.text(
         `Monto a Pagar: $ ${parseFloat(data.booking_amount).toLocaleString()}`,
         10,
@@ -316,7 +336,7 @@ export class ReservationPageComponent implements OnInit {
       doc.setLineWidth(0.5);
       const lineY = 200;
       doc.line(10, lineY, 200, lineY);
-      
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(20);
       const text = 'Gracias por reservar!';
@@ -324,7 +344,7 @@ export class ReservationPageComponent implements OnInit {
       const pageWidth2 = doc.internal.pageSize.getWidth();
       const textX = (pageWidth - textWidth) / 2;
       doc.text(text, textX, lineY + 15);
-      
+
       const pdfBytes = doc.output();
       const pdfUrl = URL.createObjectURL(
         new Blob([pdfBytes], { type: 'application/pdf' })
@@ -340,22 +360,30 @@ export class ReservationPageComponent implements OnInit {
           'Comprobante de Reserva - Apartamentos Anahí.pdf';
       }
     });
-    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
       const startingPriceNum = parseFloat(startingPrice);
       const discountNum = discount ? parseFloat(discount) : 0;
-      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
       return discountedAmount.toLocaleString();
     }
   }
-  
-  
 
   openPaymentForm(reservationId: number) {
     this.paymentService.findAllPayments().subscribe((payments: IPayment[]) => {
-      const hasPreviousPayment = payments.some(payment => payment.booking.id_booking === reservationId);
-  
+      const hasPreviousPayment = payments.some(
+        (payment) => payment.booking.id_booking === reservationId
+      );
+
       if (hasPreviousPayment) {
-        Swal.fire('Cobro previo', 'Esta reserva ya tiene un cobro registrado.', 'info');
+        Swal.fire(
+          'Cobro previo',
+          'Esta reserva ya tiene un cobro registrado.',
+          'info'
+        );
       } else {
         const dialogRef = this.dialog.open(PaymentFormComponent, {
           width: '800px',
@@ -363,7 +391,7 @@ export class ReservationPageComponent implements OnInit {
           disableClose: true,
           data: { reservationId: reservationId },
         });
-  
+
         dialogRef.afterClosed().subscribe((result) => {
           if (result === 'save') {
             this.router.navigate(['admin/payments']);
