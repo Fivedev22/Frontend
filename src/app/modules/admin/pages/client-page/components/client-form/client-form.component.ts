@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -16,8 +15,6 @@ import { ClientService } from '../../../../../../services/client-page.service';
 import { IDocumentType } from '../../../../../../interfaces/document_type.interface';
 import { DocumentTypeService } from '../../../../../../services/document_type.service';
 
-
-
 @Component({
   selector: 'app-client-form',
   templateUrl: './client-form.component.html',
@@ -27,7 +24,6 @@ export class ClientFormComponent implements OnInit {
   provinces!: IProvince[];
   genderTypes!: IGenderType[];
   documentTypes!: IDocumentType[];
-
 
   clientForm!: FormGroup;
 
@@ -88,7 +84,7 @@ export class ClientFormComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(20),
-          this.noNumbersValidator
+          this.noNumbersValidator,
         ],
       ],
       last_name: [
@@ -97,7 +93,7 @@ export class ClientFormComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(20),
-          this.noNumbersValidator
+          this.noNumbersValidator,
         ],
       ],
       email: [
@@ -117,7 +113,7 @@ export class ClientFormComponent implements OnInit {
           Validators.maxLength(10),
         ],
       ],
-      gender_type: ['',[Validators.required]],
+      gender_type: ['', [Validators.required]],
       document_type: ['', [Validators.required]],
       document_number: [
         '',
@@ -221,5 +217,4 @@ export class ClientFormComponent implements OnInit {
     }
     return null;
   }
-  
 }

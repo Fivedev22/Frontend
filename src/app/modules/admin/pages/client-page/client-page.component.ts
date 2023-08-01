@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClientService } from '../../../../services/client-page.service';
@@ -40,11 +40,8 @@ export class ClientPageComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly clientService: ClientService,
     private readonly paymentService: PaymentService,
-    private readonly reservationService: ReservationService,
-    private customPaginator: MatPaginatorIntl
-  ) {
-    customPaginator.itemsPerPageLabel = 'Filas por página';
-  }
+    private readonly reservationService: ReservationService
+  ) {}
 
   ngOnInit(): void {
     this.findAllClients();
@@ -285,7 +282,10 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 7
           );
           doc.text(
-            `Monto con descuento: $ ${calculateDiscountedAmount(payment.booking_starting_price, payment.booking_discount)}`,
+            `Monto con descuento: $ ${calculateDiscountedAmount(
+              payment.booking_starting_price,
+              payment.booking_discount
+            )}`,
             20,
             startY + lineHeight * 7.5
           );
@@ -298,7 +298,12 @@ export class ClientPageComponent implements OnInit {
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 8.5, 190, startY + lineHeight * 8.5);
+          doc.line(
+            20,
+            startY + lineHeight * 8.5,
+            190,
+            startY + lineHeight * 8.5
+          );
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Gastos Extras:', 20, startY + lineHeight * 9.5);
@@ -351,10 +356,14 @@ export class ClientPageComponent implements OnInit {
         );
       }
     );
-    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
       const startingPriceNum = parseFloat(startingPrice);
       const discountNum = discount ? parseFloat(discount) : 0;
-      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
       return discountedAmount.toLocaleString();
     }
   }
@@ -446,7 +455,12 @@ export class ClientPageComponent implements OnInit {
           );
           doc.setLineWidth(0.5);
           doc.setDrawColor(0, 0, 0);
-          doc.line(20, startY + lineHeight * 3.5, 190, startY + lineHeight * 3.5);
+          doc.line(
+            20,
+            startY + lineHeight * 3.5,
+            190,
+            startY + lineHeight * 3.5
+          );
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(14);
           doc.text('Detalles de la reserva:', 20, startY + lineHeight * 4.5);
@@ -517,7 +531,10 @@ export class ClientPageComponent implements OnInit {
             startY + lineHeight * 11
           );
           doc.text(
-            `Monto con descuento: $ ${calculateDiscountedAmount(booking.starting_price, booking.discount)}`,
+            `Monto con descuento: $ ${calculateDiscountedAmount(
+              booking.starting_price,
+              booking.discount
+            )}`,
             20,
             startY + lineHeight * 11.5
           );
@@ -559,10 +576,14 @@ export class ClientPageComponent implements OnInit {
         );
       }
     );
-    function calculateDiscountedAmount(startingPrice: string, discount: string | undefined): string {
+    function calculateDiscountedAmount(
+      startingPrice: string,
+      discount: string | undefined
+    ): string {
       const startingPriceNum = parseFloat(startingPrice);
       const discountNum = discount ? parseFloat(discount) : 0;
-      const discountedAmount = startingPriceNum - (startingPriceNum * discountNum / 100);
+      const discountedAmount =
+        startingPriceNum - (startingPriceNum * discountNum) / 100;
       return discountedAmount.toLocaleString();
     }
   }

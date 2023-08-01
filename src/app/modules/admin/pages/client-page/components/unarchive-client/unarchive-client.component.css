@@ -88,12 +88,6 @@ td {
   height: 100%;
 }
 
-/* th:last-child,
-td:last-child {
-  flex: 0 0 auto;
-  width: 200px;
-} */
-
 .content-icons {
   display: flex;
   height: 100%;
