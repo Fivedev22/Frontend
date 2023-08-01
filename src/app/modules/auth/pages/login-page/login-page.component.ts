@@ -18,35 +18,24 @@ export class LoginPageComponent implements OnInit {
     private authService: AuthService,
     private tokenService: TokenService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    let token =  localStorage.getItem('anahi.token');
-    token ?  this.router.navigate(['/admin'])  : null
+    let token = localStorage.getItem('anahi.token');
+    token ? this.router.navigate(['/admin']) : null;
 
     this.formLogin = this.initForm();
   }
 
   onLogin(): void {
-    console.log(this.formLogin.value);
-
     this.authService.ingresar(this.formLogin.value).subscribe(
       (data) => {
-
-
         if (!data) {
-
           this.Alert('Datos incorrectos', 'warning', '#F25D5D', '#fff');
         } else {
           this.Alert('Autenticación correcta', 'success', '#75CB8D', '#fff');
 
-          localStorage.setItem(
-            'name',
-            this.formLogin.get('username')?.value
-          );
-
-      
-          
+          localStorage.setItem('name', this.formLogin.get('username')?.value);
 
           setTimeout(() => {
             this.tokenService.setToken(data.token);
@@ -76,7 +65,7 @@ export class LoginPageComponent implements OnInit {
   Alert(msg: any, status: any, bgColor: any, color: any) {
     const Toast = Swal.mixin({
       toast: true,
-      width: "30%",
+      width: '30%',
       position: 'top',
       showConfirmButton: false,
       timer: 1500,

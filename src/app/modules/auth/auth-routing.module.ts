@@ -15,7 +15,10 @@ const routes: Routes = [
       { path: 'login', component: LoginPageComponent },
       { path: 'forgot-password', component: ForgotPasswordPageComponent },
       { path: 'reset-password/:token', component: ResetPasswordPageComponent },
-      { path: 'success-forgot-password', component: SuccessForgotPasswordPageComponent },
+      {
+        path: 'success-forgot-password',
+        component: SuccessForgotPasswordPageComponent,
+      },
     ],
   },
 ];

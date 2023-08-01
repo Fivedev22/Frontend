@@ -17,7 +17,8 @@ export class ResetPasswordPageComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.formResetPassword = this.initForm();
@@ -38,23 +39,20 @@ export class ResetPasswordPageComponent implements OnInit {
     let token: any = localStorage.getItem('anahi.refreshToken');
 
     const newPassword = this.formResetPassword.get('newPassword')?.value;
-    const confirmPassword = this.formResetPassword.get('confirmPassword')?.value;
-    console.log(newPassword, confirmPassword);
+    const confirmPassword =
+      this.formResetPassword.get('confirmPassword')?.value;
 
     if (newPassword != confirmPassword) {
-      console.log('la contraseña no coinciden');
-      this.AlertError()
+      this.AlertError();
     } else {
       this.usuario = new IResetPassword(
         token,
         this.formResetPassword.get('confirmPassword')?.value
       );
 
-      console.log(this.usuario);
       this.authService.restablecerContrasenia(this.usuario).subscribe(
         (data) => {
-          this.AlertSuccess()
-          console.log(data);
+          this.AlertSuccess();
           this.router.navigate(['/auth']);
         },
         (error) => {
@@ -64,12 +62,10 @@ export class ResetPasswordPageComponent implements OnInit {
     }
   }
 
-
-
   AlertError() {
     const Toast = Swal.mixin({
       toast: true,
-      width: "30%",
+      width: '30%',
       position: 'top',
       showConfirmButton: false,
       timer: 2000,
@@ -103,4 +99,3 @@ export class ResetPasswordPageComponent implements OnInit {
     });
   }
 }
-

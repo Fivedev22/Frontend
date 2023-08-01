@@ -7,15 +7,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./success-forgot-password-page.component.css'],
 })
 export class SuccessForgotPasswordPageComponent implements OnInit {
- 
+  constructor(private router: Router) {}
 
-  constructor( private router: Router) { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-   
-  }
-
-  BackLogin(){
-    this.router.navigate(["auth/login"])
+  BackLogin() {
+    this.router.navigate(['auth/login']);
   }
 }

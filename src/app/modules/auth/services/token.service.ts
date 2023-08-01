@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenService {
-
-  constructor() { }
+  constructor() {}
 
   public setToken(token: string) {
     localStorage.setItem('anahi.accesstoken', token);
@@ -14,5 +13,4 @@ export class TokenService {
   public getToken() {
     return localStorage.getItem('anahi.accesstoken');
   }
-
 }
