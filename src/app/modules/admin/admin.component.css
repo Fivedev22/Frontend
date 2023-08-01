@@ -5,11 +5,9 @@
 
 .main-container {
   width: 100%;
-  /* height: calc(100vh - 65px); */
   min-height: 100%;
   display: flex;
   background: #f7f9fc;
-  /* margin-top: 10%; */
 }
 
 .main-content {
@@ -22,7 +20,3 @@
   min-height: calc(100vh - 65px);
   margin-top: 65px;
 }
-
-/* #toggle{
-  margin-left: 250px;
-} */
