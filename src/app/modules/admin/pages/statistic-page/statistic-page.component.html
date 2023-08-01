@@ -64,6 +64,9 @@
         <mat-icon>download</mat-icon>
       </button> 
       <canvas id="barByMonthChart"></canvas>
+      <button mat-icon-button class="small-icon-button" (click)="downloadChart('barByMonthChart')">
+        <mat-icon>download</mat-icon>
+      </button> 
     </div>
     <div class="statistic-section-body_canvas" *ngIf="selectModule === 4">
       <canvas id="propertyChart"></canvas>
