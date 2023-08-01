@@ -74,19 +74,13 @@ export class ReservationPageComponent implements OnInit {
               (payment) => payment.booking.id_booking === reservation.id_booking
             );
 
-            // Update the local attribute
             reservation.is_paid = hasPayments;
 
-            // Call the updateIsPaid function if there are payments
             if (hasPayments) {
               this.reservationService
                 .updateIsPaid(reservation.id_booking!)
-                .subscribe(
-                  () =>
-                    console.log(
-                      `Updated is_paid for reservation ${reservation.id_booking}`
-                    ),
-                  (error) => console.error('Error updating is_paid:', error)
+                .subscribe((error) =>
+                  console.error('Error updating is_paid:', error)
                 );
             }
 
@@ -97,12 +91,10 @@ export class ReservationPageComponent implements OnInit {
 
       forkJoin(observables).subscribe((updatedReservations) => {
         if (this.showAllReservations) {
-          // Si showAllReservations es true, mostrar todas las reservas sin filtrar
           this.dataSource = new MatTableDataSource<IReservation>(
             updatedReservations
           );
         } else {
-          // Filtrar las reservas con fecha de check-out mayor a la fecha actual y estado is_paid igual a false
           const visibleReservations = updatedReservations.filter(
             (reservation) =>
               new Date(reservation.check_out_date) > currentDate ||
@@ -223,7 +215,6 @@ export class ReservationPageComponent implements OnInit {
         }
       },
       error: (error) => {
-        // Manejo de errores si la llamada al servicio falla
         console.error('Error al obtener los pagos:', error);
       },
     });

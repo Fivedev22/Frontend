@@ -9,12 +9,9 @@ import {
 import { IReservationType } from '../../../../../../interfaces/reservation_type.interface';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
@@ -44,14 +41,13 @@ import {
 } from '@angular/material/core';
 import { IPaymentType } from 'src/app/interfaces/payment_type.interface';
 import { PaymentTypeService } from 'src/app/services/payment_type.service';
-import { vehicleBrands } from './car-brands';
 
 export const PICK_FORMATS = {
   parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
   display: {
     dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
-    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' }, 
+    monthYearLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
     monthYearA11yLabel: { year: 'numeric', month: 'numeric' },
   },
 };
@@ -69,7 +65,6 @@ class PickDateAdapter extends NativeDateAdapter {
       return super.format(date, displayFormat);
     }
   }
-  
 }
 
 @Component({
@@ -102,14 +97,8 @@ export class ReservationFormComponent implements OnInit {
   clientDetail = new FormControl();
   montoConDescuento!: number;
   minDate!: Date;
-  vehicleBrands: string[] = vehicleBrands;
   currentStep: number = 1;
   public showFields = false;
-
-
-
-
-
 
   actionTitle: string = 'Registrar Reserva';
   actionButton: string = 'Registrar';
@@ -131,14 +120,15 @@ export class ReservationFormComponent implements OnInit {
     private paymentTypeService: PaymentTypeService,
     private datePipe: DatePipe,
 
-
     public dialogRef: MatDialogRef<ReservationFormComponent>
   ) {
     if (this.reservationData) {
       const checkInDate = new Date(this.reservationData.check_in);
       const checkOutDate = new Date(this.reservationData.check_out);
-  
-      this.minDate = new Date(Math.min(checkInDate.getTime(), checkOutDate.getTime()));
+
+      this.minDate = new Date(
+        Math.min(checkInDate.getTime(), checkOutDate.getTime())
+      );
       this.minDate.setHours(0, 0, 0, 0);
     } else {
       this.minDate = new Date();
@@ -193,8 +183,6 @@ export class ReservationFormComponent implements OnInit {
     if (this.reservationData) {
       const checkInDate = new Date(this.reservationData.check_in_date);
       const checkOutDate = new Date(this.reservationData.check_out_date);
-
-      // Ajustar las fechas según la zona horaria del cliente
       checkInDate.setTime(
         checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
       );
@@ -204,7 +192,7 @@ export class ReservationFormComponent implements OnInit {
 
       this.reservationForm.patchValue({
         check_in_date: checkInDate,
-        check_out_date: checkOutDate
+        check_out_date: checkOutDate,
       });
     }
   }
@@ -224,7 +212,6 @@ export class ReservationFormComponent implements OnInit {
   public toggleFields(): void {
     this.showFields = !this.showFields;
   }
-  
 
   public hasError = (controlName: string, errorName: string) => {
     return this.reservationForm.controls[controlName].hasError(errorName);
@@ -275,8 +262,17 @@ export class ReservationFormComponent implements OnInit {
           ],
         ],
         brand: ['', [Validators.required]],
-        model: ['', [Validators.required, Validators.pattern('^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ]*$')]],
-        licensePlate: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,7}$')]],
+        model: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ]*$'),
+          ],
+        ],
+        licensePlate: [
+          '',
+          [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,7}$')],
+        ],
         starting_price: ['', [Validators.required, Validators.min(100)]],
         discount: ['', Validators.min(0)],
         deposit_amount: ['', [Validators.required]],
@@ -309,13 +305,13 @@ export class ReservationFormComponent implements OnInit {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
     const selectedDate = new Date(control.value);
-  
+
     if (selectedDate < currentDate && !control.value) {
       return { pastDate: true };
     }
-  
+
     return null;
-  }  
+  }
 
   checkInCheckOutValidator(reservationForm: FormGroup) {
     const checkInDate = reservationForm.get('check_in_date')?.value;
@@ -346,7 +342,6 @@ export class ReservationFormComponent implements OnInit {
     }
   }
 
-
   dateClass = (date: Date): string => {
     return this.dateFilter(date) ? 'disabled-date' : '';
   };
@@ -366,7 +361,6 @@ export class ReservationFormComponent implements OnInit {
 
     return !occupiedDatesHash[dateStr];
   };
-
 
   addReservationData(data: any) {
     this.actionTitle = 'Modificar Reserva';
@@ -411,7 +405,9 @@ export class ReservationFormComponent implements OnInit {
     this.reservationForm.controls['deposit_amount'].setValue(
       data.deposit_amount
     );
-    this.reservationForm.controls['payment_type'].setValue(data.payment_type.id);
+    this.reservationForm.controls['payment_type'].setValue(
+      data.payment_type.id
+    );
     this.reservationForm.controls['estimated_amount_deposit'].setValue(
       data.estimated_amount_deposit
     );
@@ -433,19 +429,17 @@ export class ReservationFormComponent implements OnInit {
       this.reservationForm.controls['deposit_amount'].value
     );
     let precioReserva = this.montoConDescuento - montoSenia;
-    // if (precioReserva <= 0) {
-    //   precioReserva = this.montoConDescuento;
-    //   this.reservationForm.patchValue({ deposit_amount: precioReserva });
-    // }
     if (montoSenia > this.montoConDescuento) {
-      this.reservationForm.patchValue({ deposit_amount: this.montoConDescuento });
+      this.reservationForm.patchValue({
+        deposit_amount: this.montoConDescuento,
+      });
     }
 
     if (precioReserva <= 0) {
-        precioReserva = 0;
-        this.reservationForm.patchValue({ deposit_amount: precioReserva });
+      precioReserva = 0;
+      this.reservationForm.patchValue({ deposit_amount: precioReserva });
     }
-      
+
     if (montoSenia > montoInicial) {
       this.reservationForm.patchValue({ deposit_amount: precioReserva });
     }
@@ -486,13 +480,6 @@ export class ReservationFormComponent implements OnInit {
       this.reservationService
         .createReservation(this.reservationForm.value)
         .subscribe({
-          next: (res) => {
-            console.log(res);
-            this.createAlert.fire().then(() => {
-              this.reservationForm.reset();
-              this.dialogRef.close('save');
-            });
-          },
           error: (e) => {
             this.errorAlert.fire();
           },
@@ -599,7 +586,6 @@ export class ReservationFormComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((selectedProperty) => {
-        console.log(selectedProperty);
         if (selectedProperty) {
           this.propertyDetail.setValue(selectedProperty.property_name);
           this.reservationForm.controls['property'].setValue(

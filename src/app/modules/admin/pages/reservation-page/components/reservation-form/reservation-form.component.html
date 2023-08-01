@@ -7,7 +7,6 @@
   <div class="content-form-dialog">
     <mat-grid-list cols="2" rowHeight="2:0.5" gutterSize="15px">
       <form [formGroup]="reservationForm" autocomplete="off" novalidate>
-
         <ng-container *ngIf="currentStep === 1">
           <h2>Detalles de la Reserva</h2>
           <mat-grid-tile>
@@ -22,14 +21,19 @@
               />
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Fecha de Reserva</mat-label>
-              <input formControlName="createdAt" matInput type="text" readonly />
+              <input
+                formControlName="createdAt"
+                matInput
+                type="text"
+                readonly
+              />
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Tipo de Reserva</mat-label>
@@ -53,7 +57,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-          
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Procedencia de Reserva</mat-label>
@@ -98,7 +102,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile colspan="2">
             <mat-form-field appearance="outline">
               <mat-label>Inmueble Seleccionado</mat-label>
@@ -124,7 +128,7 @@
             </mat-form-field>
           </mat-grid-tile>
         </ng-container>
-  
+
         <ng-container *ngIf="currentStep === 2">
           <h2>Detalles de la Estadía</h2>
           <mat-grid-tile>
@@ -161,7 +165,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Fecha de Salida</mat-label>
@@ -196,7 +200,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Hora de Llegada</mat-label>
@@ -215,12 +219,9 @@
               >
                 <strong>Campo requerido</strong>
               </mat-error>
-              <!-- <mat-error align="end" *ngIf="hasError('check_in_hour', 'pattern')">
-                <strong>Debe ser entre las 14:00 y las 20:00</strong>
-              </mat-error> -->
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Hora de Salida</mat-label>
@@ -252,18 +253,23 @@
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
-              <mat-error align="end" *ngIf="hasError('adults_number', 'required')"
+              <mat-error
+                align="end"
+                *ngIf="hasError('adults_number', 'required')"
                 ><strong>Campo requerido</strong>
               </mat-error>
               <mat-error align="end" *ngIf="hasError('adults_number', 'min')"
                 ><strong>Minimo 1 adulto</strong>
               </mat-error>
-              <mat-error align="end" *ngIf="hasError('adults_number', 'pattern')">
+              <mat-error
+                align="end"
+                *ngIf="hasError('adults_number', 'pattern')"
+              >
                 <strong>Solo se permiten números</strong>
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Cantidad de Niños</mat-label>
@@ -274,7 +280,10 @@
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
-              <mat-error align=" end" *ngIf="hasError('kids_number', 'required')">
+              <mat-error
+                align=" end"
+                *ngIf="hasError('kids_number', 'required')"
+              >
                 <strong>Campo requerido</strong>
               </mat-error>
               <mat-error align="end" *ngIf="hasError('kids_number', 'pattern')"
@@ -285,7 +294,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Cantidad de Mascotas</mat-label>
@@ -302,24 +311,30 @@
                 ><strong>Minimo O como valor</strong>
               </mat-error>
               <mat-hint align="end">Campo requerido</mat-hint>
-              <mat-error align=" end" *ngIf="hasError('pets_number', 'required')">
+              <mat-error
+                align=" end"
+                *ngIf="hasError('pets_number', 'required')"
+              >
                 <strong>Campo requerido</strong>
               </mat-error>
             </mat-form-field>
-          </mat-grid-tile>  
-                  
+          </mat-grid-tile>
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Marca del Vehículo</mat-label>
-              <input matInput formControlName="brand" placeholder="Ingrese la marca...">
+              <input
+                matInput
+                formControlName="brand"
+                placeholder="Ingrese la marca..."
+              />
               <mat-hint align="end">Campo requerido</mat-hint>
               <mat-error align="end" *ngIf="hasError('brand', 'required')">
                 <strong>Campo requerido</strong>
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-          
-          
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Modelo del Vehículo</mat-label>
@@ -337,8 +352,8 @@
                 <strong>Ingrese un modelo válido</strong>
               </mat-error>
             </mat-form-field>
-          </mat-grid-tile>          
-          
+          </mat-grid-tile>
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Patente del Vehículo</mat-label>
@@ -349,16 +364,22 @@
                 type="text"
               />
               <mat-hint align="end">Campo requerido</mat-hint>
-              <mat-error align="end" *ngIf="hasError('licensePlate', 'required')"> 
+              <mat-error
+                align="end"
+                *ngIf="hasError('licensePlate', 'required')"
+              >
                 <strong>Campo requerido</strong>
               </mat-error>
-              <mat-error align="end" *ngIf="hasError('licensePlate', 'pattern')">
+              <mat-error
+                align="end"
+                *ngIf="hasError('licensePlate', 'pattern')"
+              >
                 <strong>Debe contener entre 6 y 7 letras/números</strong>
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
         </ng-container>
-        
+
         <ng-container *ngIf="currentStep === 3">
           <h2>Detalle del Monto y Confirmación</h2>
           <mat-grid-tile>
@@ -389,7 +410,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Descuento</mat-label>
@@ -411,7 +432,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Monto de Seña</mat-label>
@@ -430,7 +451,9 @@
               />
               <mat-hint align="end">Campo requerido</mat-hint>
               <mat-error *ngIf="hasError('deposit_amount', 'invalidAmount')">
-                <strong>El monto debe ser mayor o igual al monto estimado</strong>
+                <strong
+                  >El monto debe ser mayor o igual al monto estimado</strong
+                >
               </mat-error>
               <mat-error
                 align=" end"
@@ -440,7 +463,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Forma de Pago (Seña)</mat-label>
@@ -464,7 +487,7 @@
               </mat-error>
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Monto Estimado de Seña</mat-label>
@@ -485,7 +508,7 @@
               />
             </mat-form-field>
           </mat-grid-tile>
-  
+
           <mat-grid-tile>
             <mat-form-field appearance="outline">
               <mat-label>Monto a Cobrar</mat-label>
@@ -509,14 +532,27 @@
             </mat-form-field>
           </mat-grid-tile>
         </ng-container>
-
       </form>
     </mat-grid-list>
   </div>
   <mat-divider></mat-divider>
   <div class="content-footer-dialog">
-    <button mat-button color="primary" (click)="previousStep()" *ngIf="currentStep > 1">Anterior</button>
-    <button mat-button color="primary" (click)="nextStep()" *ngIf="currentStep < 3">Siguiente</button>  
+    <button
+      mat-button
+      color="primary"
+      (click)="previousStep()"
+      *ngIf="currentStep > 1"
+    >
+      Anterior
+    </button>
+    <button
+      mat-button
+      color="primary"
+      (click)="nextStep()"
+      *ngIf="currentStep < 3"
+    >
+      Siguiente
+    </button>
     <button mat-stroked-button mat-dialog-close color="warn">Cerrar</button>
     <button
       mat-stroked-button

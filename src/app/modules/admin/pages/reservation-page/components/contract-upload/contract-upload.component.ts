@@ -22,13 +22,6 @@ export class ContractUploadComponent implements OnInit {
     this.getContracts();
   }
 
-  // onFileSelected(files: FileList | null) {
-  //   if (files && files.length > 0) {
-  //     const selectedFile = files[0];
-  //     this.uploadContract(selectedFile);
-  //   }
-  // }
-
   uploadContract(file: File) {
     if (
       file.type !== 'application/pdf' &&
