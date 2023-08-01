@@ -6,7 +6,6 @@ import { ReservationService } from '../../../../services/reservation.service';
 import { ClientService } from '../../../../services/client-page.service';
 import { PropertyService } from '../../../../services/property-page.service';
 
-
 @Component({
   selector: 'app-statistic-page',
   templateUrl: './statistic-page.component.html',
@@ -21,7 +20,6 @@ export class StatisticPageComponent implements AfterViewInit {
     private reservationService: ReservationService,
     private clientService: ClientService,
     private propertyService: PropertyService
-    
   ) {}
 
   ngAfterViewInit() {
@@ -37,8 +35,7 @@ export class StatisticPageComponent implements AfterViewInit {
     this.createPropertyChart();
     this.PropertyByProvinceChart();
   }
-  
-  
+
   createReservationChart() {
     const canvas = document.getElementById(
       'reservationChart'
@@ -82,7 +79,7 @@ export class StatisticPageComponent implements AfterViewInit {
             options: {
               indexAxis: 'y',
               responsive: true,
-              maintainAspectRatio: false, 
+              maintainAspectRatio: false,
               plugins: {
                 legend: {
                   position: 'top',
@@ -113,7 +110,7 @@ export class StatisticPageComponent implements AfterViewInit {
   createPaymentChart() {
     const canvas = document.getElementById('barChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-  
+
     if (ctx) {
       this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
         const allMonths = Array.from({ length: 12 }, (_, i) => {
@@ -125,17 +122,21 @@ export class StatisticPageComponent implements AfterViewInit {
           const date = new Date(payment.createdAt);
           const month = date.toLocaleString('default', { month: 'long' });
           const startingPrice = parseFloat(payment.booking_starting_price);
-          const discount = parseFloat(payment.booking_discount ?? "0");
-          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
-        
+          const discount = parseFloat(payment.booking_discount ?? '0');
+          const discountedAmount =
+            startingPrice - startingPrice * (discount / 100);
+
           acc[month] = (acc[month] || 0) + discountedAmount;
           return acc;
-        }, {} as any);        
+        }, {} as any);
         const datasetData = allMonths.map((month) => {
           const value = dataByMonth[month] || 0;
           return parseFloat(value.toFixed(2));
         });
-        const totalIncome = datasetData.reduce((acc, income) => acc + income, 0);
+        const totalIncome = datasetData.reduce(
+          (acc, income) => acc + income,
+          0
+        );
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -192,7 +193,6 @@ export class StatisticPageComponent implements AfterViewInit {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
   }
-  
 
   ClientsByProvinceChart() {
     const canvas = document.getElementById(
@@ -276,8 +276,7 @@ export class StatisticPageComponent implements AfterViewInit {
     if (ctx) {
       this.clientService.findAllClients().subscribe((clients) => {
         const genderCounts = clients.reduce((acc, client) => {
-          const gender =
-            client.gender_type.gender_type_name;
+          const gender = client.gender_type.gender_type_name;
           acc[gender] = (acc[gender] || 0) + 1;
           return acc;
         }, {} as any);
@@ -782,5 +781,4 @@ export class StatisticPageComponent implements AfterViewInit {
         break;
     }
   }
-  
 }
