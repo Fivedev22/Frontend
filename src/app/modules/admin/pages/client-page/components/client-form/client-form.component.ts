@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
+  AsyncValidatorFn,
   FormBuilder,
   FormGroup,
   Validators,
@@ -14,6 +15,8 @@ import { IGenderType } from '../../../../../../interfaces/gender_type.interface'
 import { ClientService } from '../../../../../../services/client-page.service';
 import { IDocumentType } from '../../../../../../interfaces/document_type.interface';
 import { DocumentTypeService } from '../../../../../../services/document_type.service';
+import { map, Observable, of } from 'rxjs';
+import { IClient } from 'src/app/interfaces/client.interface';
 
 @Component({
   selector: 'app-client-form',
@@ -123,11 +126,30 @@ export class ClientFormComponent implements OnInit {
           Validators.minLength(8),
           Validators.maxLength(11),
         ],
+        this.documentNumberValidator(this.clientService),
       ],
       is_foreign: ['', [Validators.required]],
       province: ['', [Validators.required]],
     });
   }
+
+  documentNumberValidator(clientService: ClientService): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      const documentNumber = control.value;
+  
+      if (!this.clientData) {
+        return clientService.searchByDocument(documentNumber).pipe(
+          map((client: IClient) => {
+            return client ? { documentExists: true } : null;
+          })
+        );
+      } else {
+        return of(null);
+      }
+    };
+  }
+  
+  
 
   addClientData(data: any) {
     this.actionTitle = 'Modificar Cliente';

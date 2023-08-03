@@ -65,19 +65,30 @@ export class TableCxrComponent implements OnInit {
           return;
         }
   
-        const clientName = `${client.name} ${client.last_name}`;
+        const clientName = `Cliente: ${client.name} ${client.last_name}`;
         let message = `
-          <div style="font-family: Arial, sans-serif; font-size: 16px; background-color: #e6f3e8; padding: 10px;">
+          <div style="font-family: Arial, sans-serif; font-size: 20px; background: linear-gradient(180deg, #e6f3e8, #b0ddb6); padding: 10px; width: 500px;">
             <p>${clientName}</p>
-            <p>Reservas:</p>
+            <p style="font-size: 18px;">Reservas Previas:</p>
             <ul style="list-style-type: square; margin-left: 20px;">
         `;
   
         // Construir la lista de reservas con fechas
         bookings.forEach((booking: any) => {
-          const checkInDate = new Date(booking.check_in_date).toLocaleDateString();
-          const checkOutDate = new Date(booking.check_out_date).toLocaleDateString();
-          message += `<li>${checkInDate} - ${checkOutDate}</li>`;
+          const checkInDate = new Date(booking.check_in_date);
+          const checkOutDate = new Date(booking.check_out_date);
+  
+          // Corregir desfase horario usando el huso horario local
+          checkInDate.setTime(
+            checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
+          );
+          checkOutDate.setTime(
+            checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+          );
+  
+          const formattedCheckInDate = checkInDate.toLocaleDateString();
+          const formattedCheckOutDate = checkOutDate.toLocaleDateString();
+          message += `<li style="font-size: 16px;">Check-in: ${formattedCheckInDate} - Check-out: ${formattedCheckOutDate}</li>`;
         });
   
         message += `
@@ -86,8 +97,8 @@ export class TableCxrComponent implements OnInit {
         `;
   
         // Define las dimensiones del popup
-        const popupWidth = 400;
-        const popupHeight = 300;
+        const popupWidth = 500;
+        const popupHeight = 195;
   
         // Calcula la posición del popup para centrarlo en la pantalla
         const leftPosition = (window.innerWidth - popupWidth) / 2;
@@ -98,10 +109,10 @@ export class TableCxrComponent implements OnInit {
         popup?.document.write(message);
       },
       (error) => {
-        // Manejar errores, si es necesario
       }
     );
   }
+  
   
   
   
