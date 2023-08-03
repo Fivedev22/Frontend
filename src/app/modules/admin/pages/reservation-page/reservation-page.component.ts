@@ -114,46 +114,76 @@ export class ReservationPageComponent implements OnInit {
 
 
   archiveReservation(id: number, booking_number: number, check_in_date: Date) {
-    this.paymentService.findAllPayments().subscribe({
-      next: (payments) => {
-        const hasPayments = payments.some(
-          (payment) => payment.booking.id_booking === id
-        );
-        if (hasPayments) {
+    const currentDate = new Date();
+  
+    if (id === undefined) {
+      console.error('El ID de la reserva es undefined.');
+      return;
+    }
+  
+    this.reservationService.findOneReservation(id).subscribe({
+      next: (reservation) => {
+        let checkInDate = new Date(reservation.check_in_date);
+        let checkOutDate = new Date(reservation.check_out_date);
+  
+        // Aplicar el desfase horario a las fechas
+        checkInDate.setTime(checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000);
+        checkOutDate.setTime(checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000);
+        
+        // Comprobar si la fecha actual está dentro del rango de check_in_date y check_out_date
+        if (currentDate >= checkInDate && currentDate <= checkOutDate) {
           Swal.fire({
-            title: 'No se puede archivar la reserva',
-            text: `La reserva N°: ${booking_number} tiene un cobro asociado.`,
             icon: 'error',
-            confirmButtonText: 'Aceptar',
-            confirmButtonColor: '#F25D5D',
+            title: 'No se puede archivar la reserva',
+            text: 'La reserva está en ejecución y no es posible archivarla.',
           });
         } else {
-          Swal.fire({
-            title: '¿Desea archivar la reserva?',
-            text: `Reserva N°: ${booking_number} - Fecha Check-in: ${check_in_date}`,
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: 'Archivar',
-            cancelButtonText: 'Cancelar',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.reservationService.archiveReservation(id).subscribe({
-                next: (res) => {
-                  Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Reserva archivada correctamente',
-                    showConfirmButton: false,
-                    timer: 1800,
-                  }).then(() => {
-                    this.findAllReservations();
-                  });
-                },
-                error(e) {
-                  alert(e);
-                },
-              });
-            }
+          this.paymentService.findAllPayments().subscribe({
+            next: (payments) => {
+              const hasPayments = payments.some(
+                (payment) => payment.booking.id_booking === id
+              );
+              if (hasPayments) {
+                Swal.fire({
+                  title: 'No se puede archivar la reserva',
+                  text: `La reserva N°: ${booking_number} tiene un cobro asociado.`,
+                  icon: 'error',
+                  confirmButtonText: 'Aceptar',
+                  confirmButtonColor: '#F25D5D',
+                });
+              } else {
+                Swal.fire({
+                  title: '¿Desea archivar la reserva?',
+                  text: `Reserva N°: ${booking_number} - Fecha Check-in: ${check_in_date}`,
+                  icon: 'error',
+                  showCancelButton: true,
+                  confirmButtonText: 'Archivar',
+                  cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    this.reservationService.archiveReservation(id).subscribe({
+                      next: (res) => {
+                        Swal.fire({
+                          position: 'center',
+                          icon: 'success',
+                          title: 'Reserva archivada correctamente',
+                          showConfirmButton: false,
+                          timer: 1800,
+                        }).then(() => {
+                          this.findAllReservations();
+                        });
+                      },
+                      error(e) {
+                        alert(e);
+                      },
+                    });
+                  }
+                });
+              }
+            },
+            error(e) {
+              alert(e);
+            },
           });
         }
       },

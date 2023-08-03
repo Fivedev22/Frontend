@@ -28,7 +28,6 @@ export class StatisticPageComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.createPaymentChart();
     this.topPaymentTypesChart();
-    this.createReservationChart();
     this.ClientsByProvinceChart();
     this.createGenderChart();
     this.topClientChart();
@@ -60,10 +59,12 @@ export class StatisticPageComponent implements AfterViewInit {
   }
 
   
+  
   createReservationChart() {
     const canvas = document.getElementById(
       'reservationChart'
     ) as HTMLCanvasElement;
+
     const ctx = canvas.getContext('2d');
 
     if (ctx) {
