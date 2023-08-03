@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     //! + Proteger ruta dependiendo del auth
     path: 'admin',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import(`./modules/admin/admin.module`).then((m) => m.AdminModule),
   },
