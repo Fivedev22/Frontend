@@ -144,7 +144,7 @@ export class UnarchivePaymentComponent {
               <style>
                 body {
                   font-family: helvetica;
-                  background-color: #e8f5e9; /* Agregado: Color verde claro al fondo */
+                  background-color: #fff; 
                 }
                 h2 {
                   font-size: 16px;
