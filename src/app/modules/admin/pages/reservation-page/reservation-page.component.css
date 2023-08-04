@@ -125,9 +125,10 @@ td {
 
 .small-button {
   border: none;
-  font-size: 12px;
+  font-size: 13px;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .pagado {

@@ -30,9 +30,9 @@
   <div class="reservation-section-body">
     <div class="cpc-tableTitle">
       <span>Tabla de reservas</span>
-      <button class="small-button" (click)="toggleShowAllReservations()">
+      <div class="small-button" (click)="toggleShowAllReservations()">
         {{ showAllReservations ? "Ocultar pagadas" : "Ver pagadas" }}
-      </button>
+      </div>
     </div>
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="booking_number">
