@@ -164,7 +164,7 @@ export class DashboardPageComponent implements AfterViewInit {
         <style>
         body {
           font-family: helvetica;
-          background-color: #e8f5e9; /* Agregado: Color verde claro al fondo */
+          background-color: #fff; 
         }
         h2 {
           font-size: 16px;
@@ -260,15 +260,15 @@ export class DashboardPageComponent implements AfterViewInit {
                   <title>Inmuebles</title>
                   <style>
                     body {
-                      background-color: #e8f5e9; /* Fondo verde claro */
-                      font-family: Arial, sans-serif; /* Fuente */
-                      font-size: 20px; /* Tamaño de fuente */
-                      line-height: 1.5; /* Espaciado entre líneas */
-                      margin: 20px; /* Márgenes */
+                      background-color: #fff; 
+                      font-family: Arial, sans-serif; 
+                      font-size: 20px; 
+                      line-height: 1.5; 
+                      margin: 20px;
                     }
                   
                     h2 {
-                      font-weight: normal; /* Titulos sin negrita */
+                      font-weight: normal;
                     }
                   
                     table {
@@ -283,12 +283,12 @@ export class DashboardPageComponent implements AfterViewInit {
                     }
                   
                     th {
-                      background-color: #4CAF50; /* Color de fondo del encabezado */
-                      color: white; /* Color de texto del encabezado */
+                      background-color: #0d6efd;
+                      color: white;
                     }
                   
                     tr:nth-child(even) {
-                      background-color: #f2f2f2; /* Color de fondo de las filas pares */
+                      background-color: #f2f2f2;
                     }
                   </style>
                 </head>
