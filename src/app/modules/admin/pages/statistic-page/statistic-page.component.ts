@@ -8,7 +8,6 @@ import { PropertyService } from '../../../../services/property-page.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-
 @Component({
   selector: 'app-statistic-page',
   templateUrl: './statistic-page.component.html',
@@ -37,36 +36,31 @@ export class StatisticPageComponent implements AfterViewInit {
     this.createPropertyChart();
     this.PropertyByProvinceChart();
   }
-  
+
   downloadChart(chartId: string) {
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
-
-    // Crear un nuevo documento PDF
     const pdf = new jsPDF();
-
-    // Capturar el gráfico y agregarlo como imagen al PDF
     html2canvas(canvas).then((canvasImage) => {
       const imageData = canvasImage.toDataURL('image/png');
-      const width = 100; // Ancho de la imagen en el PDF (ajusta según tus necesidades)
-      const height = (canvasImage.height / canvasImage.width) * width; // Mantener la relación de aspecto
-
-      // Agregar la imagen al PDF
+      const width = 100;
+      const height = (canvasImage.height / canvasImage.width) * width;
       pdf.addImage(imageData, 'PNG', 10, 10, width, height);
-
-      // Descargar el PDF con el nombre del gráfico
       pdf.save(`${chartId}_grafico.pdf`);
     });
   }
 
-  
-  
   createReservationChart() {
     const canvas = document.getElementById(
       'reservationChart'
     ) as HTMLCanvasElement;
 
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.reservationService
         .findAllReservations()
@@ -85,7 +79,7 @@ export class StatisticPageComponent implements AfterViewInit {
               labels: Object.keys(propertyCounts),
               datasets: [
                 {
-                  label: 'Reservas por propiedad',
+                  label: 'RESERVAS POR PROPIEDAD',
                   data: Object.values(propertyCounts),
                   backgroundColor: Object.keys(propertyCounts).map((property) =>
                     property === propertyWithMostReservations
@@ -108,10 +102,12 @@ export class StatisticPageComponent implements AfterViewInit {
               plugins: {
                 legend: {
                   position: 'top',
+                  title: { font: { size: 15 } },
                 },
                 title: {
                   display: true,
-                  text: 'Propiedad con más reservas',
+                  text: 'PROPIEDAD CON MAS RESERVAS',
+                  font: { size: 15 },
                 },
               },
               scales: {
@@ -127,6 +123,7 @@ export class StatisticPageComponent implements AfterViewInit {
             },
           });
         });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -135,32 +132,52 @@ export class StatisticPageComponent implements AfterViewInit {
   createPaymentChart() {
     const canvas = document.getElementById('barChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
     if (ctx) {
       this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
         const monthNames = [
-          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
-          'septiembre', 'octubre', 'noviembre', 'diciembre'
+          'enero',
+          'febrero',
+          'marzo',
+          'abril',
+          'mayo',
+          'junio',
+          'julio',
+          'agosto',
+          'septiembre',
+          'octubre',
+          'noviembre',
+          'diciembre',
         ];
-  
+
         const dataByMonth = payments.reduce((acc, payment) => {
           const date = new Date(payment.createdAt);
           const month = monthNames[date.getMonth()]; // Obtener el nombre del mes en español
           const startingPrice = parseFloat(payment.booking_starting_price);
-          const discount = parseFloat(payment.booking_discount ?? "0");
-          const discountedAmount = startingPrice - (startingPrice * (discount / 100));
-  
+          const discount = parseFloat(payment.booking_discount ?? '0');
+          const discountedAmount =
+            startingPrice - startingPrice * (discount / 100);
+
           acc[month] = (acc[month] || 0) + discountedAmount;
           return acc;
         }, {} as any);
-  
+
         const datasetData = monthNames.map((month) => {
           const value = dataByMonth[month] || 0;
           return parseFloat(value.toFixed(2));
         });
-  
-        const totalIncome = datasetData.reduce((acc, income) => acc + income, 0);
-  
+
+        const totalIncome = datasetData.reduce(
+          (acc, income) => acc + income,
+          0
+        );
+
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -180,14 +197,25 @@ export class StatisticPageComponent implements AfterViewInit {
             plugins: {
               legend: {
                 position: 'top',
+                labels: {
+                  font: {
+                    size: 15,
+                  },
+                },
               },
               title: {
                 display: true,
-                text: 'Ingresos por mes',
+                text: 'INGRESOS POR MES',
+                font: {
+                  size: 15,
+                },
               },
               subtitle: {
                 display: true,
-                text: `Total: $${totalIncome}`,
+                text: `TOTAL: $${totalIncome}`,
+                font: {
+                  size: 15,
+                },
               },
               tooltip: {
                 callbacks: {
@@ -213,19 +241,23 @@ export class StatisticPageComponent implements AfterViewInit {
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
   }
-  
-  
 
   ClientsByProvinceChart() {
     const canvas = document.getElementById(
       'clientsByProvinceChart'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.clientService.findAllClients().subscribe((clients) => {
         const provinceCounts = clients.reduce((acc, client) => {
@@ -256,15 +288,20 @@ export class StatisticPageComponent implements AfterViewInit {
             plugins: {
               legend: {
                 position: 'top',
+                title: {
+                  font: { size: 15 },
+                },
               },
               title: {
                 display: true,
-                text: 'Clientes por provincia',
+                text: 'CLIENTES POR PROVINCIA',
+                font: { size: 15 },
               },
             },
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -298,7 +335,12 @@ export class StatisticPageComponent implements AfterViewInit {
   createGenderChart() {
     const canvas = document.getElementById('genderChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.clientService.findAllClients().subscribe((clients) => {
         const genderCounts = clients.reduce((acc, client) => {
@@ -329,15 +371,20 @@ export class StatisticPageComponent implements AfterViewInit {
             plugins: {
               legend: {
                 position: 'top',
+                title: {
+                  font: { size: 15 },
+                },
               },
               title: {
                 display: true,
-                text: 'Distribución de género de los clientes',
+                text: 'DISTRIBUCION DE GENERO DE LOS CLIENTES',
+                font: { size: 15 },
               },
             },
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -348,7 +395,12 @@ export class StatisticPageComponent implements AfterViewInit {
       'topClientChart'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.reservationService
         .findAllReservations()
@@ -382,7 +434,7 @@ export class StatisticPageComponent implements AfterViewInit {
                   categoryPercentage: 0.6,
                 },
                 {
-                  label: 'Promedio',
+                  label: 'PROMEDIO',
                   data: data.map(
                     () => data.reduce((a, b) => a + b) / data.length
                   ),
@@ -399,10 +451,14 @@ export class StatisticPageComponent implements AfterViewInit {
               plugins: {
                 legend: {
                   position: 'top',
+                  title: {
+                    font: { size: 15 },
+                  },
                 },
                 title: {
                   display: true,
-                  text: 'Clientes con más reservas',
+                  text: 'CLIENTES CON MAS RESERVAS',
+                  font: { size: 15 },
                 },
               },
               scales: {
@@ -424,6 +480,7 @@ export class StatisticPageComponent implements AfterViewInit {
             },
           });
         });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -434,6 +491,12 @@ export class StatisticPageComponent implements AfterViewInit {
       'topPaymentTypesChart'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
     if (ctx) {
       this.paymentsService.findAllPaymentsPaid().subscribe((payments) => {
@@ -458,7 +521,7 @@ export class StatisticPageComponent implements AfterViewInit {
             labels: labels,
             datasets: [
               {
-                label: 'Tipo de pagos más utilizados',
+                label: 'TIPO DE PAGOS MAS UTILIZADOS',
                 data: data,
                 backgroundColor: backgroundColors,
               },
@@ -472,12 +535,14 @@ export class StatisticPageComponent implements AfterViewInit {
               },
               title: {
                 display: true,
-                text: 'Tipos de pagos más utilizados por cobro',
+                text: 'TIPOS DE PAGOS MAS UTILIZADOS POR COBRO',
+                font: { size: 15 },
               },
             },
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -486,7 +551,12 @@ export class StatisticPageComponent implements AfterViewInit {
   reservationTypeChart() {
     const canvas = document.getElementById('polarChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.reservationService
         .findAllReservations()
@@ -505,7 +575,7 @@ export class StatisticPageComponent implements AfterViewInit {
               labels: Object.keys(typeCounts),
               datasets: [
                 {
-                  label: 'Tipos de reserva',
+                  label: 'TIPOS DE RESERVA',
                   data: Object.values(typeCounts),
                   backgroundColor: ['rgba(75, 192, 192, 0.2)'],
                   borderColor: ['rgba(75, 192, 192, 1)'],
@@ -517,15 +587,20 @@ export class StatisticPageComponent implements AfterViewInit {
               plugins: {
                 legend: {
                   position: 'top',
+                  title: {
+                    font: { size: 15 },
+                  },
                 },
                 title: {
                   display: true,
-                  text: 'Tipos de reserva más utilizados',
+                  text: 'TIPOS DE RESERVA MAS UTILIZADOS',
+                  font: { size: 15 },
                 },
               },
             },
           });
         });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -534,7 +609,12 @@ export class StatisticPageComponent implements AfterViewInit {
   createOriginChart() {
     const canvas = document.getElementById('originChart') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.reservationService
         .findAllReservations()
@@ -563,7 +643,7 @@ export class StatisticPageComponent implements AfterViewInit {
               labels: labels,
               datasets: [
                 {
-                  label: 'Tipos de procedencia',
+                  label: 'TIPOS DE PROCEDENCIA',
                   data: bubbleData,
                   backgroundColor: 'rgba(75, 192, 192, 0.2)',
                   borderColor: 'rgba(75, 192, 192, 1)',
@@ -576,92 +656,121 @@ export class StatisticPageComponent implements AfterViewInit {
               plugins: {
                 legend: {
                   position: 'top',
+                  title: { font: { size: 15 } },
                 },
                 title: {
                   display: true,
-                  text: 'Tipos de procedencia de reserva más utilizados',
+                  text: 'TIPOS DE PROCEDENCIA DE RESERVA MAS UTILIZADOS',
+                  font: { size: 15 },
                 },
               },
             },
           });
         });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
   }
 
   createReservationsByMonthChart() {
-    const canvas = document.getElementById('barByMonthChart') as HTMLCanvasElement;
+    const canvas = document.getElementById(
+      'barByMonthChart'
+    ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-  
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
-      this.reservationService.findAllReservations().subscribe((reservations) => {
-        const monthNames = [
-          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
-          'septiembre', 'octubre', 'noviembre', 'diciembre'
-        ];
-  
-        const reservationsByMonth = monthNames.map((month) => {
-          const reservationsInMonth = reservations.filter((reservation) => {
-            const reservationDate = new Date(reservation.check_in_date);
-            const reservationMonth = reservationDate.getMonth(); // Obtener el número del mes (0 a 11)
-            return reservationMonth === monthNames.indexOf(month);
+      this.reservationService
+        .findAllReservations()
+        .subscribe((reservations) => {
+          const monthNames = [
+            'enero',
+            'febrero',
+            'marzo',
+            'abril',
+            'mayo',
+            'junio',
+            'julio',
+            'agosto',
+            'septiembre',
+            'octubre',
+            'noviembre',
+            'diciembre',
+          ];
+
+          const reservationsByMonth = monthNames.map((month) => {
+            const reservationsInMonth = reservations.filter((reservation) => {
+              const reservationDate = new Date(reservation.check_in_date);
+              const reservationMonth = reservationDate.getMonth(); // Obtener el número del mes (0 a 11)
+              return reservationMonth === monthNames.indexOf(month);
+            });
+            return reservationsInMonth.length;
           });
-          return reservationsInMonth.length;
-        });
-  
-        const barColors = this.generateFixedColors(monthNames.length);
-  
-        const chart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: monthNames,
-            datasets: [
-              {
-                label: 'Cantidad de reservas por mes',
-                data: reservationsByMonth,
-                backgroundColor: barColors,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Cantidad de reservas por mes',
-              },
+
+          const barColors = this.generateFixedColors(monthNames.length);
+
+          const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: monthNames,
+              datasets: [
+                {
+                  label: 'CANTIDAD DE RESERVAS POR MES',
+                  data: reservationsByMonth,
+                  backgroundColor: barColors,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                },
+              ],
             },
-            scales: {
-              x: {
-                grid: {
-                  display: false,
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                  title: { font: { size: 15 } },
+                },
+                title: {
+                  display: true,
+                  text: 'CANTIDAD DE RESERVAS POR MES',
+                  font: { size: 15 },
                 },
               },
-              y: {
-                beginAtZero: true,
+              scales: {
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                },
               },
             },
-          },
+          });
         });
-      });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
-  }  
-  
+  }
 
   createPropertyChart() {
     const canvas = document.getElementById(
       'propertyChart'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.propertyService.findAllProperties().subscribe((properties) => {
         const propertyTypes = properties.map(
@@ -683,7 +792,7 @@ export class StatisticPageComponent implements AfterViewInit {
             labels: labels,
             datasets: [
               {
-                label: 'Cantidad de propiedades por tipo',
+                label: 'CANTIDAD DE PROPIEDADES POR TIPO',
                 data: data,
                 backgroundColor: backgroundColors,
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -696,10 +805,14 @@ export class StatisticPageComponent implements AfterViewInit {
             plugins: {
               legend: {
                 position: 'top',
+                title: {
+                  font: { size: 15 },
+                },
               },
               title: {
                 display: true,
-                text: 'Cantidad de propiedades por tipo',
+                text: 'CANTIDAD DE PROPIEDADES POR TIPO',
+                font: { size: 15 },
               },
             },
             scales: {
@@ -715,6 +828,7 @@ export class StatisticPageComponent implements AfterViewInit {
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }
@@ -725,7 +839,12 @@ export class StatisticPageComponent implements AfterViewInit {
       'provinceChart'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+    const dpi = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    const canvasWidth = rect.width * dpi;
+    const canvasHeight = 500 * dpi;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
     if (ctx) {
       this.propertyService.findAllProperties().subscribe((properties) => {
         const provinces = properties.map(
@@ -747,7 +866,7 @@ export class StatisticPageComponent implements AfterViewInit {
             labels: labels,
             datasets: [
               {
-                label: 'Cantidad de propiedades por provincia',
+                label: 'CANTIDAD DE PROPIEDADES POR PROVINCIA',
                 data: data,
                 backgroundColor: backgroundColors,
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -760,15 +879,20 @@ export class StatisticPageComponent implements AfterViewInit {
             plugins: {
               legend: {
                 position: 'top',
+                title: {
+                  font: { size: 15 },
+                },
               },
               title: {
                 display: true,
-                text: 'Cantidad de propiedades por provincia',
+                text: 'CANTIDAD DE PROPIEDADES POR PROVINCIA',
+                font: { size: 15 },
               },
             },
           },
         });
       });
+      ctx.scale(dpi, dpi);
     } else {
       console.error('No se pudo obtener el contexto del lienzo.');
     }

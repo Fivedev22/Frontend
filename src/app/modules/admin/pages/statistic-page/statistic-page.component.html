@@ -20,63 +20,170 @@
     </div>
   </div>
 
-  <div class="statistic-section-body">
+  <div class="statistic-section-body" *ngIf="selectModule === 1">
+    <div class="module">
+      <div class="statistic-content">
+        <canvas id="barChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('barChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="topPaymentTypesChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('topPaymentTypesChart')"
+          >download</mat-icon
+        >
+      </div>
+    </div>
+  </div>
+  <div class="statistic-section-body" *ngIf="selectModule === 2">
+    <div class="module">
+      <div class="statistic-content">
+        <canvas id="topClientChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('topClientChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="clientsByProvinceChart"></canvas>
+        <mat-icon
+          class="icons"
+          (click)="downloadChart('clientsByProvinceChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="genderChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('genderChart')"
+          >download</mat-icon
+        >
+      </div>
+    </div>
+  </div>
+  <div class="statistic-section-body" *ngIf="selectModule === 3">
+    <div class="module">
+      <div class="statistic-content">
+        <canvas id="reservationChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('reservationChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="polarChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('polarChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="originChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('originChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="barByMonthChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('barByMonthChart')"
+          >download</mat-icon
+        >
+      </div>
+    </div>
+  </div>
+  <div class="statistic-section-body" *ngIf="selectModule === 4">
+    <div class="module">
+      <div class="statistic-content">
+        <canvas id="propertyChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('propertyChart')"
+          >download</mat-icon
+        >
+      </div>
+      <div class="statistic-content">
+        <canvas id="provinceChart"></canvas>
+        <mat-icon class="icons" (click)="downloadChart('provinceChart')"
+          >download</mat-icon
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="statistic-section-body">
+
+
+
+    <div class="statistic-section-body_canvas" *ngIf="selectModule === 4">
+      <canvas id="propertyChart"></canvas>
+      <mat-icon class="icons" (click)="downloadChart('propertyChart')"
+        >download</mat-icon
+      >
+      <canvas id="provinceChart"></canvas>
+      <mat-icon class="icons" (click)="downloadChart('provinceChart')"
+        >download</mat-icon
+      >
+    </div>
+  </div> -->
+</section>
+
+<!-- 
+
     <div class="statistic-section-body_canvas" *ngIf="selectModule === 1">
       <canvas id="barChart"></canvas>
-      <button mat-icon-button (click)="downloadChart('barChart')">
-        <mat-icon>download</mat-icon>
-      </button>      
+      <mat-icon class="icons" (click)="downloadChart('barChart')"
+        >download</mat-icon
+      >
       <canvas id="topPaymentTypesChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('topPaymentTypesChart')">
-        <mat-icon>download</mat-icon>
-      </button>  
+      <mat-icon class="icons" (click)="downloadChart('topPaymentTypesChart')"
+        >download</mat-icon
+      >
     </div>
+
+ -->
+
+<!-- 
+
+
     <div class="statistic-section-body_canvas" *ngIf="selectModule === 2">
       <canvas id="clientsByProvinceChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('clientsByProvinceChart')">
-        <mat-icon>download</mat-icon>
-      </button>  
+      <mat-icon class="icons" (click)="downloadChart('clientsByProvinceChart')"
+        >download</mat-icon
+      >
       <canvas id="genderChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('genderChart')">
-        <mat-icon>download</mat-icon>
-      </button>  
+      <mat-icon class="icons" (click)="downloadChart('genderChart')"
+        >download</mat-icon
+      >
       <canvas id="topClientChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('topClientChart')">
-        <mat-icon>download</mat-icon>
-      </button>  
+      <mat-icon class="icons" (click)="downloadChart('topClientChart')"
+        >download</mat-icon
+      >
     </div>
+
+
+
+  -->
+
+<!-- 
     <div class="statistic-section-body_canvas" *ngIf="selectModule === 3">
       <canvas id="reservationChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('reservationChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
+      <mat-icon class="icons" (click)="downloadChart('reservationChart')"
+        >download</mat-icon
+      >
       <canvas id="polarChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('polarChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
+      <mat-icon class="icons" (click)="downloadChart('polarChart')"
+        >download</mat-icon
+      >
     </div>
     <div
       class="statistic-section-body_canvas mosaic"
       *ngIf="selectModule === 3"
     >
       <canvas id="originChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('originChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
+      <mat-icon class="icons" (click)="downloadChart('originChart')"
+        >download</mat-icon
+      >
       <canvas id="barByMonthChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('barByMonthChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
+      <mat-icon class="icons" (click)="downloadChart('barByMonthChart')"
+        >download</mat-icon
+      >
     </div>
-    <div class="statistic-section-body_canvas" *ngIf="selectModule === 4">
-      <canvas id="propertyChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('propertyChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
-      <canvas id="provinceChart"></canvas>
-      <button mat-icon-button class="small-icon-button" (click)="downloadChart('provinceChart')">
-        <mat-icon>download</mat-icon>
-      </button> 
-    </div>
-  </div>
-</section>
+
+
+
+   -->
