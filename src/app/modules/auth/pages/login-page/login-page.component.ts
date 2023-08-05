@@ -21,7 +21,7 @@ export class LoginPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let token = localStorage.getItem('anahi.token');
+    let token = localStorage.getItem('anahi.accesstoken');
     token ? this.router.navigate(['/admin']) : null;
 
     this.formLogin = this.initForm();
