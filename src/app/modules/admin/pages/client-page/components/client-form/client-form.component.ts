@@ -3,7 +3,9 @@ import {
   AbstractControl,
   AsyncValidatorFn,
   FormBuilder,
+  FormControl,
   FormGroup,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -106,6 +108,7 @@ export class ClientFormComponent implements OnInit {
           Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
           Validators.email,
         ],
+        this.validateEmailUnique(this.clientService, this.clientData?.id_client) 
       ],
       phone_number: [
         '',
@@ -115,6 +118,7 @@ export class ClientFormComponent implements OnInit {
           Validators.minLength(10),
           Validators.maxLength(10),
         ],
+        this.phoneNumberValidator(this.clientService, this.clientData?.id_client)
       ],
       gender_type: ['', [Validators.required]],
       document_type: ['', [Validators.required]],
@@ -126,25 +130,75 @@ export class ClientFormComponent implements OnInit {
           Validators.minLength(8),
           Validators.maxLength(11),
         ],
-        this.documentNumberValidator(this.clientService),
+        this.documentNumberValidator(this.clientService, this.clientData?.id_client)
       ],
       is_foreign: ['', [Validators.required]],
       province: ['', [Validators.required]],
     });
   }
 
-  documentNumberValidator(clientService: ClientService): AsyncValidatorFn {
+  documentNumberValidator(clientService: ClientService, clientId?: number): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       const documentNumber = control.value;
   
-      if (!this.clientData) {
         return clientService.searchByDocument(documentNumber).pipe(
           map((client: IClient) => {
-            return client ? { documentExists: true } : null;
+            // Si el cliente existe y su ID no coincide con el cliente en edición, mostrar error
+            if (client && client.id_client !== clientId) {
+              return { documentExists: true };
+            }
+            return null;
           })
         );
-      } else {
-        return of(null);
+    };
+  }
+  
+
+  validateEmailUnique(clientService: ClientService, clientId?: number): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return clientService.findAllClients().pipe(
+        map((clients: IClient[]) => {
+          const email = control.value.toLowerCase();
+          // Si clientId está definido, filtrar los clientes para ignorar el cliente en edición
+          const filteredClients = clientId ? clients.filter((client) => client.id_client !== clientId) : clients;
+          const emailExists = filteredClients.some((client) => client.email.toLowerCase() === email);
+          return emailExists ? { emailTaken: true } : null;
+        })
+      );
+    };
+  }
+  
+
+  phoneNumberValidator(clientService: ClientService, clientId?: number) {
+    return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+      const phoneNumber = control.value;
+  
+      if (!phoneNumber || phoneNumber === '') {
+        // No hagas validación si el campo está vacío
+        return null;
+      }
+  
+      try {
+        // Obtener todos los clientes
+        const clients = await clientService.findAllClients().toPromise();
+  
+        // Si clientId está definido, filtrar los clientes para ignorar el cliente en edición
+        const filteredClients = clientId ? clients?.filter((client) => client.id_client !== clientId) : clients;
+  
+        // Verificar si algún cliente tiene el mismo número de teléfono
+        const duplicateClient = filteredClients?.find((client) => client.phone_number === phoneNumber);
+  
+        if (duplicateClient) {
+          // Encontró un cliente con el mismo número de teléfono
+          return { phoneNumberDuplicate: true };
+        }
+  
+        // No se encontraron clientes con el mismo número de teléfono
+        return null;
+      } catch (error) {
+        // Manejo de errores en caso de que ocurra algún problema con el servicio
+        console.error('Error al buscar clientes:', error);
+        return null;
       }
     };
   }

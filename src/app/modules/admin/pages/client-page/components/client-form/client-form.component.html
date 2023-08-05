@@ -81,6 +81,9 @@
             <mat-error align=" end" *ngIf="hasError('email', 'required')"
               ><strong>Campo requerido</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('email', 'emailTaken')">
+              <strong>Este correo electrónico ya está registrado</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 
@@ -116,6 +119,9 @@
               *ngIf="hasError('phone_number', 'maxlength')"
             >
               <strong>Maximo 11 caracteres</strong>
+            </mat-error>
+            <mat-error align="end" *ngIf="hasError('phone_number', 'phoneNumberDuplicate')">
+              <strong>El número de teléfono ya está registrado</strong>
             </mat-error>
           </mat-form-field>
         </mat-grid-tile>
