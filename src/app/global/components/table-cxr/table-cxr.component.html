@@ -44,11 +44,11 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
         <td mat-cell *matCellDef="let row">
           <div class="content-icons">
-            <div ngClass="icons" (click)="selectPerson(row)">Seleccionar</div>
-            <button mat-icon-button (click)="showReservations(row)">
-              <mat-icon style="color: #898989;">calendar_today</mat-icon>
-            </button>            
+            <div ngClass="icons" (click)="selectPerson(row)">Seleccionar</div>         
           </div>
+          <button mat-icon-button (click)="showReservations(row)">
+            <mat-icon style="color: #898989;">calendar_today</mat-icon>
+          </button>   
         </td>
       </ng-container> 
 

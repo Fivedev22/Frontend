@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -46,7 +46,8 @@ export class ReservationPageComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly reservationService: ReservationService,
     private readonly paymentService: PaymentService,
-    private router: Router
+    private router: Router,
+    private readonly changeDetectorRef: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
@@ -56,8 +57,9 @@ export class ReservationPageComponent implements OnInit {
   ngAfterViewInit() {
     this.sort.direction = 'asc';
     this.sort.active = 'is_paid';
+    this.changeDetectorRef.detectChanges();
     this.findAllReservations();
-  }
+  }  
 
   toggleShowAllReservations() {
     this.showAllReservations = !this.showAllReservations;

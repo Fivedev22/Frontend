@@ -355,10 +355,6 @@ export class ReservationFormComponent implements OnInit {
     );
   }
   
-  
-  
-  
-  
 
   dateClass = (date: Date): string => {
     return this.dateFilter(date) ? 'disabled-date' : '';
@@ -434,6 +430,8 @@ export class ReservationFormComponent implements OnInit {
     );
   }
 
+  /*
+   */
   calcularPrecioReserva() {
     const montoInicial = Number(
       this.reservationForm.controls['starting_price'].value
@@ -498,6 +496,12 @@ export class ReservationFormComponent implements OnInit {
       this.reservationService
         .createReservation(this.reservationForm.value)
         .subscribe({
+          next: () => {
+            this.createAlert.fire().then(() => {
+              this.reservationForm.reset();
+              this.dialogRef.close('save');
+            });
+          },
           error: (e) => {
             this.errorAlert.fire();
           },

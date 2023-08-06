@@ -45,6 +45,9 @@
               *ngIf="hasError('property_name', 'maxlength')"
               >Maximo <strong>50 caracteres</strong>
             </mat-error>
+            <mat-error align="end" *ngIf="hasError('property_name', 'propertyNameExists')">
+              <strong>El nombre de propiedad ya existe</strong>
+            </mat-error>
           </mat-form-field>
         </mat-grid-tile>
 

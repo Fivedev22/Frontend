@@ -49,7 +49,9 @@ export class TableCxrComponent implements OnInit {
     this.dialogRef.close(client);
   }
 
-  showReservations(row: any): void {
+  /*
+  */
+ showReservations(row: any): void {
     const clientId = row.id_client; // Asegúrate de que la propiedad 'id_client' exista dentro del objeto 'row'
     this.clientService.getClientBookings(clientId).subscribe(
       (response: any) => {
@@ -69,7 +71,7 @@ export class TableCxrComponent implements OnInit {
         let message = `
           <div style="font-family: Arial, sans-serif; font-size: 20px; background: linear-gradient(180deg, #e6f3e8, #b0ddb6); padding: 10px; width: 500px;">
             <p>${clientName}</p>
-            <p style="font-size: 18px;">Reservas Previas:</p>
+            <p style="font-size: 18px;">Reservas:</p>
             <ul style="list-style-type: square; margin-left: 20px;">
         `;
   

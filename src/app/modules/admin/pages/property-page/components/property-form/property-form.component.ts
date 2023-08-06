@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { IProvince } from '../../../../../../interfaces/province.interface';
@@ -11,6 +11,7 @@ import { IAvailabilityStatus } from '../../../../../../interfaces/availability_s
 import { AvailabilityStatusService } from '../../../../../../services/availability_status.service';
 import { IActivityStatus } from '../../../../../../interfaces/activity_status.interface';
 import { ActivityStatusService } from '../../../../../../services/activity_status.service';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-property-form',
@@ -90,6 +91,7 @@ export class PropertyFormComponent implements OnInit {
           Validators.minLength(1),
           Validators.maxLength(50),
         ],
+        [this.propertyNameValidator.bind(this)],
       ],
       property_type: ['', [Validators.required]],
       square_meter: [
@@ -168,6 +170,24 @@ export class PropertyFormComponent implements OnInit {
       activity_status: ['', [Validators.required]],
     });
   }
+  
+  propertyNameValidator: AsyncValidatorFn = (control: AbstractControl): Observable<ValidationErrors | null> => {
+    const propertyName = control.value;
+    const currentPropertyName = this.propertyData ? this.propertyData.property_name : null; // Nombre de la propiedad actual que se está editando
+  
+    if (currentPropertyName === propertyName) {
+      return of(null); // Omitir la validación si el nombre es igual al nombre actual en edición
+    }
+  
+    return this.propertyService.findAllProperties().pipe(
+      map((properties) => {
+        const propertyExists = properties.some((property) => property.property_name === propertyName);
+        return propertyExists ? { propertyNameExists: true } : null;
+      }),
+      catchError(() => of(null))
+    );
+  };
+  
 
   addPropertyData(data: any) {
     this.actionTitle = 'Modificar Propiedad';
