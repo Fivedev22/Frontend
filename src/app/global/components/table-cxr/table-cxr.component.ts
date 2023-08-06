@@ -50,14 +50,14 @@ export class TableCxrComponent implements OnInit {
   }
 
   /*
-  */
- showReservations(row: any): void {
+   */
+  showReservations(row: any): void {
     const clientId = row.id_client; // Asegúrate de que la propiedad 'id_client' exista dentro del objeto 'row'
     this.clientService.getClientBookings(clientId).subscribe(
       (response: any) => {
         const client = response.client;
         const bookings = response.bookings;
-  
+
         if (!Array.isArray(bookings) || bookings.length === 0) {
           Swal.fire(
             'Sin reservas',
@@ -66,57 +66,56 @@ export class TableCxrComponent implements OnInit {
           );
           return;
         }
-  
+
         const clientName = `Cliente: ${client.name} ${client.last_name}`;
         let message = `
-          <div style="font-family: Arial, sans-serif; font-size: 20px; background: linear-gradient(180deg, #e6f3e8, #b0ddb6); padding: 10px; width: 500px;">
+          <div style="font-family: Arial, sans-serif; font-size: 20px; padding: 10px; width: 500px;">
             <p>${clientName}</p>
             <p style="font-size: 18px;">Reservas:</p>
             <ul style="list-style-type: square; margin-left: 20px;">
         `;
-  
+
         // Construir la lista de reservas con fechas
         bookings.forEach((booking: any) => {
           const checkInDate = new Date(booking.check_in_date);
           const checkOutDate = new Date(booking.check_out_date);
-  
+
           // Corregir desfase horario usando el huso horario local
           checkInDate.setTime(
             checkInDate.getTime() + checkInDate.getTimezoneOffset() * 60 * 1000
           );
           checkOutDate.setTime(
-            checkOutDate.getTime() + checkOutDate.getTimezoneOffset() * 60 * 1000
+            checkOutDate.getTime() +
+              checkOutDate.getTimezoneOffset() * 60 * 1000
           );
-  
+
           const formattedCheckInDate = checkInDate.toLocaleDateString();
           const formattedCheckOutDate = checkOutDate.toLocaleDateString();
           message += `<li style="font-size: 16px;">Check-in: ${formattedCheckInDate} - Check-out: ${formattedCheckOutDate}</li>`;
         });
-  
+
         message += `
             </ul>
           </div>
         `;
-  
+
         // Define las dimensiones del popup
         const popupWidth = 500;
         const popupHeight = 195;
-  
+
         // Calcula la posición del popup para centrarlo en la pantalla
         const leftPosition = (window.innerWidth - popupWidth) / 2;
         const topPosition = (window.innerHeight - popupHeight) / 2;
-  
+
         // Abre el popup
-        const popup = window.open('', '_blank', `width=${popupWidth}, height=${popupHeight}, left=${leftPosition}, top=${topPosition}`);
+        const popup = window.open(
+          '',
+          '_blank',
+          `width=${popupWidth}, height=${popupHeight}, left=${leftPosition}, top=${topPosition}`
+        );
         popup?.document.write(message);
       },
-      (error) => {
-      }
+      (error) => {}
     );
   }
-  
-  
-  
-  
-  }
-
+}
